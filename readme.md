@@ -26,7 +26,7 @@ You can also set font size and font flags in `main.lua`. You have more instructi
 
 ### Adding more addons
 
-By default, the addon changes the font only of the addons I am using (see above). If you have another addon with an unsuitable font in the edit box, you can try to add it to the main function. Find more instructions in `main.lua`.
+By default, the addon changes the font only of the addons I am using (see above). If you have another addon with an unsuitable font in the edit box, you can try to add the frame to the list. Find more instructions in `main.lua`.
 
 Feel free to make suggestions in the Issues on the addon’s Github page.
 

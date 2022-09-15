@@ -6,7 +6,7 @@
 ## OptionalDeps: M6, OPie, ImprovedMacroFrame, Blizzard_MacroUI, WowLua
 ## DefaultState: enabled
 ## Author: Mot
-## X-Wago-ID:
+## X-Wago-ID: lQNlO3Ge
 # SavedVariables:
 # SavedVariablesPerCharacter:
 
