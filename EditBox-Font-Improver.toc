@@ -3,7 +3,8 @@
 ## Version: 0.9.0
 ## Notes: Lets you set your custom font, font size and style for the edit boxes of: Blizz’s macro frame, OPie, M6, and WoWLua.
 # Dependencies:
-## OptionalDeps: M6, OPie, ImprovedMacroFrame, Blizzard_MacroUI, WowLua
+## OptionalDeps: M6, OPie, ImprovedMacroFrame, Blizzard_MacroUI, WowLua, MacroManager
+# LoadWith:
 ## DefaultState: enabled
 ## Author: Mot
 ## X-Wago-ID: lQNlO3Ge
