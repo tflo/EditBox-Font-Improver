@@ -2,10 +2,10 @@ local addonName, _ = ...
 
 --[ Config Begin ]=============================================================
 
---[[ 
+--[[
 	You _have_ to change the font path to the path of your desired font in your
 	WoW setup (unless you happen to have the example font at exactly the same
-	path on your machine). 
+	path on your machine).
 	The game client (Retail) can only access fonts inside `/World of
 	Warcraft/_retail_/` which acts as root folder for the path. So, for example,
 	`Fonts/MORPHEUS.ttf` would also be a valid path, but _not_ anything outside
@@ -19,21 +19,21 @@ local font = [[Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Mono/PTM55F.ttf]]
 local size = 12
 
 -- Either an empty string for no flags, or any comma-delimited combination of 'OUTLINE', 'THICKOUTLINE' and 'MONOCHROME'
-local flags = '' 
+local flags = ''
 
 -- https://wowpedia.fandom.com/wiki/API_FontInstance_SetFont
 
 --[ Config End ]================================================================
 
 
--- The 'addon names' in the comments _must_ be in OptionalDeps in the toc
-local targets = { 
+-- The 'addon name strings' in the comments _must_ be in OptionalDeps in the toc
+local targets = {
 	M6EditBox, -- 'M6'; edit box, title and group we leave alone
 	ABE_MacroInput, -- 'OPie'; the edit box for custom macro buttons
 	MacroFrameText, -- 'Blizzard_MacroUI'; also affects 'ImprovedMacroFrame' (toc!)
 	WowLuaFrameOutput, -- 'WowLua'; output box
 	-- MacroManager does not work bc the frame is not visible. It _is_ visible though if run in-game, from WoWLua or macro. TODO: find out why.
--- 	MacroManagerMultiLineEditBox1Edit, -- 'MacroManager'; new addon 2022-10
+	-- MacroManagerMultiLineEditBox1Edit, -- 'MacroManager'; new addon 2022-10
 }
 
 -- 'pairs' is crucial here. 'ipairs' exits at a gap in the list (bc of a not loaded addon).
@@ -43,9 +43,7 @@ end
 
 -- For the WoWLua edit box we take the font size as actually set in the WowLua GUI
 -- This is not a frame, so we want to make sure it exists
-if WowLuaMonoFont then 
-	WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags)
-end
+if WowLuaMonoFont then WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags) end
 
 -- local f = CreateFrame('Frame')
 -- f:RegisterEvent('PLAYER_LOGIN')
