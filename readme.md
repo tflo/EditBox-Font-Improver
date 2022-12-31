@@ -28,5 +28,8 @@ You can also set font size and font flags in `main.lua`. You have more instructi
 
 By default, the addon changes the font only of the addons I am using (see above). If you have another addon with an unsuitable font in the edit box, you can try to add the frame to the list. Find more instructions in `main.lua`.
 
-Feel free to make suggestions in the Issues on the addon’s Github page.
+---
+
+Feel free to post suggestions or issues in the [GitHub Issues](https://github.com/tflo/PetWalker/issues) of the repo!
+__Please do not post issues or suggestions in the comments on Curseforge.__
 

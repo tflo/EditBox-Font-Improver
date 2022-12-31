@@ -32,7 +32,7 @@ local targets = {
 	ABE_MacroInput, -- 'OPie'; the edit box for custom macro buttons
 	MacroFrameText, -- 'Blizzard_MacroUI'; also affects 'ImprovedMacroFrame' (toc!)
 	WowLuaFrameOutput, -- 'WowLua'; output box
-	-- MacroManager does not work bc the frame is not visible. It _is_ visible though if run in-game, from WoWLua or macro. TODO: find out why.
+	-- MacroManager does not work bc the frame is not visible. It _is_ visible though if run in-game, from WoWLua or macro.
 	-- MacroManagerMultiLineEditBox1Edit, -- 'MacroManager'; new addon 2022-10
 }
 
@@ -45,17 +45,6 @@ end
 -- This is not a frame, so we want to make sure it exists
 if WowLuaMonoFont then WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags) end
 
--- local f = CreateFrame('Frame')
--- f:RegisterEvent('PLAYER_LOGIN')
--- f:SetScript('OnEvent', function()
--- 	for _, t in pairs(targets) do
--- 		t:SetFont(font, size, flags)
--- 	end
--- 	if WowLuaMonoFont then
--- 		WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags)
--- 	end
--- MacroManagerMultiLineEditBox1Edit:SetFont(font, size, flags)
--- end)
 
 --[[ Notes for the User ========================================================
 

@@ -1,13 +1,17 @@
 ## Interface: 100002
 ## Title: EditBox Font Improver
-## Version: 1.0.0
+## Version: 1.0.1
 ## Notes: Lets you set your custom font, font size and style for the edit boxes of: Blizz’s macro frame, OPie, M6, and WoWLua.
+## Author: Mot
+
 # Dependencies:
 ## OptionalDeps: M6, OPie, ImprovedMacroFrame, Blizzard_MacroUI, WowLua
 # LoadWith:
 ## DefaultState: enabled
-## Author: Mot
+
 ## X-Wago-ID: lQNlO3Ge
+## X-Curse-Project-ID: 784773
+
 # SavedVariables:
 # SavedVariablesPerCharacter:
 
