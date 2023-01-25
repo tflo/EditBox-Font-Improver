@@ -32,8 +32,6 @@ local targets = {
 	ABE_MacroInput, -- 'OPie'; the edit box for custom macro buttons
 	MacroFrameText, -- 'Blizzard_MacroUI'; also affects 'ImprovedMacroFrame' (toc!)
 	WowLuaFrameOutput, -- 'WowLua'; output box
-	-- MacroManager does not work bc the frame is not visible. It _is_ visible though if run in-game, from WoWLua or macro.
-	-- MacroManagerMultiLineEditBox1Edit, -- 'MacroManager'; new addon 2022-10
 }
 
 -- 'pairs' is crucial here. 'ipairs' exits at a gap in the list (bc of a not loaded addon).

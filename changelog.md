@@ -1,3 +1,7 @@
+### Version 1.0.1.1 (2023-01-25)
+- toc: update for 10.0.5
+- Removed some obsolete comments
+
 #### 1.0.1 (2022-12-31)
 - toc: Added CF ID 
 - Minor changes to readme
