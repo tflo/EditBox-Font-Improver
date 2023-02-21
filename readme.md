@@ -18,6 +18,7 @@ The main point is that in these macro/script edit boxes we want a clean, monospa
 Before using the addon the first time, you have to set the path to your desired font in the `main.lua` file of the addon. 
 
 If you use [SharedMedia](https://www.curseforge.com/wow/addons/sharedmedia), then your fonts will usually be in…
+
 - `Interface/AddOns/SharedMedia/fonts/` or  
 - `Interface/AddOns/SharedMedia_MyMedia/`
 
@@ -32,6 +33,6 @@ By default, the addon changes the font only of the addons I am using (see above)
 
 ---
 
-Feel free to post suggestions or issues in the [GitHub Issues](https://github.com/tflo/PetWalker/issues) of the repo!
+Feel free to post suggestions or issues in the [GitHub Issues](https://github.com/tflo/EditBox-Font-Improver/issues) of the repo!
 __Please do not post issues or suggestions in the comments on Curseforge.__
 
