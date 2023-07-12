@@ -1,3 +1,7 @@
+### 1.0.3 (2023-07-12)
+- toc updated for 10.1.5.
+  - I have not yet had a chance to really test the addon with 10.1.5, but as far as I know there are no relevant API changes. If I find any problems, you'll get a content update soon.
+
 ### 1.0.2 (2023-05-02)
 - toc: update for 10.1
 
