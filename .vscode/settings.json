@@ -1,0 +1,10 @@
+{
+	"Lua.diagnostics.globals": [
+		"MacroFrameText",
+		"M6EditBox",
+		"ABE_MacroInput",
+		"WowLuaFrameOutput",
+		"WowLuaMonoFont",
+		"WowLua_DB"
+	]
+}
