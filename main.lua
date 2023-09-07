@@ -12,7 +12,7 @@ local addonName, _ = ...
 	like `/System/Library/Fonts/Courier New.ttf`.
 ]]
 
--- Path to the font file
+-- THIS IS THE MAIN THING: Replace the example path with the path to your desired font file here
 local font = [[Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Mono/PTM55F.ttf]]
 
 -- Size in points
@@ -34,7 +34,6 @@ local targets = {
 	WowLuaFrameOutput, -- 'WowLua'; output box
 }
 
--- 'pairs' is crucial here. 'ipairs' exits at a gap in the list (bc of a not loaded addon).
 for _, t in pairs(targets) do
 	t:SetFont(font, size, flags)
 end
@@ -46,7 +45,7 @@ if WowLuaMonoFont then WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags) e
 
 --[[ Notes for the User ========================================================
 
-	You can add additional addons by adding their edit box frame to the
+	You can add more addons by adding their edit box frame to the
 	`targets` list. To find the correct frame name, you can use `/fstack` in the
 	game UI. This will not work for every addon though.
 
@@ -56,7 +55,7 @@ if WowLuaMonoFont then WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags) e
 
 --[[ License ===================================================================
 
-	Copyright © 2022 Thomas Floeren
+	Copyright © 2022-2023 Thomas Floeren
 
 	This file is part of EditBox Font Improver.
 

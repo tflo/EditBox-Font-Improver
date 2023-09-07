@@ -25,11 +25,11 @@ If you use [SharedMedia](https://www.curseforge.com/wow/addons/sharedmedia), the
 If not, anything inside the client folder should be accessible, for example in `World of Warcraft/_retail_/Fonts/` or `World of Warcraft/_retail_/Interface/MyNewFontFolder/`.
 The path then would be `Fonts/myfont.ttf` or `Interface/MyNewFontFolder/myfont.ttf`.
 
-You can also set font size and font flags in `main.lua`. You have more instructions there.
+You can also set font size and font flags in `main.lua`. _You find more instructions there!_
 
 ### Adding more addons
 
-By default, the addon changes the font only of the addons I am using (see above). If you have another addon with an unsuitable font in the edit box, you can try to add the frame to the list. Find more instructions in `main.lua`.
+By default, the addon changes the font only of the addons I am using or was using (see above). If you have another addon with an unsuitable font in the edit box, you can try to add the frame to the list. Find more instructions in `main.lua`.
 
 ---
 
