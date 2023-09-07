@@ -1,3 +1,9 @@
+#### 1.0.4 (2023-09-07)
+
+- Slightly better instruction comments in main.lua.
+- Readme changes.
+- toc bump for 100107
+
 #### 1.0.3 (2023-07-12)
 
 - toc updated for 10.1.5.

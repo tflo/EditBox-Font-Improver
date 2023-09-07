@@ -1,4 +1,6 @@
-local addonName, _ = ...
+local addonName, a = ...
+
+local _
 
 --[ Config Begin ]=============================================================
 
