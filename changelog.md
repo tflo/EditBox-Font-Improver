@@ -1,3 +1,8 @@
+#### 1.0.9 (2024-07-24)
+
+- toc updated for TWW 110000.
+- Tested in TWW with Blizz Macro Editor, M6 Editor, and OPie.
+
 #### 1.0.8 (2024-05-08)
 
 - toc bump only (100207). Addon update will follow as needed.
