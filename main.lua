@@ -46,7 +46,7 @@ local targets = {
 	M6EditBox, -- 'M6'; edit box, title and group we leave alone
 	ABE_MacroInput, -- 'OPie'; the edit box for custom macro buttons
 	MacroFrameText, -- 'Blizzard_MacroUI'; also affects 'ImprovedMacroFrame' (toc!)
-	WowLuaFrameOutput, -- 'WowLua'; output box
+-- 	WowLuaFrameOutput, -- 'WowLua'; output box. Actually not needed if we replace the font like we do below.
 }
 
 -- We need `pairs` here, bc a not loaded addon will cause a gap (nil value) in the list.
@@ -54,10 +54,13 @@ for _, t in pairs(targets) do
 	t:SetFont(font, size, flags)
 end
 
--- For the WoWLua edit box we take the font size as actually set in the WowLua GUI
--- This is not a frame, so we want to make sure it exists
-if WowLuaMonoFont then WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags) end
-
+-- WOWLUA
+-- We take the font size as actually set in the WowLua GUI.
+if include_WoWLua and WowLuaMonoFont then
+	WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags)
+	WowLuaMonoFontSpaced:SetFont(font, WowLua_DB.fontSize, flags)
+	WowLua:UpdateFontSize(WowLua_DB.fontSize)
+end
 
 --[[ Notes for the User ========================================================
 
