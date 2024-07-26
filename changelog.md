@@ -1,3 +1,7 @@
+To see all commits, including alpha-version changes, go [here](https://github.com/tflo/EditBox-Font-Improver/commits/master/).
+
+### Releases
+
 #### 1.1.0 (2024-07-26)
 
 - Fixed the WoWLua part so that it actually works. (Sorry, I haven't used WoWLua for a while).
