@@ -1,3 +1,8 @@
+#### 1.1.0 (2024-07-26)
+
+- Fixed the WoWLua part so that it actually works. (Sorry, I haven't used WoWLua for a while).
+- More explanatory comments in the config section in `main.lua`.
+
 #### 1.0.9 (2024-07-24)
 
 - toc updated for TWW 110000.
