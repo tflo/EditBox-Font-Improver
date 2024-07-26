@@ -2,6 +2,16 @@ To see all commits, including alpha-version changes, go [here](https://github.co
 
 ### Releases
 
+#### 1.2.0-beta-1 (2024-07-26)
+
+- Added increased interline spacing (leading) for the WoWLua edit box.
+    - WoWLua's default spacing of 0 is so tight that underscores visually melt into uppercase letters on the next line.
+    - Check *main.lua* for config.
+- Font replacement now covers the BugSack main frame content (experimental!).
+    - Yes, this is not a macro/script edit box. But it contains code, so a little more readability is not a bad thing.
+- Refactored code.
+- Uploaded screenshots to CF.
+
 #### 1.1.0 (2024-07-26)
 
 - Fixed the WoWLua part so that it actually works. (Sorry, I haven't used WoWLua for a while).
