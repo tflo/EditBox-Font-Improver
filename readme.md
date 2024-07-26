@@ -4,10 +4,11 @@
 
 The addon lets you set your custom font, font size and style for the edit boxes of:
 
-- Blizz’s macro frame
-- [M6](https://www.curseforge.com/wow/addons/m6x)
-- [OPie](https://www.curseforge.com/wow/addons/opie) (the box to write a custom macro for a button)
-- [WowLua](https://www.wowinterface.com/downloads/info7366-WowLua.html) (output and edit box)
+- Blizz’s macro frame: Edit box
+- [M6](https://www.curseforge.com/wow/addons/m6x): Edit box
+- [OPie](https://www.curseforge.com/wow/addons/opie): The edit box to write a macro for a button
+- [WowLua](https://www.wowinterface.com/downloads/info7366-WowLua.html): Output and edit box
+- [BugSack](https://www.curseforge.com/wow/addons/bugsack): Main window text (not an edit box, but it contains code that should be readable)
 
 The main point is that in these macro/script edit boxes we want a clean, monospaced font, and not Friz Quadrata, Arial Narrow, or similar nonsense. (WoWLua is an exception, as it already uses an appropriate font. See the comments in `main.lua` for how to exclude WoWLua from the font replacement.)
 
@@ -30,6 +31,10 @@ You can also set font size and font flags in `main.lua`. _You find more instruct
 ### Adding more addons
 
 By default, the addon changes the font only of the addons I am using or was using (see above). If you have another addon with an unsuitable font in the edit box, you can try to add the frame to the list. Find more instructions in `main.lua`.
+
+### Extras
+
+If you are using WoWLua, then you will be pleased that the EBFI increases the interline spacing in the WoWLua edit box (optional).
 
 ---
 
