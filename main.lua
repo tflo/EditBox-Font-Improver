@@ -44,6 +44,14 @@ local spacing_wowlua = 3
 
 
 --[[===========================================================================
+	Create Font Object
+===========================================================================]]--
+
+-- Currently we do not need the global font object
+local ebfi_font = CreateFont('ebfi_font_global')
+ebfi_font:SetFont(font, size, flags)
+
+--[[===========================================================================
 	Straightforward Frames
 ===========================================================================]]--
 
@@ -58,7 +66,7 @@ local function setup_misc()
 	}
 	-- We need `pairs` here, bc a not loaded addon will cause a gap (nil value) in the list.
 	for _, t in pairs(targets) do
-		t:SetFont(font, size, flags)
+		t:SetFontObject(ebfi_font)
 	end
 end
 
@@ -101,7 +109,7 @@ local function setup_bugsack()
 	local font_set = false
 	hooksecurefunc(BugSack, 'OpenSack', function()
 		if not font_set then -- No need to run it more than once
-			BugSackScrollText:SetFont(font, size, flags)
+			BugSackScrollText:SetFontObject(ebfi_font)
 			font_set = true
 -- 			print 'EBFI Debug: BugSack hook run!' -- Debug
 		end
