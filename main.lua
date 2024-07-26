@@ -83,6 +83,24 @@ end
 	game UI. This will not work for every addon though.
 
 ============================================================================]]--
+--[[===========================================================================
+	BugSack (experimental!)
+===========================================================================]]--
+
+-- The main frame is not created before first open, so we have to hook.
+-- Needed OptionalDeps in toc: 'BugSack'
+local function setup_bugsack()
+	if not BugSack then return end
+	local font_set
+	hooksecurefunc(BugSack, 'OpenSack', function()
+		if not font_set then -- No need to run it more than once
+			BugSackScrollText:SetFont(font, size, flags)
+			font_set = true
+-- 			print 'EBFI Debug: BugSack hook run!' -- Debug
+		end
+	end)
+end
+
 
 
 
