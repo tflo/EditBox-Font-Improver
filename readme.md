@@ -9,7 +9,7 @@ The addon lets you set your custom font, font size and style for the edit boxes 
 - [OPie](https://www.curseforge.com/wow/addons/opie) (the box to write a custom macro for a button)
 - [WowLua](https://www.wowinterface.com/downloads/info7366-WowLua.html) (output and edit box)
 
-The main point is that in these macro/script edit boxes we want a clean, monospaced font, and not Friz Quadrata, Arial Narrow, or similar nonsense.
+The main point is that in these macro/script edit boxes we want a clean, monospaced font, and not Friz Quadrata, Arial Narrow, or similar nonsense. (WoWLua is an exception, as it already uses an appropriate font. See the comments in `main.lua` for how to exclude WoWLua from the font replacement.)
 
 ## Usage
 
