@@ -1,8 +1,10 @@
 local addonName, a = ...
 
-local _
 
---[ Config Begin ]=============================================================
+
+--[[===========================================================================
+	CONFIG
+===========================================================================]]--
 
 --[[
 	You _have_ to change the font path to the path of your desired font in your
@@ -14,18 +16,29 @@ local _
 	like `/System/Library/Fonts/Courier New.ttf`.
 ]]
 
--- THIS IS THE MAIN THING: Replace the example path with the path to your desired font file here
+-- THIS IS THE MAIN THING: Replace the example path with the path to your desired font file!
 local font = [[Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Mono/PTM55F.ttf]]
 
 -- Size in points
 local size = 12
 
--- Either an empty string for no flags, or any comma-delimited combination of 'OUTLINE', 'THICKOUTLINE' and 'MONOCHROME'
+-- Font flags
+-- For our purpose, you most likely do not want any outlining. So, leave the empty string here.
+-- Otherwise, see https://wowpedia.fandom.com/wiki/API_FontInstance_SetFont
 local flags = ''
 
--- https://wowpedia.fandom.com/wiki/API_FontInstance_SetFont
+-- WoWLua alraedy uses a nice monospaced font out of the box (Vera Mono).
+-- So, if you prefer the original font in WoWLua, just set the following variable to `false`:
+local include_WoWLua = true
 
---[ Config End ]================================================================
+
+-- Hint: Before updating the addon, make sure to copy your config, so that you
+-- can paste it into the new version!
+
+--[[===========================================================================
+	End CONFIG
+===========================================================================]]--
+
 
 
 -- The 'addon name strings' in the comments _must_ be in OptionalDeps in the toc
@@ -36,6 +49,7 @@ local targets = {
 	WowLuaFrameOutput, -- 'WowLua'; output box
 }
 
+-- We need `pairs` here, bc a not loaded addon will cause a gap (nil value) in the list.
 for _, t in pairs(targets) do
 	t:SetFont(font, size, flags)
 end
@@ -57,7 +71,7 @@ if WowLuaMonoFont then WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags) e
 
 --[[ License ===================================================================
 
-	Copyright © 2022-2023 Thomas Floeren
+	Copyright © 2022-2024 Thomas Floeren
 
 	This file is part of EditBox Font Improver.
 
