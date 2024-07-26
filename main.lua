@@ -1,9 +1,8 @@
 local addonName, a = ...
 
 
-
 --[[===========================================================================
-	CONFIG
+	User Config
 ===========================================================================]]--
 
 --[[
@@ -13,13 +12,13 @@ local addonName, a = ...
 	The game client (Retail) can only access fonts inside `/World of
 	Warcraft/_retail_/` which acts as root folder for the path. So, for example,
 	`Fonts/MORPHEUS.ttf` would also be a valid path, but _not_ anything outside
-	like `/System/Library/Fonts/Courier New.ttf`.
+	WoW like `/System/Library/Fonts/Courier New.ttf`.
 ]]
 
 -- THIS IS THE MAIN THING: Replace the example path with the path to your desired font file!
 local font = [[Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Mono/PTM55F.ttf]]
 
--- Size in points
+-- Size in points: Set the desired font size here.
 local size = 12
 
 -- Font flags
@@ -42,28 +41,42 @@ local spacing_WoWLua = 3
 -- Hint: Before updating the addon, make sure to copy your config, so that you
 -- can paste it into the new version!
 
+
 --[[===========================================================================
-	End CONFIG
+	Straightforward frames
 ===========================================================================]]--
 
-
-
--- The 'addon name strings' in the comments _must_ be in OptionalDeps in the toc
-local targets = {
-	M6EditBox, -- 'M6'; edit box, title and group we leave alone
-	ABE_MacroInput, -- 'OPie'; the edit box for custom macro buttons
-	MacroFrameText, -- 'Blizzard_MacroUI'; also affects 'ImprovedMacroFrame' (toc!)
--- 	WowLuaFrameOutput, -- 'WowLua'; output box. Actually not needed if we replace the font like we do below.
-}
-
--- We need `pairs` here, bc a not loaded addon will cause a gap (nil value) in the list.
-for _, t in pairs(targets) do
-	t:SetFont(font, size, flags)
+-- Easy stuff, where we can simply set the frame font.
+-- The frames are created at load time, so no issues.
+local function setup_misc()
+	-- The 'addon name strings' as in the comments _must_ be in OptionalDeps in the toc.
+	local targets = {
+		M6EditBox, -- 'M6'; edit box, title and group we leave alone.
+		ABE_MacroInput, -- 'OPie'; the edit box for custom macro buttons.
+		MacroFrameText, -- 'Blizzard_MacroUI'; also affects 'ImprovedMacroFrame'.
+	}
+	-- We need `pairs` here, bc a not loaded addon will cause a gap (nil value) in the list.
+	for _, t in pairs(targets) do
+		t:SetFont(font, size, flags)
+	end
 end
 
--- WOWLUA
--- We take the font size as actually set in the WowLua GUI.
-if WowLuaMonoFontSpaced then
+-- NOTE for the user:
+-- You can add more addons by adding their edit box frame to the `targets` list.
+-- To find the correct frame name, you can use `/fstack` in the game UI. This
+-- will only work if the frame is created at addon load time, and not for every
+-- addon though.
+
+
+--[[===========================================================================
+	WoWLua
+===========================================================================]]--
+
+-- We have to manipulate the font object, otherwise we get reset when the user changes font size in WoWLua.
+-- We use the font size as actually set in the WowLua GUI.
+-- Needed OptionalDeps in toc: 'WowLua'
+local function setup_wowlua()
+	if not WowLuaMonoFontSpaced then return end
 	if include_WoWLua then
 		WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags)
 		WowLuaMonoFontSpaced:SetFont(font, WowLua_DB.fontSize, flags)
@@ -76,13 +89,7 @@ if WowLuaMonoFontSpaced then
 	end
 end
 
---[[ Notes for the User ========================================================
 
-	You can add more addons by adding their edit box frame to the
-	`targets` list. To find the correct frame name, you can use `/fstack` in the
-	game UI. This will not work for every addon though.
-
-============================================================================]]--
 --[[===========================================================================
 	BugSack (experimental!)
 ===========================================================================]]--
@@ -101,6 +108,16 @@ local function setup_bugsack()
 	end)
 end
 
+
+--[[===========================================================================
+	Run the Stuff
+===========================================================================]]--
+
+setup_misc()
+setup_wowlua()
+setup_bugsack()
+
+-- NOTE: We could also run this in an event script at PLAYER_LOGIN, but the OptionalDeps system seems to work fine so far.
 
 
 
