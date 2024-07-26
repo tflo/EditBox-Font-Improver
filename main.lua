@@ -6,16 +6,15 @@ local addonName, a = ...
 ===========================================================================]]--
 
 --[[
-	You _have_ to change the font path to the path of your desired font in your
-	WoW setup (unless you happen to have the example font at exactly the same
-	path on your machine).
-	The game client (Retail) can only access fonts inside `/World of
-	Warcraft/_retail_/` which acts as root folder for the path. So, for example,
-	`Fonts/MORPHEUS.ttf` would also be a valid path, but _not_ anything outside
-	WoW like `/System/Library/Fonts/Courier New.ttf`.
+YOU HAVE TO CHANGE THE FONT PATH TO THE PATH OF *YOUR* DESIRED FONT.
+The game client (Retail) can only access fonts inside `../World of Warcraft/_retail_/`
+which also acts as root folder for any path. So, for example, `Fonts/MORPHEUS.ttf`
+would be a valid path, also e.g. `Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf`
+for a font you've installed for SharedMedia. But any font path outside WoW like e.g.
+`/System/Library/Fonts/Courier New.ttf` will not work!
 ]]
 
--- THIS IS THE MAIN THING: Replace the example path with the path to your desired font file!
+-- MANDATORY: FONT PATH: Replace the example path with the path to your desired font file:
 local font = [[Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Mono/PTM55F.ttf]]
 
 -- Size in points: Set the desired font size here.
@@ -31,16 +30,26 @@ local flags = ''
 local include_wowlua = true
 
 -- EXTRA: Interline spacing for the WoWLua edit box:
--- WoWLua uses an insanely tight line spacing of 0 (zero). This setting
--- increases the line spacing. Recommended: at least 1, better something between
--- 2 and 5. To use WoWLua's default spacing, set the value to `nil` (without any
--- quotes) or remove/comment the line.
+-- WoWLua uses a line spacing of 0 (zero), which too tight for an editor that
+-- displays many lines. This setting increases the line spacing. Recommended: At
+-- least 1, better something in the range of 2 to 4. To use WoWLua's default
+-- spacing, set the value to `nil` (without any quotes) or remove/comment the
+-- line.
 -- Note: This setting is independent of the above `include_wowlua`.
 local spacing_wowlua = 3
 
+-- [ End of User Config ] -----------------------------------------------------
 
--- Hint: Before updating the addon, make sure to copy your config, so that you
--- can paste it into the new version!
+
+-- TIP: After setting your font path and the other config values, copy the
+-- Config section to a safe place. That way you can quickly reapply your values
+-- when the addon is updated. (But do not blindly paste the entire saved config,
+-- as variable names may have changed, or configs may have been added/removed in
+-- the new version!)
+
+-- If this addon reaches a higher download number, I will consider adding a
+-- database (SavedVariables) and a way to configure it in-game. But not for now,
+-- as it seems to be used only by me and a handful of others ;)
 
 
 --[[===========================================================================
@@ -51,20 +60,23 @@ local spacing_wowlua = 3
 local ebfi_font = CreateFont('ebfi_font_global')
 ebfi_font:SetFont(font, size, flags)
 
+
 --[[===========================================================================
 	Straightforward Frames
 ===========================================================================]]--
 
--- Easy stuff, where we can simply set the frame font.
--- The frames are created at load time, so no issues.
+-- Easy stuff, where we can simply apply our font object.
+-- The frames are created at load time, so no issues, if the addons are
+-- OptionalDeps. A missing addon doesn't pose a problem, as it just creates a
+-- nil value in the table, which is ignored when we iterate.
 local function setup_misc()
-	-- The 'addon name strings' as in the comments _must_ be in OptionalDeps in the toc.
+	-- The addon names as noted in the comments must be declared OptionalDeps in the toc.
 	local targets = {
 		M6EditBox, -- 'M6'; edit box, title and group we leave alone.
 		ABE_MacroInput, -- 'OPie'; the edit box for custom macro buttons.
 		MacroFrameText, -- 'Blizzard_MacroUI'; also affects 'ImprovedMacroFrame'.
 	}
-	-- We need `pairs` here, bc a not loaded addon will cause a gap (nil value) in the list.
+	-- We can't use `ipairs' here because a missing addon (nil) would stop iteration.
 	for _, t in pairs(targets) do
 		t:SetFontObject(ebfi_font)
 	end
@@ -80,9 +92,10 @@ end
 	WoWLua
 ===========================================================================]]--
 
--- We have to manipulate the font object, otherwise we get reset when the user changes font size in WoWLua.
+-- We directly manipulate WoWLua's font object, otherwise we get reset when the
+-- user changes font size in WoWLua.
 -- We use the font size as actually set in the WowLua GUI.
--- Needed OptionalDeps in toc: 'WowLua'
+-- Required OptionalDeps in toc: 'WowLua'
 local function setup_wowlua()
 	if not WowLuaMonoFontSpaced then return end
 	if include_wowlua then
@@ -99,11 +112,11 @@ end
 
 
 --[[===========================================================================
-	BugSack (experimental!)
+	BugSack (experimental)
 ===========================================================================]]--
 
 -- The main frame is not created before first open, so we have to hook.
--- Needed OptionalDeps in toc: 'BugSack'
+-- Required OptionalDeps in toc: 'BugSack'
 local function setup_bugsack()
 	if not BugSack then return end
 	local font_set = false
@@ -111,7 +124,6 @@ local function setup_bugsack()
 		if not font_set then -- No need to run it more than once
 			BugSackScrollText:SetFontObject(ebfi_font)
 			font_set = true
--- 			print 'EBFI Debug: BugSack hook run!' -- Debug
 		end
 	end)
 end
@@ -125,7 +137,8 @@ setup_misc()
 setup_wowlua()
 setup_bugsack()
 
--- NOTE: We could also run this in an event script at PLAYER_LOGIN, but the OptionalDeps system seems to work fine so far.
+-- NOTE: We could also run this in an event script at PLAYER_LOGIN, but the
+-- OptionalDeps system seems to work fine so far.
 
 
 
