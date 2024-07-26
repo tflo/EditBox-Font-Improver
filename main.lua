@@ -28,14 +28,15 @@ local flags = ''
 
 -- WoWLua alraedy uses a nice monospaced font out of the box (Vera Mono).
 -- So, if you prefer the original font in WoWLua, just set the following variable to `false`:
-local include_WoWLua = true
+local include_wowlua = true
 
 -- EXTRA: Interline spacing for the WoWLua edit box:
--- WoWLua uses an insanely tight line spacing of 0 (zero). This setting increases the line
--- spacing. Recommended: at least 1, better something between 2 and 5.
--- To use WoWLua's default, set it to `nil` (without any quotes) or remove/comment the line.
--- Note: This setting is independent of the above `include_WoWLua`.
-local spacing_WoWLua = 3
+-- WoWLua uses an insanely tight line spacing of 0 (zero). This setting
+-- increases the line spacing. Recommended: at least 1, better something between
+-- 2 and 5. To use WoWLua's default spacing, set the value to `nil` (without any
+-- quotes) or remove/comment the line.
+-- Note: This setting is independent of the above `include_wowlua`.
+local spacing_wowlua = 3
 
 
 -- Hint: Before updating the addon, make sure to copy your config, so that you
@@ -43,7 +44,7 @@ local spacing_WoWLua = 3
 
 
 --[[===========================================================================
-	Straightforward frames
+	Straightforward Frames
 ===========================================================================]]--
 
 -- Easy stuff, where we can simply set the frame font.
@@ -63,9 +64,8 @@ end
 
 -- NOTE for the user:
 -- You can add more addons by adding their edit box frame to the `targets` list.
--- To find the correct frame name, you can use `/fstack` in the game UI. This
--- will only work if the frame is created at addon load time, and not for every
--- addon though.
+-- To find the correct frame, use `/fstack` in the game UI. This will only work
+-- if the frame is created at addon load time, and not for every addon though.
 
 
 --[[===========================================================================
@@ -77,13 +77,13 @@ end
 -- Needed OptionalDeps in toc: 'WowLua'
 local function setup_wowlua()
 	if not WowLuaMonoFontSpaced then return end
-	if include_WoWLua then
+	if include_wowlua then
 		WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags)
 		WowLuaMonoFontSpaced:SetFont(font, WowLua_DB.fontSize, flags)
 		WowLua:UpdateFontSize(WowLua_DB.fontSize)
 	end
 
-	local spacing = tonumber(spacing_WoWLua)
+	local spacing = tonumber(spacing_wowlua)
 	if spacing then
 		WowLuaMonoFontSpaced:SetSpacing(spacing)
 	end
@@ -98,7 +98,7 @@ end
 -- Needed OptionalDeps in toc: 'BugSack'
 local function setup_bugsack()
 	if not BugSack then return end
-	local font_set
+	local font_set = false
 	hooksecurefunc(BugSack, 'OpenSack', function()
 		if not font_set then -- No need to run it more than once
 			BugSackScrollText:SetFont(font, size, flags)
