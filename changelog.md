@@ -2,6 +2,13 @@ To see all commits, including alpha-version changes, go [here](https://github.co
 
 ### Releases
 
+#### 1.2.0 (2024-07-27)
+
+- The "experimental" addition of BugSack (see 1.2.0-beta-1 notes) works fine, so this is a permanent feature now.
+- Removed font flags (outlining) from the Config section. We don't need that.
+- Optimizations.
+- Better instructions in main.lua and the readme/description.
+
 #### 1.2.0-beta-1 (2024-07-26)
 
 - Added increased interline spacing (leading) for the WoWLua edit box.
