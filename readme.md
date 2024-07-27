@@ -2,7 +2,7 @@
 
 ## Summary
 
-The addon lets you set your custom font, font size and style for the edit boxes of:
+The addon lets you set your custom font and font size for the edit boxes of:
 
 - Blizz’s macro frame: Edit box
 - [M6](https://www.curseforge.com/wow/addons/m6x): Edit box
@@ -16,7 +16,7 @@ The main point is that in these macro/script edit boxes we want a clean, monospa
 
 ### First-time setup
 
-Before using the addon the first time, you have to set the path to your desired font in the `main.lua` file of the addon.
+Before using the addon the first time, **you have to set the path to your desired font in the `main.lua` file of the addon.** This and other settings are in the Config section, which is very well commented.
 
 If you use [SharedMedia](https://www.curseforge.com/wow/addons/sharedmedia), then your fonts will usually be in…
 
@@ -26,7 +26,9 @@ If you use [SharedMedia](https://www.curseforge.com/wow/addons/sharedmedia), the
 If not, anything inside the client folder should be accessible, for example in `World of Warcraft/_retail_/Fonts/` or `World of Warcraft/_retail_/Interface/MyNewFontFolder/`.
 The path then would be `Fonts/myfont.ttf` or `Interface/MyNewFontFolder/myfont.ttf`.
 
-You can also set font size and font flags in `main.lua`. _You find more instructions there!_
+You can also set the font size and other things in `main.lua`. _You find more instructions there._
+
+**To make it clear (as this is different from most addons): You HAVE TO edit the Config section in the `main.lua` file in order to use the addon. Setting the font path there is not optional!**
 
 ### Adding more addons
 
@@ -34,7 +36,7 @@ By default, the addon changes the font only of the addons I am using or was usin
 
 ### Extras
 
-If you are using WoWLua, then you will be pleased that the EBFI increases the interline spacing in the WoWLua edit box (optional).
+If you are using WoWLua, you will be pleased that the EBFI increases the interline spacing in the WoWLua edit box (optional).
 
 ---
 
