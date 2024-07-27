@@ -20,11 +20,6 @@ local font = [[Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Mono/PTM55F.ttf]]
 -- Size in points: Set the desired font size here.
 local size = 12
 
--- Font flags
--- For our purpose, you most likely do not want any outlining. So, leave the empty string here.
--- Otherwise, see https://wowpedia.fandom.com/wiki/API_FontInstance_SetFont
-local flags = ''
-
 -- WoWLua alraedy uses a nice monospaced font out of the box (Vera Mono).
 -- So, if you prefer the original font in WoWLua, just set the following variable to `false`:
 local include_wowlua = true
@@ -56,8 +51,12 @@ local spacing_wowlua = 3
 	Create Font Object
 ===========================================================================]]--
 
--- Currently we do not need the global font object
+-- Currently we do not need the global font object.
 local ebfi_font = CreateFont('ebfi_font_global')
+
+-- For our purpose, we do not want any outlining.
+local flags = ''
+
 ebfi_font:SetFont(font, size, flags)
 
 
