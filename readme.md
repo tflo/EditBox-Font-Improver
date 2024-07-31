@@ -34,10 +34,6 @@ You can also set the font size and other things in `main.lua`. _You find more in
 
 By default, the addon changes the font only of the addons I am using or was using (see above). If you have another addon with an unsuitable font in the edit box, you can try to add the frame to the list. Find more instructions in `main.lua`.
 
-### Extras
-
-If you are using WoWLua, you will be pleased that the EBFI increases the interline spacing in the WoWLua edit box (optional).
-
 ---
 
 Feel free to post suggestions or issues in the [GitHub Issues](https://github.com/tflo/EditBox-Font-Improver/issues) of the repo!

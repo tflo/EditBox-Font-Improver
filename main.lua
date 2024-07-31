@@ -24,15 +24,6 @@ local size = 12
 -- So, if you prefer the original font in WoWLua, just set the following variable to `false`:
 local include_wowlua = true
 
--- EXTRA: Interline spacing for the WoWLua edit box:
--- WoWLua uses a line spacing of 0 (zero), which too tight for an editor that
--- displays many lines. This setting increases the line spacing. Recommended: At
--- least 1, better something in the range of 2 to 4. To use WoWLua's default
--- spacing, set the value to `nil` (without any quotes) or remove/comment the
--- line.
--- Note: This setting is independent of the above `include_wowlua`.
-local spacing_wowlua = 3
-
 -- [ End of User Config ] -----------------------------------------------------
 
 
@@ -103,10 +94,11 @@ local function setup_wowlua()
 		WowLua:UpdateFontSize(WowLua_DB.fontSize)
 	end
 
-	local spacing = tonumber(spacing_wowlua)
-	if spacing then
-		WowLuaMonoFontSpaced:SetSpacing(spacing)
-	end
+-- Disabled for the moment, since this messes up the cursor position
+-- 	local spacing = tonumber(spacing_wowlua)
+-- 	if spacing then
+-- 		WowLuaMonoFontSpaced:SetSpacing(spacing)
+-- 	end
 end
 
 

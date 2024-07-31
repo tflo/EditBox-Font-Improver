@@ -2,6 +2,10 @@ To see all commits, including alpha-version changes, go [here](https://github.co
 
 ### Releases
 
+#### 1.2.1 (2024-07-31)
+
+- I had to revert the line spacing setting for the WoWLua editbox, since this messes up the cursor position. Will be re-implemented when/if I find a solution.
+
 #### 1.2.0 (2024-07-27)
 
 - The "experimental" addition of BugSack (see 1.2.0-beta-1 notes) works fine, so this is a permanent feature now.
