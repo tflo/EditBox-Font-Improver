@@ -1,6 +1,14 @@
-To see all commits, including alpha-version changes, go [here](https://github.com/tflo/EditBox-Font-Improver/commits/master/).
+To see all commits, including all alpha changes, [*go here*](https://github.com/tflo/PetWalker/commits/master/).
 
-### Releases
+---
+
+## Releases
+
+#### 2.0.0-alpha1 (2024-10-02)
+
+- WiP!
+- Using events now to do stuff.
+- Added support for ScriptLibrary addon.
 
 #### 1.2.1 (2024-07-31)
 

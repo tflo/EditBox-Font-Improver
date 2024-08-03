@@ -1,24 +1,71 @@
-local addonName, a = ...
+local me, a = ...
+
+local db = {}
+local FLAGS = "" -- For our purpose, we do not want any outlining. Nope.
+
+
+
+local debug = true
+
+local function debugprint(...)
+	if debug then
+		local a, b = strsplit(".", GetTimePreciseSec())
+		print(format("[%s.%s] %sEBFI >>> Debug >>>\124r", a:sub(-3), b:sub(1, 3), "\124cffEE82EE"), ...)
+	end
+end
+
+local COLOR_EBFI = "|cFFD783FF"
+local COLOR_WARN = "|cnWARNING_FONT_COLOR:"
+local MSG_PRE = COLOR_EBFI .. "EBFI|r:"
+local MSG_PREFIX = COLOR_EBFI .. "EditBox Font Improver|r:"
+
+local function warnprint(...)
+	print(format("%s %sWARNING:", MSG_PREFIX, COLOR_WARN), ...)
+end
+
+local default_size = 12
+
+local defaults = {
+	macroeditors = { enable = true, size = default_size },
+	wowlua = { enable = true, size = default_size },
+	scriptlibrary = { enable = true, size = default_size },
+	bugsack = { enable = true, size = default_size },
+}
+
+local function make_subtables(src, dst)
+	for k, v in pairs(src) do
+		if type(v) == "table" then
+			dst[k] = dst[k] or {}
+			make_subtables(src[k], dst[k])
+		end
+	end
+end
 
 
 --[[===========================================================================
-	User Config
+	Defaults for the DB
 ===========================================================================]]--
 
---[[
-YOU HAVE TO CHANGE THE FONT PATH TO THE PATH OF *YOUR* DESIRED FONT.
-The game client (Retail) can only access fonts inside `../World of Warcraft/_retail_/`
-which also acts as root folder for any path. So, for example, `Fonts/MORPHEUS.ttf`
-would be a valid path, also e.g. `Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf`
-for a font you've installed for SharedMedia. But any font path outside WoW like e.g.
+local readme_for_SV = [[
+Hi there! Probably you have opened this SavedVariables file to directly edit the
+font path. Good idea! This help text is for you: ——— In fact, YOU HAVE TO CHANGE THE FONT
+PATH TO THE PATH OF *YOUR* DESIRED FONT. Otherwise it won't work! ——— The game
+client (Retail) can only access fonts inside `../World of Warcraft/_retail_/`
+which also acts as root folder for any path. So, for example,
+`Fonts/MORPHEUS.ttf` would be a valid path, also e.g.
+`Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf` for a font you've
+installed for SharedMedia. But any font path outside WoW like e.g.
 `/System/Library/Fonts/Courier New.ttf` will not work!
 ]]
 
+readme_for_SV = readme_for_SV:gsub("\n", " ")
+
 -- MANDATORY: FONT PATH: Replace the example path with the path to your desired font file:
-local font = [[Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Mono/PTM55F.ttf]]
+-- local sample_fontpath = [[Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Mono/PTM55F.ttf]]
+local sample_fontpath = [[Interface/AddOns/SharedMedia_MyMedia/font/this/is/a/sample/path.ttf]]
 
 -- Size in points: Set the desired font size here.
-local size = 12
+local size = default_size
 
 -- WoWLua alraedy uses a nice monospaced font out of the box (Vera Mono).
 -- So, if you prefer the original font in WoWLua, just set the following variable to `false`:
@@ -42,13 +89,16 @@ local include_wowlua = true
 	Create Font Object
 ===========================================================================]]--
 
--- Currently we do not need the global font object.
-local ebfi_font = CreateFont('ebfi_font_global')
+local function create_fontobj()
+	local ebfi_font = CreateFont "ebfi_font"
+	ebfi_font:SetFont(db.font, size, FLAGS)
+end
 
--- For our purpose, we do not want any outlining.
-local flags = ''
-
-ebfi_font:SetFont(font, size, flags)
+local function test_font()
+	if ebfi_font:GetFont() ~= db.font then
+		warnprint "Font path is not valid!"
+	end
+end
 
 
 --[[===========================================================================
@@ -60,16 +110,16 @@ ebfi_font:SetFont(font, size, flags)
 -- OptionalDeps. A missing addon doesn't pose a problem, as it just creates a
 -- nil value in the table, which is ignored when we iterate.
 local function setup_misc()
-	-- The addon names as noted in the comments must be declared OptionalDeps in the toc.
 	local targets = {
-		M6EditBox, -- 'M6'; edit box, title and group we leave alone.
-		ABE_MacroInput, -- 'OPie'; the edit box for custom macro buttons.
-		MacroFrameText, -- 'Blizzard_MacroUI'; also affects 'ImprovedMacroFrame'.
+		MacroFrameText, -- Blizzard_MacroUI; also affects ImprovedMacroFrame.
+-- 		M6EditBox, -- M6; it seems this frame was renamed; see next entry.
+		ABE_MacroInputEB, -- M6 and OPie; macro edit box.
 	}
 	-- We can't use `ipairs' here because a missing addon (nil) would stop iteration.
 	for _, t in pairs(targets) do
 		t:SetFontObject(ebfi_font)
 	end
+	debugprint "`setup_misc` run."
 end
 
 -- NOTE for the user:
@@ -77,6 +127,8 @@ end
 -- To find the correct frame, use `/fstack` in the game UI. This will only work
 -- if the frame is created at addon load time, and not for every addon though.
 
+-- Check out this:
+-- https://github.com/Stanzilla/WoWUIBugs/issues/581
 
 --[[===========================================================================
 	WoWLua
@@ -85,12 +137,11 @@ end
 -- We directly manipulate WoWLua's font object, otherwise we get reset when the
 -- user changes font size in WoWLua.
 -- We use the font size as actually set in the WowLua GUI.
--- Required OptionalDeps in toc: 'WowLua'
 local function setup_wowlua()
 	if not WowLuaMonoFontSpaced then return end
 	if include_wowlua then
-		WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, flags)
-		WowLuaMonoFontSpaced:SetFont(font, WowLua_DB.fontSize, flags)
+		WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, FLAGS)
+		WowLuaMonoFontSpaced:SetFont(font, WowLua_DB.fontSize, FLAGS)
 		WowLua:UpdateFontSize(WowLua_DB.fontSize)
 	end
 
@@ -106,31 +157,97 @@ end
 	BugSack (experimental)
 ===========================================================================]]--
 
--- The main frame is not created before first open, so we have to hook.
--- Required OptionalDeps in toc: 'BugSack'
 local function setup_bugsack()
+	if BugSackScrollText then
+		BugSackScrollText:SetFontObject(ebfi_font)
+	else
+		warnprint "BugSack target frame not found."
+	end
+end
+
+-- The main frame is not created before first open, so we have to hook.
+local function hook_bugsack()
 	if not BugSack then return end
-	local font_set = false
-	hooksecurefunc(BugSack, 'OpenSack', function()
-		if not font_set then -- No need to run it more than once
-			BugSackScrollText:SetFontObject(ebfi_font)
-			font_set = true
+	local done = false
+	hooksecurefunc(BugSack, "OpenSack", function()
+		if not done then
+			setup_bugsack()
+			done = true
+			debugprint "BugSack hook called."
 		end
 	end)
 end
 
 
 --[[===========================================================================
+	ScriptLibrary
+===========================================================================]]--
+
+local function setup_scriptlibrary()
+	if RuntimeEditorMainWindowCodeEditorCodeEditorEditBox then
+		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(db.font, size, FLAGS)
+	else
+		warnprint "ScriptLibrary target frame not found."
+	end
+end
+
+-- The main frame is not created before first open, so we have to hook.
+local function hook_scriptlibrary()
+	if not SlashCmdList.SCRIPTLIBRARY then return end
+	local done = false
+	hooksecurefunc(SlashCmdList, "SCRIPTLIBRARY", function()
+		if not done then
+			setup_scriptlibrary()
+			done = true
+			debugprint "ScriptLibrary hook called."
+		end
+	end)
+end
+
+-- NOTE:
+-- I haven't found a way to grab the font size that is set in ScriptLibrary.
+-- ScriptLibrary wipes its global DB after load, and practically all functions and variables are private.
+
+--[[===========================================================================
 	Run the Stuff
 ===========================================================================]]--
 
-setup_misc()
-setup_wowlua()
-setup_bugsack()
+local ef = CreateFrame "Frame"
 
--- NOTE: We could also run this in an event script at PLAYER_LOGIN, but the
--- OptionalDeps system seems to work fine so far.
+local function on_event(self, event, ...)
+	if event == "ADDON_LOADED" then
+		if ... == me then
+			self:UnregisterEvent "ADDON_LOADED"
+			EBFI_DB = setmetatable(EBFI_DB or {}, { __index = defaults })
+			db = EBFI_DB
+			make_subtables(defaults, db)
+			db["Read Me!"] = readme_for_SV -- Populate SV file for user guidance.
+			db.font = db.font or sample_fontpath -- Populate SV file for user guidance.
+			create_fontobj()
+		end
+	elseif event == "VARIABLES_LOADED" then
+		setup_wowlua()
+		hook_bugsack()
+		hook_scriptlibrary()
+		setup_misc()
+	elseif event == "PLAYER_LOGIN" then
+		C_Timer.After(30, test_font)
+	end
+end
 
+ef:RegisterEvent "ADDON_LOADED"
+ef:RegisterEvent "PLAYER_LOGIN"
+ef:RegisterEvent "VARIABLES_LOADED"
+ef:SetScript("OnEvent", on_event)
+
+-- SLASH_EDITBOXFONTIMPROVER1 = "/editboxfontimprover"
+-- SLASH_EDITBOXFONTIMPROVER2 = "/ebfi"
+-- SlashCmdList["EDITBOXFONTIMPROVER"] = function(msg)
+-- 	if msg == "runsl" then
+-- 		setup_scriptlibrary()
+-- 	elseif msg == "runcmd" then
+-- 	end
+-- end
 
 
 --[[ License ===================================================================
