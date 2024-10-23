@@ -5,7 +5,7 @@ local FLAGS = "" -- For our purpose, we do not want any outlining. Nope.
 
 
 
-local debug = true
+local debug = false
 
 local function debugprint(...)
 	if debug then
