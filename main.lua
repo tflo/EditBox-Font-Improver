@@ -226,10 +226,10 @@ local function on_event(self, event, ...)
 			create_fontobj()
 		end
 	elseif event == "VARIABLES_LOADED" then
-		setup_wowlua()
-		hook_bugsack()
-		hook_scriptlibrary()
-		setup_misc()
+		if db.wowlua then setup_wowlua() end
+		if db.bugsack then hook_bugsack() end
+		if db.scriptlibrary then hook_scriptlibrary() end
+		if db.macroeditors then setup_misc() end
 	elseif event == "PLAYER_LOGIN" then
 		C_Timer.After(30, test_font)
 	end
