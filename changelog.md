@@ -1,6 +1,11 @@
 To see all commits, including alpha-version changes, go [here](https://github.com/tflo/EditBox-Font-Improver/commits/master/).
+To see all commits, including all alpha changes, [*go here*](https://github.com/tflo/PetWalker/commits/master/).
 
 ### Releases
+
+#### 1.2.2 (2024-20-23)
+
+- toc bump, no changes.
 
 #### 1.2.1 (2024-07-31)
 
