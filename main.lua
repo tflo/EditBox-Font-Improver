@@ -71,19 +71,6 @@ local size = default_size
 -- So, if you prefer the original font in WoWLua, just set the following variable to `false`:
 local include_wowlua = true
 
--- [ End of User Config ] -----------------------------------------------------
-
-
--- TIP: After setting your font path and the other config values, copy the
--- Config section to a safe place. That way you can quickly reapply your values
--- when the addon is updated. (But do not blindly paste the entire saved config,
--- as variable names may have changed, or configs may have been added/removed in
--- the new version!)
-
--- If this addon reaches a higher download number, I will consider adding a
--- database (SavedVariables) and a way to configure it in-game. But not for now,
--- as it seems to be used only by me and a handful of others ;)
-
 
 --[[===========================================================================
 	Create Font Object
@@ -102,7 +89,7 @@ end
 
 
 --[[===========================================================================
-	Straightforward Frames
+	Straightforward Frames (macro editors)
 ===========================================================================]]--
 
 -- Easy stuff, where we can simply apply our font object.
@@ -154,7 +141,7 @@ end
 
 
 --[[===========================================================================
-	BugSack (experimental)
+	BugSack
 ===========================================================================]]--
 
 local function setup_bugsack()
