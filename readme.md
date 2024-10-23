@@ -1,5 +1,7 @@
 # EditBox Font Improver
 
+***Beta Note: This is the description for the 1.x.x release version. For the current 2.x.x-beta or alpha versions (Oct 2024), see the changelog!***
+
 ## Summary
 
 The addon lets you set your custom font and font size for the edit boxes of:

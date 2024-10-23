@@ -4,11 +4,21 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
-#### 2.0.0-alpha1 (2024-10-02)
+#### 2.0.0-beta1 (2024-10-17)
 
 - WiP!
+- You have to set your font path now in the SavedVariables file.
+    - This is a QoL improvement for you, as your set font path will be persistent through addon updates now.
+    - The SavedVariables file is located at: `World of Warcraft/_retail_/WTF/Account/<accountNumber>/SavedVariables/EditBox-Font-Improver.lua`.
+    - If it isn’t there, then reload the UI or log out while EBFI is loaded. It will be created then.
+    - What you are looking for is the value of the `["font"]` key in the SavedVariables file.
+    - The initial value is a sample font path string. Just replace it with your actual font path.
+    - Edit the SavedVariables file only while you are logged out! Otherwise the game client will overwrite your changes at logout/reload.
+    - Use a simple Plain Text Editor to edit the file. Do not use a Word Processor (e.g. Pages, MS Word)!
+    - You find some instructions in the SavedVariables file itself (`["Read Me!"]`)
+    - You can no longer set the font path in the main.lua file!
+- Added support for the ScriptLibrary addon.
 - Using events now to do stuff.
-- Added support for ScriptLibrary addon.
 
 #### 1.2.1 (2024-07-31)
 
