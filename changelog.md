@@ -1,8 +1,21 @@
-To see all commits, including all alpha changes, [*go here*](https://github.com/tflo/PetWalker/commits/master/).
+To see all commits, including all alpha changes, [*go here*](https://github.com/tflo/EditBox-Font-Improver/commits/master/).
 
 ---
 
 ## Releases
+
+#### 2.0.0-beta3 (2024-12-19)
+
+- toc bump to 110007 (WoW Retail 11.0.7).
+- No content changes. If I notice that the addon needs an update for 11.0.7, I will release one.
+- I currently do not have much time to play, so if you notice weird/unusual behavior with 11.0.7 and don’t see an update from my part, please let me know [here](https://github.com/tflo/EditBox-Font-Improver/issues).
+
+#### 2.0.0-beta2 (2024-10-23)
+
+- If not yet done, read the big change notes from 2.0.0-beta1 (2024-10-17) below!
+- Using the enable switches from the DB now.
+- Removed some old comments.
+- Deactivated debug mode.
 
 #### 2.0.0-beta1 (2024-10-17)
 

@@ -1,6 +1,6 @@
-## Interface: 110005
+## Interface: 110007
 ## Title: EditBox Font Improver
-## Version: 2.0.0-alpha1
+## Version: 2.0.0-beta3
 ## IconTexture: Interface\AddOns\EditBox-Font-Improver\icon.blp
 ## Notes: Lets you set your custom font, font size and style for the edit boxes of: Blizz's macro frame, OPie, M6, and WoWLua.
 ## Author: Mot (@6mot, @tflo)
