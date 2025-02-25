@@ -31,6 +31,7 @@ local default_fontpath = [[Interface/AddOns/EditBox-Font-Improver/fonts/pt-mono_
 local default_size = 12
 
 local defaults = {
+	-- Individual sizes are not (yet) enabled.
 	macroeditors = { enable = true, size = default_size },
 	wowlua = { enable = true, size = default_size },
 	scriptlibrary = { enable = true, size = default_size },
@@ -58,6 +59,8 @@ folder and set the path like 'Interface/AddOns/MyFont.ttf'.
 
 readme_for_SV = readme_for_SV:gsub("\n", " ")
 
+-- We have not yet enabled individual sizes;
+-- and probably it doesn't make much sense.
 local size = default_size
 
 
