@@ -60,10 +60,6 @@ readme_for_SV = readme_for_SV:gsub("\n", " ")
 
 local size = default_size
 
--- WoWLua alraedy uses a nice monospaced font out of the box (Vera Mono).
--- So, if you prefer the original font in WoWLua, just set the following variable to `false`:
-local include_wowlua = true
-
 
 --[[===========================================================================
 	Create Font Object
@@ -119,11 +115,9 @@ end
 -- We use the font size as actually set in the WowLua GUI.
 local function setup_wowlua()
 	if not WowLuaMonoFontSpaced then return end
-	if include_wowlua then
-		WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, FLAGS)
-		WowLuaMonoFontSpaced:SetFont(font, WowLua_DB.fontSize, FLAGS)
-		WowLua:UpdateFontSize(WowLua_DB.fontSize)
-	end
+	WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, FLAGS)
+	WowLuaMonoFontSpaced:SetFont(font, WowLua_DB.fontSize, FLAGS)
+	WowLua:UpdateFontSize(WowLua_DB.fontSize)
 
 -- Disabled for the moment, since this messes up the cursor position
 -- 	local spacing = tonumber(spacing_wowlua)
@@ -206,10 +200,10 @@ local function on_event(self, event, ...)
 			create_fontobj()
 		end
 	elseif event == "VARIABLES_LOADED" then
-		if db.wowlua then setup_wowlua() end
-		if db.bugsack then hook_bugsack() end
-		if db.scriptlibrary then hook_scriptlibrary() end
-		if db.macroeditors then setup_misc() end
+		if db.wowlua.enable then setup_wowlua() end
+		if db.bugsack.enable then hook_bugsack() end
+		if db.scriptlibrary.enable then hook_scriptlibrary() end
+		if db.macroeditors.enable then setup_misc() end
 	elseif event == "PLAYER_LOGIN" then
 		C_Timer.After(20, test_font)
 	end
