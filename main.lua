@@ -24,18 +24,18 @@ local function warnprint(...)
 end
 
 --[[===========================================================================
-	Defaults for the DB
+	Defaults
 ===========================================================================]]--
 
 local default_fontpath = [[Interface/AddOns/EditBox-Font-Improver/fonts/pt-mono_regular.ttf]]
-local default_size = 12
+local default_fontsize = 12
 
 local defaults = {
 	-- Individual sizes are not (yet) enabled.
-	macroeditors = { enable = true, size = default_size },
-	wowlua = { enable = true, size = default_size },
-	scriptlibrary = { enable = true, size = default_size },
-	bugsack = { enable = true, size = default_size },
+	macroeditors = { enable = true, fontsize = default_fontsize },
+	wowlua = { enable = true, fontsize = default_fontsize },
+	scriptlibrary = { enable = true, fontsize = default_fontsize },
+	bugsack = { enable = true, fontsize = default_fontsize },
 }
 
 local function make_subtables(src, dst)
@@ -59,10 +59,6 @@ folder and set the path like 'Interface/AddOns/MyFont.ttf'.
 
 readme_for_SV = readme_for_SV:gsub("\n", " ")
 
--- We have not yet enabled individual sizes;
--- and probably it doesn't make much sense.
-local size = default_size
-
 
 --[[===========================================================================
 	Create Font Object
@@ -70,7 +66,7 @@ local size = default_size
 
 local function create_fontobj()
 	local ebfi_font = CreateFont "ebfi_font"
-	ebfi_font:SetFont(db.font, size, FLAGS)
+	ebfi_font:SetFont(db.font, db.default_fontsize, FLAGS)
 end
 
 local function test_font()
@@ -162,7 +158,7 @@ end
 
 local function setup_scriptlibrary()
 	if RuntimeEditorMainWindowCodeEditorCodeEditorEditBox then
-		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(db.font, size, FLAGS)
+		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(db.font, db.default_fontsize, FLAGS)
 	else
 		warnprint "ScriptLibrary target frame not found."
 	end
@@ -200,6 +196,7 @@ local function on_event(self, event, ...)
 			make_subtables(defaults, db)
 			db["Read Me!"] = readme_for_SV -- Populate SV file for user guidance.
 			db.font = db.font or default_fontpath -- Populate SV file with example path.
+			db.default_fontsize = db.default_fontsize or default_fontsize -- Populate SV file with example path.
 			create_fontobj()
 		end
 	elseif event == "VARIABLES_LOADED" then
