@@ -62,7 +62,7 @@ readme_for_SV = readme_for_SV:gsub("\n", " ")
 
 -- MANDATORY: FONT PATH: Replace the example path with the path to your desired font file:
 -- local sample_fontpath = [[Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Mono/PTM55F.ttf]]
-local sample_fontpath = [[Interface/AddOns/SharedMedia_MyMedia/font/this/is/a/sample/path.ttf]]
+local default_fontpath = [[Interface/AddOns/EditBox-Font-Improver/fonts/pt-mono_regular.ttf]]
 
 -- Size in points: Set the desired font size here.
 local size = default_size
@@ -209,7 +209,7 @@ local function on_event(self, event, ...)
 			db = EBFI_DB
 			make_subtables(defaults, db)
 			db["Read Me!"] = readme_for_SV -- Populate SV file for user guidance.
-			db.font = db.font or sample_fontpath -- Populate SV file for user guidance.
+			db.font = db.font or default_fontpath -- Populate SV file with example path.
 			create_fontobj()
 		end
 	elseif event == "VARIABLES_LOADED" then
