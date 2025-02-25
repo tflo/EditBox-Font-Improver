@@ -1,6 +1,7 @@
-local me, a = ...
 
-local db = {}
+local me, A = ...
+local db
+
 local FLAGS = "" -- For our purpose, we do not want any outlining. Nope.
 
 
@@ -71,7 +72,7 @@ end
 
 local function test_font()
 	if ebfi_font:GetFont() ~= db.font then
-		warnprint "Font path is not valid! You have to set a valid font path in the addon's SavedVariables file. Check out the addon's readme/description for more information."
+		warnprint "Font path is not valid! Make sure there is a valid font path set in the addon's SavedVariables file. Check out the addon's readme/description for more information."
 	end
 end
 
