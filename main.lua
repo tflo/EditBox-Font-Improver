@@ -23,6 +23,11 @@ local function warnprint(...)
 	print(format("%s %sWARNING:", MSG_PREFIX, COLOR_WARN), ...)
 end
 
+--[[===========================================================================
+	Defaults for the DB
+===========================================================================]]--
+
+local default_fontpath = [[Interface/AddOns/EditBox-Font-Improver/fonts/pt-mono_regular.ttf]]
 local default_size = 12
 
 local defaults = {
@@ -42,26 +47,17 @@ local function make_subtables(src, dst)
 end
 
 
---[[===========================================================================
-	Defaults for the DB
-===========================================================================]]--
-
 local readme_for_SV = [[
 Hi there! Probably you have opened this SavedVariables file to directly edit the font path. Good idea! This help text is
-for you: ——— The default path ["font"] points to the PT Mono font, inside the "fonts" folder of the addon itself. ———
-The game can load any font that is located in the "World of Warcraft/_retail_/Interface/AddOns" directory, where
-"Interface" serves as root folder for the path. ——— So, for example, to use a font that you already have installed for
-SharedMedia: "Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf". But you can also just toss the font into the AddOns
-folder and set the path like "Interface/AddOns/MyFont.ttf".
+for you: ——— The default path ['font'] points to the PT Mono font, inside the 'fonts' folder of the addon itself. ———
+The addon can load any font that is located in the World of 'Warcraft/_retail_/Interface/AddOns' directory, where
+'Interface' serves as root folder for the path. ——— So, for example, to use a font that you already have installed for
+SharedMedia: 'Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf'. But you can also just toss the font into the AddOns
+folder and set the path like 'Interface/AddOns/MyFont.ttf'.
 ]]
 
 readme_for_SV = readme_for_SV:gsub("\n", " ")
 
--- MANDATORY: FONT PATH: Replace the example path with the path to your desired font file:
--- local sample_fontpath = [[Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Mono/PTM55F.ttf]]
-local default_fontpath = [[Interface/AddOns/EditBox-Font-Improver/fonts/pt-mono_regular.ttf]]
-
--- Size in points: Set the desired font size here.
 local size = default_size
 
 -- WoWLua alraedy uses a nice monospaced font out of the box (Vera Mono).
@@ -215,7 +211,7 @@ local function on_event(self, event, ...)
 		if db.scriptlibrary then hook_scriptlibrary() end
 		if db.macroeditors then setup_misc() end
 	elseif event == "PLAYER_LOGIN" then
-		C_Timer.After(30, test_font)
+		C_Timer.After(20, test_font)
 	end
 end
 
@@ -236,7 +232,7 @@ ef:SetScript("OnEvent", on_event)
 
 --[[ License ===================================================================
 
-	Copyright © 2022-2024 Thomas Floeren
+	Copyright © 2022-2025 Thomas Floeren
 
 	This file is part of EditBox Font Improver.
 
