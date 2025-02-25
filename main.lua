@@ -47,15 +47,12 @@ end
 ===========================================================================]]--
 
 local readme_for_SV = [[
-Hi there! Probably you have opened this SavedVariables file to directly edit the
-font path. Good idea! This help text is for you: ——— In fact, YOU HAVE TO CHANGE THE FONT
-PATH TO THE PATH OF *YOUR* DESIRED FONT. Otherwise it won't work! ——— The game
-client (Retail) can only access fonts inside `../World of Warcraft/_retail_/`
-which also acts as root folder for any path. So, for example,
-`Fonts/MORPHEUS.ttf` would be a valid path, also e.g.
-`Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf` for a font you've
-installed for SharedMedia. But any font path outside WoW like e.g.
-`/System/Library/Fonts/Courier New.ttf` will not work!
+Hi there! Probably you have opened this SavedVariables file to directly edit the font path. Good idea! This help text is
+for you: ——— The default path ["font"] points to the PT Mono font, inside the "fonts" folder of the addon itself. ———
+The game can load any font that is located in the "World of Warcraft/_retail_/Interface/AddOns" directory, where
+"Interface" serves as root folder for the path. ——— So, for example, to use a font that you already have installed for
+SharedMedia: "Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf". But you can also just toss the font into the AddOns
+folder and set the path like "Interface/AddOns/MyFont.ttf".
 ]]
 
 readme_for_SV = readme_for_SV:gsub("\n", " ")
