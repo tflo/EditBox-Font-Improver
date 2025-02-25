@@ -83,7 +83,7 @@ end
 
 local function test_font()
 	if ebfi_font:GetFont() ~= db.font then
-		warnprint "Font path is not valid!"
+		warnprint "Font path is not valid! You have to set a valid font path in the addon's SavedVariables file. Check out the addon's readme/description for more information."
 	end
 end
 
