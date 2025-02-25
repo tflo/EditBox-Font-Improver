@@ -4,6 +4,19 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 2.0.1 (2025-02-26)
+
+- Turned the beta into release: See 2.0.0-beta change notes! In short:
+    - You set the font path now in the SavedVariables file. (This means it will be preserved across future addon updates.)
+    - If coming from an older version (including betas), delete your existing SavedVariables file while logged out!
+- The addon comes now with a preinstalled font (PT Mono) and pre-set path.
+- In the SavedVariables file, you can now disable the addon for individual applications (macro editors, WoWLua, ScriptLibrary, BugSack).
+- Also in the SavedVariables file, you can now set the font size.
+- More informative “font path is not valid” message.
+- Updated readme/description.
+- Added category to toc.
+- toc bump to 110100.
+
 #### 2.0.0-beta3 (2024-12-19)
 
 - toc bump to 110007 (WoW Retail 11.0.7).

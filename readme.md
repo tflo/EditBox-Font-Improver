@@ -1,6 +1,9 @@
 # EditBox Font Improver
 
-***Beta Note: This is the description for the 1.x.x release version. For the current 2.x.x-beta or alpha versions (Oct 2024), see the changelog!***
+***Note on version 2 (2025-02-26):****
+
+- **If you are coming from version 1.x or the 2.0.0-beta versions, please delete your SavedVariables file while being logged out!** (You might get a one-time SV loading error after deleting. This is harmless.)
+- **Read the completely rewritten “Setup” section below, since almost everything has changed!**
 
 ## Summary
 
@@ -9,32 +12,47 @@ The addon lets you set your custom font and font size for the edit boxes of:
 - Blizz’s macro frame: Edit box
 - [M6](https://www.curseforge.com/wow/addons/m6x): Edit box
 - [OPie](https://www.curseforge.com/wow/addons/opie): The edit box to write a macro for a button
-- [WowLua](https://www.wowinterface.com/downloads/info7366-WowLua.html): Output and edit box
+- [WowLua](https://www.curseforge.com/wow/addons/wowlua): Output and edit box
+- [ScriptLibrary](https://www.curseforge.com/wow/addons/script-library): Edit box
 - [BugSack](https://www.curseforge.com/wow/addons/bugsack): Main window text (not an edit box, but it contains code that should be readable)
 
-The main point is that in these macro/script edit boxes we want a clean, monospaced font, and not Friz Quadrata, Arial Narrow, or similar nonsense. (WoWLua is an exception, as it already uses an appropriate font. See the comments in `main.lua` for how to exclude WoWLua from the font replacement.)
+The main point is that in these macro/code boxes we want a clean, monospaced font, and not Friz Quadrata, Arial Narrow, or similar nonsense. (WoWLua is an exception, as it already uses an appropriate font. See the comments in `main.lua` for how to exclude WoWLua from the font replacement.)
 
-## Usage
+## Setup
 
-### First-time setup
+### Font Path
 
-Before using the addon the first time, **you have to set the path to your desired font in the `main.lua` file of the addon.** This and other settings are in the Config section, which is very well commented.
+By default, the addon comes with the PT Mono font and the font path is pre-set to that font.
+
+To use a different font, **you have to set the path to your desired font in the SavedVariables file of the addon.** The SavedVariables file is located at  
+`World of Warcraft/_retail_/WTF/Account/[number]/SavedVariables/EditBox-Font-Improver.lua`.
+
+To edit and save the SavedVariables file, you have to be logged out (though not necessary to quit the game).
+
+You can set the font path to anything inside the `Interface/AddOns` folder. Examples:
 
 If you use [SharedMedia](https://www.curseforge.com/wow/addons/sharedmedia), then your fonts will usually be in…
 
 - `Interface/AddOns/SharedMedia/fonts/` or
-- `Interface/AddOns/SharedMedia_MyMedia/`
+- `Interface/AddOns/SharedMedia_MyMedia/` or a similar location
 
-If not, anything inside the client folder should be accessible, for example in `World of Warcraft/_retail_/Fonts/` or `World of Warcraft/_retail_/Interface/MyNewFontFolder/`.
-The path then would be `Fonts/myfont.ttf` or `Interface/MyNewFontFolder/myfont.ttf`.
+You can also just toss a font file into the AddOns folder and set the path like `Interface/AddOns/MyFont.ttf`.
 
-You can also set the font size and other things in `main.lua`. _You find more instructions there._
+Note that `Interface` must be the root folder of any path. 
 
-**To make it clear (as this is different from most addons): You HAVE TO edit the Config section in the `main.lua` file in order to use the addon. Setting the font path there is not optional!**
+In the SavedVariables file itself you will also find a small “Read Me!” text with instructions for the font path.
 
-### Adding more addons
+### Enable/Disable
 
-By default, the addon changes the font only of the addons I am using or was using (see above). If you have another addon with an unsuitable font in the edit box, you can try to add the frame to the list. Find more instructions in `main.lua`.
+By default, the addon changes the font of the above listed addons. To deactivate the font replacement for an addon, you have to set the `enable` key of that addon to `false` in the SavedVariables files. (As with the font setup, you have to be logged out while editing/saving the SavedVariables file.)
+
+The `macroeditors` key affects Blizz’s macro frame, M6, and OPie. The other addons (WoWLua, BugSack, ScriptLibrary) have individual keys.
+
+### Font Size
+
+Change the value (default 12) of the `default_fontsize` key in the SavedVariables file to change the font size for all affected addons. (As with the font setup, you have to be logged out while editing/saving the SavedVariables file.)
+
+In the SavedVariables file you might also see a `fontsize` key for the individual addons. However, individual font sizes are not enabled at this moment (and probably it wouldn’t make much sense).
 
 ---
 
