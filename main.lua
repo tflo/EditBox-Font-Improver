@@ -196,8 +196,8 @@ local function on_event(self, event, ...)
 			db = EBFI_DB
 			make_subtables(defaults, db)
 			db["Read Me!"] = readme_for_SV -- Populate SV file for user guidance.
-			db.font = db.font or default_fontpath -- Populate SV file with example path.
-			db.default_fontsize = db.default_fontsize or default_fontsize -- Populate SV file with example path.
+			db.font = db.font or default_fontpath -- Populate SV file for user.
+			db.default_fontsize = db.default_fontsize or default_fontsize -- Populate SV file for user.
 			create_fontobj()
 		end
 	elseif event == "VARIABLES_LOADED" then

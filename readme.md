@@ -2,7 +2,9 @@
 
 ***Note on version 2 (2025-02-26):****
 
-- **If you are coming from version 1.x or the 2.0.0-beta versions, please delete your SavedVariables file while being logged out!** (You might get a one-time SV loading error after deleting. This is harmless.)
+- **If you are coming from version 1.x or the 2.0.0-beta versions, please delete your SavedVariables file while being logged out!** (You might or might not get a one-time SV loading error after deleting. Both cases are harmless.)
+    - See the “Setup” section below if you don’t know where to find the SV file.
+    - If you have been using one of the 2.0.0-betas, you might want to copy your custom font path before deleting the SV file.
 - **Read the completely rewritten “Setup” section below, since almost everything has changed!**
 
 ## Summary
