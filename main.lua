@@ -28,7 +28,7 @@ end
 	Defaults
 ===========================================================================]]--
 
-local default_fontpath = [[Interface/AddOns/EditBox-Font-Improver/fonts/pt-mono_regular.ttf]]
+local default_fontpath = [[Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf]]
 local default_fontsize = 12
 
 local defaults = {
