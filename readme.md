@@ -1,6 +1,6 @@
 # EditBox Font Improver
 
-***Note on version 2 (2025-02-26):****
+***Note on version 2 (2025-02-26):***
 
 - **If you are coming from version 1.x or the 2.0.0-beta versions, please delete your SavedVariables file while being logged out!** (You might or might not get a one-time SV loading error after deleting. Both cases are harmless.)
     - See the “Setup” section below if you don’t know where to find the SV file.
@@ -18,7 +18,7 @@ The addon lets you set your custom font and font size for the edit boxes of:
 - [ScriptLibrary](https://www.curseforge.com/wow/addons/script-library): Edit box
 - [BugSack](https://www.curseforge.com/wow/addons/bugsack): Main window text (not an edit box, but it contains code that should be readable)
 
-The main point is that in these macro/code boxes we want a clean, monospaced font, and not Friz Quadrata, Arial Narrow, or similar nonsense. (WoWLua is an exception, as it already uses an appropriate font. See the comments in `main.lua` for how to exclude WoWLua from the font replacement.)
+The main point is that in these macro/code boxes we want a clean, monospaced font, and not Friz Quadrata, Arial Narrow, or similar nonsense. (WoWLua is an exception, as it already uses a monospaced font. EBFI allows you to replace it with the one of your choice.)
 
 ## Setup
 
