@@ -4,6 +4,10 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 2.0.3 (2025-04-24)
+
+- fixed missing toc bump.
+
 #### 2.0.2 (2025-04-23)
 - toc bump to 110105.
     - Seems to work fine, but not done many tests.
