@@ -4,6 +4,10 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 2.0.7 (2025-10-07)
+
+- toc bumped to 110205, no changes.
+
 #### 2.0.6 (2025-09-14)
 
 - Standardized licensing information in the files.
