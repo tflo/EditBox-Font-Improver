@@ -203,34 +203,39 @@ end
 	Run the Stuff
 ===========================================================================]]--
 
-local ef = CreateFrame "Frame"
+local ef = CreateFrame("Frame", MYNAME .. "_eventframe")
 
-local function on_event(self, event, ...)
-	if event == "ADDON_LOADED" then
-		if ... == me then
-			self:UnregisterEvent "ADDON_LOADED"
-			EBFI_DB = setmetatable(EBFI_DB or {}, { __index = defaults })
-			db = EBFI_DB
-			make_subtables(defaults, db)
-			db["Read Me!"] = readme_for_SV -- Populate SV file for user guidance.
-			db.font = db.font or default_fontpath -- Populate SV file for user.
-			db.default_fontsize = db.default_fontsize or default_fontsize -- Populate SV file for user.
-			create_fontobj()
-		end
-	elseif event == "VARIABLES_LOADED" then
-		if db.wowlua.enable then setup_wowlua() end
-		if db.bugsack.enable then hook_bugsack() end
-		if db.scriptlibrary.enable then hook_scriptlibrary() end
-		if db.macroeditors.enable then setup_misc() end
-	elseif event == "PLAYER_LOGIN" then
-		C_Timer.After(20, test_font)
+local function PLAYER_ENTERING_WORLD(is_login, is_reload)
+	if is_login or is_reload then
+		C_Timer.After(15, validate_fontpath)
+		ef:UnregisterEvent("PLAYER_ENTERING_WORLD")
 	end
 end
 
-ef:RegisterEvent "ADDON_LOADED"
-ef:RegisterEvent "PLAYER_LOGIN"
-ef:RegisterEvent "VARIABLES_LOADED"
-ef:SetScript("OnEvent", on_event)
+local function PLAYER_LOGIN()
+	if db.wowlua.enable and C_AddOns_IsAddOnLoaded "WowLua" then setup_wowlua() end
+	if db.bugsack.enable and C_AddOns_IsAddOnLoaded "BugSack" then hook_bugsack() end
+	if db.scriptlibrary.enable and C_AddOns_IsAddOnLoaded "ScriptLibrary" then
+		hook_scriptlibrary()
+	end
+	if db.macroeditors.enable then setup_misc() end
+end
+
+local event_handlers = {
+	["PLAYER_ENTERING_WORLD"] = PLAYER_ENTERING_WORLD,
+	["PLAYER_LOGIN"] = PLAYER_LOGIN,
+-- 	["VARIABLES_LOADED"] = VARIABLES_LOADED,
+}
+
+for event in pairs(event_handlers) do
+	ef:RegisterEvent(event)
+end
+
+ef:SetScript("OnEvent", function(_, event, ...)
+	event_handlers[event](...) -- We do not want a nil check here
+end)
+
+---
 
 -- SLASH_EDITBOXFONTIMPROVER1 = "/editboxfontimprover"
 -- SLASH_EDITBOXFONTIMPROVER2 = "/ebfi"
