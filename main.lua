@@ -18,6 +18,8 @@ end
 local CLR_EBFI = "ffD783FF"
 local CLR_WARN = WARNING_FONT_COLOR
 local MSG_PREFIX = WrapTextInColorCode("EditBox Font Improver:", CLR_EBFI)
+local FONTPATH_WARNING = RED_FONT_COLOR:WrapTextInColorCode("Font path is not valid!")
+	.. " Make sure there is a valid font path set in the addon's SavedVariables file. Check out the addon's readme/description for more information."
 
 -- We opt to not raise an error if a font cannot be set, and just print a one-time warning.
 -- The user will notice that the font is not set when they open the relevant addon.
@@ -84,10 +86,7 @@ create_fontobj()
 
 local function validate_fontpath()
 	if ebfi_font:GetFont() == db.font then return true end
-	warnprint(
-		RED_FONT_COLOR:WrapTextInColorCode("Font path is not valid!")
-			.. " Make sure there is a valid font path set in the addon's SavedVariables file. Check out the addon's readme/description for more information."
-	)
+	warnprint(FONTPATH_WARNING)
 end
 
 
@@ -217,14 +216,12 @@ end
 
 local ef = CreateFrame("Frame", MYNAME .. "_eventframe")
 
-local function PLAYER_ENTERING_WORLD(is_login, is_reload)
-	if is_login or is_reload then
-		C_Timer.After(15, validate_fontpath)
-		ef:UnregisterEvent("PLAYER_ENTERING_WORLD")
-	end
-end
-
 local function PLAYER_LOGIN()
+	if not validate_fontpath() then
+		-- Print the msg once more when login chat spam is over.
+		C_Timer.After(25, function() warnprint(FONTPATH_WARNING) end)
+		return
+	end
 	if db.wowlua.enable and C_AddOns_IsAddOnLoaded "WowLua" then setup_wowlua() end
 	if db.bugsack.enable and C_AddOns_IsAddOnLoaded "BugSack" then hook_bugsack() end
 	if db.scriptlibrary.enable and C_AddOns_IsAddOnLoaded "ScriptLibrary" then
@@ -234,17 +231,16 @@ local function PLAYER_LOGIN()
 end
 
 local event_handlers = {
-	["PLAYER_ENTERING_WORLD"] = PLAYER_ENTERING_WORLD,
 	["PLAYER_LOGIN"] = PLAYER_LOGIN,
--- 	["VARIABLES_LOADED"] = VARIABLES_LOADED,
 }
 
 for event in pairs(event_handlers) do
 	ef:RegisterEvent(event)
 end
 
+
 ef:SetScript("OnEvent", function(_, event, ...)
-	event_handlers[event](...) -- We do not want a nil check here
+	event_handlers[event](...) ---@diagnostic disable-line: redundant-parameter
 end)
 
 ---
