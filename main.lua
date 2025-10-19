@@ -48,7 +48,7 @@ local defaults = {
 	scriptlibrary = {
 		enable = true,
 		fontsize = nil,
-		addon_fontsize = false,
+		addon_fontsize = true,
 	},
 	bugsack = {
 		enable = true,
@@ -196,13 +196,14 @@ end
 	ScriptLibrary
 ===========================================================================]]--
 
+-- https://www.curseforge.com/wow/addons/script-library
+
 local function setup_scriptlibrary()
 	if RuntimeEditorMainWindowCodeEditorCodeEditorEditBox then
-		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(
-			db.font,
-			db.default_fontsize,
-			FLAGS
-		)
+		local size = db.scriptlibrary.addon_fontsize
+				and tonumber((select(2, RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:GetFont())))
+			or db.default_fontsize
+		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(db.font, size, FLAGS)
 	else
 		warnprint "ScriptLibrary target frame not found. Could not set font."
 	end
