@@ -42,22 +42,22 @@ local defaults = {
 	macroeditors = {
 		enable = true,
 		fontsize = nil,
-		addon_fontsize = false,
+		ownsize = false,
 	},
 	wowlua = {
 		enable = true,
 		fontsize = nil,
-		addon_fontsize = true,
+		ownsize = true,
 	},
 	scriptlibrary = {
 		enable = true,
 		fontsize = nil,
-		addon_fontsize = true,
+		ownsize = true,
 	},
 	bugsack = {
 		enable = true,
 		fontsize = nil,
-		addon_fontsize = true,
+		ownsize = true,
 	},
 	["Read Me!"] = "Hi there! Probably you have opened this SavedVariables file to directly edit the font path. Good idea! This help text is for you: ——— The default path ['font'] points to the PT Mono font, inside the 'fonts' folder of the addon itself. ——— The addon can load any font that is located in the World of 'Warcraft/_retail_/Interface/AddOns' directory, where 'Interface' serves as root folder for the path. ——— So, for example, to use a font that you already have installed for SharedMedia: 'Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf'. But you can also just toss the font into the AddOns folder and set the path like 'Interface/AddOns/MyFont.ttf'."
 }
@@ -92,20 +92,24 @@ local function create_fontobj()
 	warnprint(FONTPATH_WARNING)
 end
 
-local state = {
+local addons = {
 	macroeditors = {
+		has_sizecfg = false,
 		loaded = true,
 		setup_done = false,
 	},
 	wowlua = {
+		has_sizecfg = true,
 		loaded = false,
 		setup_done = false,
 	},
 	scriptlibrary = {
+		has_sizecfg = true,
 		loaded = false,
 		setup_done = false,
 	},
 	bugsack = {
+		has_sizecfg = true,
 		loaded = false,
 		setup_done = false,
 	},
@@ -122,17 +126,18 @@ local state = {
 -- The frames are created at load time, so no issues, if the addons are
 -- OptionalDeps. A missing addon doesn't pose a problem, as it just creates a
 -- nil value in the table, which is ignored when we iterate.
-local function setup_macroeditors()
-	local targets = {
+function addons.macroeditors.setup()
+	local t = {
 		MacroFrameText, -- Blizzard_MacroUI; also affects ImprovedMacroFrame.
 -- 		M6EditBox, -- M6; it seems this frame was renamed; see next entry.
 		ABE_MacroInputEB, -- M6 and OPie; macro edit box.
 	}
 	-- We can't use `ipairs' here because a missing addon (nil) would stop iteration.
-	for _, t in pairs(targets) do
-		t:SetFontObject(ebfi_font)
+	for _, v in pairs(t) do
+	print(v:GetFont())
+		v:SetFontObject(ebfi_font)
 	end
-	state.macroeditors.setup_done = true
+	addons.macroeditors.setup_done = true
 	debugprint "Setup for misc macro editors run."
 end
 
@@ -154,14 +159,14 @@ end
 -- We directly manipulate WoWLua's font object, otherwise we get reset when the
 -- user changes font size in WoWLua.
 -- We use the font size as actually set in the WowLua GUI.
-local function setup_wowlua()
+function addons.wowlua.setup()
 	if WowLuaMonoFontSpaced then
-		local size = db.wowlua.addon_fontsize and WowLua_DB.fontSize or db.default_fontsize
+		local size = db.wowlua.ownsize and WowLua_DB.fontSize or db.default_fontsize
 		WowLuaMonoFont:SetFont(db.font, size, FLAGS)
 		WowLuaMonoFontSpaced:SetFont(db.font, size, FLAGS)
 		-- Needed to apply the font (not only the size)
 		WowLua:UpdateFontSize(size)
-		state.wowlua.setup_done = true
+		addons.wowlua.setup_done = true
 	else
 		warnprint "WowLua's `WowLuaMonoFontSpaced` not found. Could not set font."
 	end
@@ -187,15 +192,15 @@ end
 -- Large: GameFontHighlightMedium: 14
 -- X-Large: GameFontHighlightLarge: 16
 
-local function setup_bugsack()
+function addons.bugsack.setup()
 	if BugSackScrollText then
-		if db.bugsack.addon_fontsize then
+		if db.bugsack.ownsize then
 			local currentsize = BugSackScrollText:GetFontObject():GetFontHeight()
 			BugSackScrollText:SetFont(db.font, tonumber(currentsize) or db.default_fontsize, FLAGS)
 		else
 			BugSackScrollText:SetFontObject(ebfi_font)
 		end
-		state.bugsack.setup_done = true
+		addons.bugsack.setup_done = true
 	else
 		warnprint "BugSack target frame not found. Could not set font."
 	end
@@ -203,7 +208,7 @@ local function setup_bugsack()
 end
 
 -- The main frame is not created before first open, so we have to hook.
-local function hook_bugsack()
+function addons.bugsack.hook()
 	if not BugSack.OpenSack then
 		warnprint "`BugSack.OpenSack` not found (needed for hook). Could not set font."
 		return
@@ -212,7 +217,7 @@ local function hook_bugsack()
 	hooksecurefunc(BugSack, "OpenSack", function()
 		if not done then
 			done = true
-			setup_bugsack()
+			addons.bugsack.setup()
 		end
 	end)
 end
@@ -224,13 +229,13 @@ end
 
 -- https://www.curseforge.com/wow/addons/script-library
 
-local function setup_scriptlibrary()
+function addons.scriptlibrary.setup()
 	if RuntimeEditorMainWindowCodeEditorCodeEditorEditBox then
-		local size = db.scriptlibrary.addon_fontsize
+		local size = db.scriptlibrary.ownsize
 				and tonumber((select(2, RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:GetFont())))
 			or db.default_fontsize
 		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(db.font, size, FLAGS)
-		state.scriptlibrary.setup_done = true
+		addons.scriptlibrary.setup_done = true
 	else
 		warnprint "ScriptLibrary target frame not found. Could not set font."
 	end
@@ -239,7 +244,7 @@ end
 
 -- The main frame is not created before first open, so we have to hook.
 -- Couldn't find any accessible 'open' function, so we use the slash command.
-local function hook_scriptlibrary()
+function addons.scriptlibrary.hook()
 	if not SlashCmdList.SCRIPTLIBRARY then
 		warnprint "`SlashCmdList.SCRIPTLIBRARY` not found (needed for hook). Could not set font."
 		return
@@ -248,7 +253,7 @@ local function hook_scriptlibrary()
 	hooksecurefunc(SlashCmdList, "SCRIPTLIBRARY", function()
 		if not done then
 			done = true
-			setup_scriptlibrary()
+			addons.scriptlibrary.setup()
 		end
 	end)
 end
@@ -265,10 +270,9 @@ end
 local ef = CreateFrame("Frame", MYNAME .. "_eventframe")
 
 local function initial_setup()
-	if db.wowlua.enable and state.wowlua.loaded then setup_wowlua() end
-	if db.bugsack.enable and state.bugsack.loaded then hook_bugsack() end
-	if db.scriptlibrary.enable and state.scriptlibrary.loaded then hook_scriptlibrary() end
-	if db.macroeditors.enable then setup_macroeditors() end
+	for k, v in pairs(addons) do
+		if db[k].enable and v.loaded then (v.hook or v.setup)() end
+	end
 end
 
 local function PLAYER_LOGIN()
@@ -277,9 +281,9 @@ local function PLAYER_LOGIN()
 		C_Timer.After(25, function() warnprint(FONTPATH_WARNING) end)
 		return
 	end
-	state.wowlua.loaded = C_AddOns_IsAddOnLoaded "WowLua"
-	state.scriptlibrary.loaded = C_AddOns_IsAddOnLoaded "ScriptLibrary"
-	state.bugsack.loaded = C_AddOns_IsAddOnLoaded "BugSack"
+	addons.wowlua.loaded = C_AddOns_IsAddOnLoaded "WowLua"
+	addons.scriptlibrary.loaded = C_AddOns_IsAddOnLoaded "ScriptLibrary"
+	addons.bugsack.loaded = C_AddOns_IsAddOnLoaded "BugSack"
 	initial_setup()
 end
 
@@ -303,10 +307,9 @@ end)
 
 local function refresh_setup()
 	if not create_fontobj() then return end
-	if db.wowlua.enable and state.wowlua.setup_done then setup_wowlua() end
-	if db.bugsack.enable and state.bugsack.setup_done then setup_bugsack() end
-	if db.scriptlibrary.enable and state.scriptlibrary.setup_done then setup_scriptlibrary() end
-	if db.macroeditors.enable and state.macroeditors.setup_done then setup_macroeditors() end
+	for k, v in pairs(addons) do
+		if db[k].enable and v.setup_done then v.setup() end
+	end
 end
 
 SLASH_EditBoxFontImprover1 = "/editboxfontimprover"
@@ -326,15 +329,15 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		)
 		refresh_setup()
 	elseif args[1] == "unisize" then
-		db.wowlua.addon_fontsize = false
-		db.scriptlibrary.addon_fontsize = false
-		db.bugsack.addon_fontsize = false
+		for k, v in pairs(addons) do
+			if v.has_sizecfg then db[k].ownsize = false end
+		end
 		ebfiprint "All addons set to use EBFI's default font size."
 		refresh_setup()
 	elseif args[1] == "ownsize" then
-		db.wowlua.addon_fontsize = true
-		db.scriptlibrary.addon_fontsize = true
-		db.bugsack.addon_fontsize = true
+		for k, v in pairs(addons) do
+			if v.has_sizecfg then db[k].ownsize = true end
+		end
 		ebfiprint "All addons with a configurable font size will keep their own size setting."
 		refresh_setup()
 	else
