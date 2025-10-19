@@ -88,11 +88,6 @@ local db = _G.EBFI_DB
 local function create_fontobj()
 	local ebfi_font = CreateFont "ebfi_font"
 	ebfi_font:SetFont(db.font, db.default_fontsize, FLAGS)
-end
-
-create_fontobj()
-
-local function validate_fontpath()
 	if ebfi_font:GetFont() == db.font then return true end
 	warnprint(FONTPATH_WARNING)
 end
@@ -264,7 +259,7 @@ local function initial_setup()
 end
 
 local function PLAYER_LOGIN()
-	if not validate_fontpath() then
+	if not create_fontobj() then
 		-- Print the msg once more when login chat spam is over.
 		C_Timer.After(25, function() warnprint(FONTPATH_WARNING) end)
 		return
@@ -293,8 +288,8 @@ end)
 	UI
 ===========================================================================]]--
 
-local function manual_setup()
-	create_fontobj()
+local function refresh_setup()
+	if not create_fontobj() then return end
 	if db.wowlua.enable and addon_loaded.wowlua and setup_done.wowlua then
 		setup_wowlua()
 	end
@@ -321,7 +316,6 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	if tonumber(args[1]) then
 		local size = max(min(tonumber(args[1]), 28), 6)
 		db.default_fontsize = size
-		if validate_fontpath() then manual_setup() end
 		ebfiprint(
 			"Font size now set to "
 				.. db.default_fontsize
