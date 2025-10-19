@@ -6,14 +6,6 @@ local MYNAME, _ = ...
 local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 local FLAGS = "" -- For our purpose, we do not want any outlining.
-local debug = true
-
-local function debugprint(...)
-	if debug then
-		local a, b = strsplit(".", GetTimePreciseSec())
-		print(format("[%s.%s] %sEBFI >>> Debug >>>\124r", a:sub(-3), b:sub(1, 3), "\124cffEE82EE"), ...)
-	end
-end
 
 local CLR_EBFI = "ffD783FF"
 local CLR_WARN = WARNING_FONT_COLOR
@@ -60,6 +52,7 @@ local defaults = {
 		ownsize = true,
 	},
 	["Read Me!"] = "Hi there! Probably you have opened this SavedVariables file to directly edit the font path. Good idea! This help text is for you: ——— The default path ['font'] points to the PT Mono font, inside the 'fonts' folder of the addon itself. ——— The addon can load any font that is located in the World of 'Warcraft/_retail_/Interface/AddOns' directory, where 'Interface' serves as root folder for the path. ——— So, for example, to use a font that you already have installed for SharedMedia: 'Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf'. But you can also just toss the font into the AddOns folder and set the path like 'Interface/AddOns/MyFont.ttf'."
+	debugmode = false,
 }
 
 local function merge_defaults(src, dst)
@@ -84,6 +77,13 @@ local db = _G.EBFI_DB
 --[[===========================================================================
 	Create Font Object
 ===========================================================================]]--
+
+local function debugprint(...)
+	if db.debugmode then
+		local a, b = strsplit(".", GetTimePreciseSec())
+		print(format("[%s.%s] %sEBFI >>> Debug >>>\124r", a:sub(-3), b:sub(1, 3), "\124cffEE82EE"), ...)
+	end
+end
 
 local function create_fontobj()
 	local ebfi_font = CreateFont "ebfi_font"
@@ -340,6 +340,9 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		end
 		ebfiprint "All addons with a configurable font size will keep their own size setting."
 		refresh_setup()
+	elseif args[1] == "dm" or args[1] == "debug" then
+		db.debugmode = not db.debugmode
+		ebfiprint("Debug mode: " .. (db.debugmode and "On" or "Off"))
 	else
 		ebfiprint 'Supported arguments: Font Size, for example "14" (default is 12); "unisize" to force all addons to use EBFI\'s font size; "ownsize" to not override the addons\'s own size setting, if it has one (default).'
 	end
