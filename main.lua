@@ -27,6 +27,10 @@ local function warnprint(msg)
 	print(format("%s %s %s", MSG_PREFIX, CLR_WARN:WrapTextInColorCode("WARNING:"), msg))
 end
 
+local function ebfiprint(msg)
+	print(format("%s %s", MSG_PREFIX, msg))
+end
+
 --[[===========================================================================
 	Defaults
 ===========================================================================]]--
@@ -93,6 +97,12 @@ local function validate_fontpath()
 	warnprint(FONTPATH_WARNING)
 end
 
+local setup_done = {
+	misc = false,
+	wowlua = false,
+	scriptlibrary = false,
+	bugsack = false,
+}
 
 --[[===========================================================================
 	Straightforward Frames (macro editors)
@@ -112,6 +122,7 @@ local function setup_misc()
 	for _, t in pairs(targets) do
 		t:SetFontObject(ebfi_font)
 	end
+	setup_done.misc = true
 	debugprint "Setup for misc macro editors run."
 end
 
@@ -137,6 +148,7 @@ local function setup_wowlua()
 		WowLuaMonoFontSpaced:SetFont(db.font, size, FLAGS)
 		-- Needed to apply the font (not only the size)
 		WowLua:UpdateFontSize(size)
+		setup_done.wowlua = true
 	else
 		warnprint "WowLua's `WowLuaMonoFontSpaced` not found. Could not set font."
 	end
@@ -170,6 +182,7 @@ local function setup_bugsack()
 		else
 			BugSackScrollText:SetFontObject(ebfi_font)
 		end
+		setup_done.bugsack = true
 	else
 		warnprint "BugSack target frame not found. Could not set font."
 	end
@@ -204,6 +217,7 @@ local function setup_scriptlibrary()
 				and tonumber((select(2, RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:GetFont())))
 			or db.default_fontsize
 		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(db.font, size, FLAGS)
+		setup_done.scriptlibrary = true
 	else
 		warnprint "ScriptLibrary target frame not found. Could not set font."
 	end
@@ -236,18 +250,29 @@ end
 
 local ef = CreateFrame("Frame", MYNAME .. "_eventframe")
 
+local addon_loaded = {
+	wowlua = false,
+	scriptlibrary = false,
+	bugsack = false,
+}
+
+local function initial_setup()
+	if db.wowlua.enable and addon_loaded.wowlua then setup_wowlua() end
+	if db.bugsack.enable and addon_loaded.bugsack then hook_bugsack() end
+	if db.scriptlibrary.enable and addon_loaded.scriptlibrary then hook_scriptlibrary() end
+	if db.macroeditors.enable then setup_misc() end
+end
+
 local function PLAYER_LOGIN()
 	if not validate_fontpath() then
 		-- Print the msg once more when login chat spam is over.
 		C_Timer.After(25, function() warnprint(FONTPATH_WARNING) end)
 		return
 	end
-	if db.wowlua.enable and C_AddOns_IsAddOnLoaded "WowLua" then setup_wowlua() end
-	if db.bugsack.enable and C_AddOns_IsAddOnLoaded "BugSack" then hook_bugsack() end
-	if db.scriptlibrary.enable and C_AddOns_IsAddOnLoaded "ScriptLibrary" then
-		hook_scriptlibrary()
-	end
-	if db.macroeditors.enable then setup_misc() end
+	addon_loaded.wowlua = C_AddOns_IsAddOnLoaded "WowLua"
+	addon_loaded.scriptlibrary = C_AddOns_IsAddOnLoaded "ScriptLibrary"
+	addon_loaded.bugsack = C_AddOns_IsAddOnLoaded "BugSack"
+	initial_setup()
 end
 
 local event_handlers = {
@@ -263,13 +288,53 @@ ef:SetScript("OnEvent", function(_, event, ...)
 	event_handlers[event](...) ---@diagnostic disable-line: redundant-parameter
 end)
 
----
 
--- SLASH_EDITBOXFONTIMPROVER1 = "/editboxfontimprover"
--- SLASH_EDITBOXFONTIMPROVER2 = "/ebfi"
--- SlashCmdList["EDITBOXFONTIMPROVER"] = function(msg)
--- 	if msg == "runsl" then
--- 		setup_scriptlibrary()
--- 	elseif msg == "runcmd" then
--- 	end
--- end
+--[[===========================================================================
+	UI
+===========================================================================]]--
+
+local function manual_setup()
+	create_fontobj()
+	if db.wowlua.enable and addon_loaded.wowlua and setup_done.wowlua then
+		setup_wowlua()
+	end
+	if db.bugsack.enable and addon_loaded.bugsack and setup_done.bugsack then
+		setup_bugsack()
+	end
+	if db.scriptlibrary.enable and addon_loaded.scriptlibrary and setup_done.scriptlibrary then
+		setup_scriptlibrary()
+	end
+	if db.macroeditors.enable and setup_done.misc then
+		setup_misc()
+	end
+end
+
+-- Currently only default font size
+
+SLASH_EditBoxFontImprover1 = "/editboxfontimprover"
+SLASH_EditBoxFontImprover2 = "/ebfi"
+SlashCmdList.EditBoxFontImprover = function(msg)
+	local args = {}
+	for arg in msg:gmatch("[^ ]+") do
+		tinsert(args, arg)
+	end
+	if tonumber(args[1]) then
+		local size = max(min(tonumber(args[1]), 28), 6)
+		db.default_fontsize = size
+		if validate_fontpath() then manual_setup() end
+		ebfiprint("Font size now set to " .. db.default_fontsize .. ". This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack).")
+	-- Debug functions (not exposed):
+	elseif args[1] == "sizedef" then
+		db.wowlua.addon_fontsize = false
+		db.scriptlibrary.addon_fontsize = false
+		db.bugsack.addon_fontsize = false
+		ebfiprint "All addons set to use EBFI's default font size."
+	elseif args[1] == "sizeown" then
+		db.wowlua.addon_fontsize = true
+		db.scriptlibrary.addon_fontsize = true
+		db.bugsack.addon_fontsize = true
+		ebfiprint "All addons set to use their own font size setting."
+	else
+		ebfiprint("Not a valid argument. Currently only the size setting is supported: just enter the desired font size, for example \"/ebfi 14\". Default size is 12.")
+	end
+end
