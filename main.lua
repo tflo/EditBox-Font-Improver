@@ -30,37 +30,46 @@ end
 	Defaults
 ===========================================================================]]--
 
-local default_fontpath = [[Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf]]
-local default_fontsize = 12
-
 local defaults = {
-	-- Individual sizes are not (yet) enabled.
-	macroeditors = { enable = true, fontsize = default_fontsize },
-	wowlua = { enable = true, fontsize = default_fontsize },
-	scriptlibrary = { enable = true, fontsize = default_fontsize },
-	bugsack = { enable = true, fontsize = default_fontsize },
+	font = [[Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf]],
+	default_fontsize = 12,
+	-- Individual sizes are not yet enabled.
+	macroeditors = {
+		enable = true,
+		fontsize = nil,
+	},
+	wowlua = {
+		enable = true,
+		fontsize = nil,
+	},
+	scriptlibrary = {
+		enable = true,
+		fontsize = nil,
+	},
+	bugsack = {
+		enable = true,
+		fontsize = nil,
+	},
+	["Read Me!"] = "Hi there! Probably you have opened this SavedVariables file to directly edit the font path. Good idea! This help text is for you: ——— The default path ['font'] points to the PT Mono font, inside the 'fonts' folder of the addon itself. ——— The addon can load any font that is located in the World of 'Warcraft/_retail_/Interface/AddOns' directory, where 'Interface' serves as root folder for the path. ——— So, for example, to use a font that you already have installed for SharedMedia: 'Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf'. But you can also just toss the font into the AddOns folder and set the path like 'Interface/AddOns/MyFont.ttf'."
 }
 
-local function make_subtables(src, dst)
+local function merge_defaults(src, dst)
 	for k, v in pairs(src) do
-		if type(v) == "table" then
-			dst[k] = dst[k] or {}
-			make_subtables(src[k], dst[k])
+		local src_type = type(v)
+		if src_type == 'table' then
+			if type(dst[k]) ~= 'table' then
+				dst[k] = {}
+			end
+			merge_defaults(v, dst[k])
+		elseif type(dst[k]) ~= src_type then
+			dst[k] = v
 		end
 	end
 end
 
-
-local readme_for_SV = [[
-Hi there! Probably you have opened this SavedVariables file to directly edit the font path. Good idea! This help text is
-for you: ——— The default path ['font'] points to the PT Mono font, inside the 'fonts' folder of the addon itself. ———
-The addon can load any font that is located in the World of 'Warcraft/_retail_/Interface/AddOns' directory, where
-'Interface' serves as root folder for the path. ——— So, for example, to use a font that you already have installed for
-SharedMedia: 'Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf'. But you can also just toss the font into the AddOns
-folder and set the path like 'Interface/AddOns/MyFont.ttf'.
-]]
-
-readme_for_SV = readme_for_SV:gsub("\n", " ")
+_G.EBFI_DB = _G.EBFI_DB or {}
+merge_defaults(defaults, _G.EBFI_DB)
+local db = _G.EBFI_DB
 
 
 --[[===========================================================================
