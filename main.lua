@@ -93,7 +93,7 @@ local function create_fontobj()
 end
 
 local setup_done = {
-	misc = false,
+	macroeditors = false,
 	wowlua = false,
 	scriptlibrary = false,
 	bugsack = false,
@@ -102,6 +102,9 @@ local setup_done = {
 --[[===========================================================================
 	Straightforward Frames (macro editors)
 ===========================================================================]]--
+
+-- https://www.townlong-yak.com/addons/m6
+-- https://www.townlong-yak.com/addons/opie
 
 -- Easy stuff, where we can simply apply our font object.
 -- The frames are created at load time, so no issues, if the addons are
@@ -117,7 +120,7 @@ local function setup_misc()
 	for _, t in pairs(targets) do
 		t:SetFontObject(ebfi_font)
 	end
-	setup_done.misc = true
+	setup_done.macroeditors = true
 	debugprint "Setup for misc macro editors run."
 end
 
@@ -129,9 +132,12 @@ end
 -- Check out this:
 -- https://github.com/Stanzilla/WoWUIBugs/issues/581
 
+
 --[[===========================================================================
 	WoWLua
 ===========================================================================]]--
+
+-- https://www.curseforge.com/wow/addons/wowlua
 
 -- We directly manipulate WoWLua's font object, otherwise we get reset when the
 -- user changes font size in WoWLua.
@@ -239,6 +245,7 @@ end
 -- I haven't found a way to grab the font size that is set in ScriptLibrary.
 -- ScriptLibrary wipes its global DB after load, and practically all functions and variables are private.
 
+
 --[[===========================================================================
 	Run the Stuff
 ===========================================================================]]--
@@ -299,12 +306,10 @@ local function refresh_setup()
 	if db.scriptlibrary.enable and addon_loaded.scriptlibrary and setup_done.scriptlibrary then
 		setup_scriptlibrary()
 	end
-	if db.macroeditors.enable and setup_done.misc then
+	if db.macroeditors.enable and setup_done.macroeditors then
 		setup_misc()
 	end
 end
-
--- Currently only default font size
 
 SLASH_EditBoxFontImprover1 = "/editboxfontimprover"
 SLASH_EditBoxFontImprover2 = "/ebfi"
@@ -321,16 +326,19 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 				.. db.default_fontsize
 				.. ". This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack)."
 		)
+		refresh_setup()
 	elseif args[1] == "unisize" then
 		db.wowlua.addon_fontsize = false
 		db.scriptlibrary.addon_fontsize = false
 		db.bugsack.addon_fontsize = false
 		ebfiprint "All addons set to use EBFI's default font size."
+		refresh_setup()
 	elseif args[1] == "ownsize" then
 		db.wowlua.addon_fontsize = true
 		db.scriptlibrary.addon_fontsize = true
 		db.bugsack.addon_fontsize = true
 		ebfiprint "All addons with a configurable font size will keep their own size setting."
+		refresh_setup()
 	else
 		ebfiprint 'Supported arguments: Font Size, for example "14" (default is 12); "unisize" to force all addons to use EBFI\'s font size; "ownsize" to not override the addons\'s own size setting, if it has one (default).'
 	end
