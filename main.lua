@@ -148,9 +148,18 @@ end
 	BugSack
 ===========================================================================]]--
 
+-- https://www.curseforge.com/wow/addons/bugsack
+
+-- BugSack's built-in font sizes:
+-- Small: GameFontHighlightSmall: 10
+-- Medium: GameFontHighlight: 12
+-- Large: GameFontHighlightMedium: 14
+-- X-Large: GameFontHighlightLarge: 16
+
 local function setup_bugsack()
 	if BugSackScrollText then
-		BugSackScrollText:SetFontObject(ebfi_font)
+		local currentsize = BugSackScrollText:GetFontObject():GetFontHeight()
+		BugSackScrollText:SetFont(db.font, tonumber(currentsize) or db.default_fontsize, FLAGS)
 	else
 		warnprint "BugSack target frame not found. Could not set font."
 	end
