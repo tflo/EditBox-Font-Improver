@@ -92,11 +92,23 @@ local function create_fontobj()
 	warnprint(FONTPATH_WARNING)
 end
 
-local setup_done = {
-	macroeditors = false,
-	wowlua = false,
-	scriptlibrary = false,
-	bugsack = false,
+local state = {
+	macroeditors = {
+		loaded = true,
+		setup_done = false,
+	},
+	wowlua = {
+		loaded = false,
+		setup_done = false,
+	},
+	scriptlibrary = {
+		loaded = false,
+		setup_done = false,
+	},
+	bugsack = {
+		loaded = false,
+		setup_done = false,
+	},
 }
 
 --[[===========================================================================
@@ -110,7 +122,7 @@ local setup_done = {
 -- The frames are created at load time, so no issues, if the addons are
 -- OptionalDeps. A missing addon doesn't pose a problem, as it just creates a
 -- nil value in the table, which is ignored when we iterate.
-local function setup_misc()
+local function setup_macroeditors()
 	local targets = {
 		MacroFrameText, -- Blizzard_MacroUI; also affects ImprovedMacroFrame.
 -- 		M6EditBox, -- M6; it seems this frame was renamed; see next entry.
@@ -120,7 +132,7 @@ local function setup_misc()
 	for _, t in pairs(targets) do
 		t:SetFontObject(ebfi_font)
 	end
-	setup_done.macroeditors = true
+	state.macroeditors.setup_done = true
 	debugprint "Setup for misc macro editors run."
 end
 
@@ -149,7 +161,7 @@ local function setup_wowlua()
 		WowLuaMonoFontSpaced:SetFont(db.font, size, FLAGS)
 		-- Needed to apply the font (not only the size)
 		WowLua:UpdateFontSize(size)
-		setup_done.wowlua = true
+		state.wowlua.setup_done = true
 	else
 		warnprint "WowLua's `WowLuaMonoFontSpaced` not found. Could not set font."
 	end
@@ -183,7 +195,7 @@ local function setup_bugsack()
 		else
 			BugSackScrollText:SetFontObject(ebfi_font)
 		end
-		setup_done.bugsack = true
+		state.bugsack.setup_done = true
 	else
 		warnprint "BugSack target frame not found. Could not set font."
 	end
@@ -218,7 +230,7 @@ local function setup_scriptlibrary()
 				and tonumber((select(2, RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:GetFont())))
 			or db.default_fontsize
 		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(db.font, size, FLAGS)
-		setup_done.scriptlibrary = true
+		state.scriptlibrary.setup_done = true
 	else
 		warnprint "ScriptLibrary target frame not found. Could not set font."
 	end
@@ -252,17 +264,11 @@ end
 
 local ef = CreateFrame("Frame", MYNAME .. "_eventframe")
 
-local addon_loaded = {
-	wowlua = false,
-	scriptlibrary = false,
-	bugsack = false,
-}
-
 local function initial_setup()
-	if db.wowlua.enable and addon_loaded.wowlua then setup_wowlua() end
-	if db.bugsack.enable and addon_loaded.bugsack then hook_bugsack() end
-	if db.scriptlibrary.enable and addon_loaded.scriptlibrary then hook_scriptlibrary() end
-	if db.macroeditors.enable then setup_misc() end
+	if db.wowlua.enable and state.wowlua.loaded then setup_wowlua() end
+	if db.bugsack.enable and state.bugsack.loaded then hook_bugsack() end
+	if db.scriptlibrary.enable and state.scriptlibrary.loaded then hook_scriptlibrary() end
+	if db.macroeditors.enable then setup_macroeditors() end
 end
 
 local function PLAYER_LOGIN()
@@ -271,9 +277,9 @@ local function PLAYER_LOGIN()
 		C_Timer.After(25, function() warnprint(FONTPATH_WARNING) end)
 		return
 	end
-	addon_loaded.wowlua = C_AddOns_IsAddOnLoaded "WowLua"
-	addon_loaded.scriptlibrary = C_AddOns_IsAddOnLoaded "ScriptLibrary"
-	addon_loaded.bugsack = C_AddOns_IsAddOnLoaded "BugSack"
+	state.wowlua.loaded = C_AddOns_IsAddOnLoaded "WowLua"
+	state.scriptlibrary.loaded = C_AddOns_IsAddOnLoaded "ScriptLibrary"
+	state.bugsack.loaded = C_AddOns_IsAddOnLoaded "BugSack"
 	initial_setup()
 end
 
@@ -297,18 +303,10 @@ end)
 
 local function refresh_setup()
 	if not create_fontobj() then return end
-	if db.wowlua.enable and addon_loaded.wowlua and setup_done.wowlua then
-		setup_wowlua()
-	end
-	if db.bugsack.enable and addon_loaded.bugsack and setup_done.bugsack then
-		setup_bugsack()
-	end
-	if db.scriptlibrary.enable and addon_loaded.scriptlibrary and setup_done.scriptlibrary then
-		setup_scriptlibrary()
-	end
-	if db.macroeditors.enable and setup_done.macroeditors then
-		setup_misc()
-	end
+	if db.wowlua.enable and state.wowlua.setup_done then setup_wowlua() end
+	if db.bugsack.enable and state.bugsack.setup_done then setup_bugsack() end
+	if db.scriptlibrary.enable and state.scriptlibrary.setup_done then setup_scriptlibrary() end
+	if db.macroeditors.enable and state.macroeditors.setup_done then setup_macroeditors() end
 end
 
 SLASH_EditBoxFontImprover1 = "/editboxfontimprover"
