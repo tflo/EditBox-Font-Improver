@@ -38,18 +38,22 @@ local defaults = {
 	macroeditors = {
 		enable = true,
 		fontsize = nil,
+		addon_fontsize = false,
 	},
 	wowlua = {
 		enable = true,
 		fontsize = nil,
+		addon_fontsize = true,
 	},
 	scriptlibrary = {
 		enable = true,
 		fontsize = nil,
+		addon_fontsize = false,
 	},
 	bugsack = {
 		enable = true,
 		fontsize = nil,
+		addon_fontsize = true,
 	},
 	["Read Me!"] = "Hi there! Probably you have opened this SavedVariables file to directly edit the font path. Good idea! This help text is for you: ——— The default path ['font'] points to the PT Mono font, inside the 'fonts' folder of the addon itself. ——— The addon can load any font that is located in the World of 'Warcraft/_retail_/Interface/AddOns' directory, where 'Interface' serves as root folder for the path. ——— So, for example, to use a font that you already have installed for SharedMedia: 'Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf'. But you can also just toss the font into the AddOns folder and set the path like 'Interface/AddOns/MyFont.ttf'."
 }
@@ -128,9 +132,11 @@ end
 -- We use the font size as actually set in the WowLua GUI.
 local function setup_wowlua()
 	if WowLuaMonoFontSpaced then
-		WowLuaMonoFont:SetFont(db.font, WowLua_DB.fontSize, FLAGS)
-		WowLuaMonoFontSpaced:SetFont(db.font, WowLua_DB.fontSize, FLAGS)
-		WowLua:UpdateFontSize(WowLua_DB.fontSize)
+		local size = db.wowlua.addon_fontsize and WowLua_DB.fontSize or db.default_fontsize
+		WowLuaMonoFont:SetFont(db.font, size, FLAGS)
+		WowLuaMonoFontSpaced:SetFont(db.font, size, FLAGS)
+		-- Needed to apply the font (not only the size)
+		WowLua:UpdateFontSize(size)
 	else
 		warnprint "WowLua's `WowLuaMonoFontSpaced` not found. Could not set font."
 	end
@@ -158,8 +164,12 @@ end
 
 local function setup_bugsack()
 	if BugSackScrollText then
-		local currentsize = BugSackScrollText:GetFontObject():GetFontHeight()
-		BugSackScrollText:SetFont(db.font, tonumber(currentsize) or db.default_fontsize, FLAGS)
+		if db.bugsack.addon_fontsize then
+			local currentsize = BugSackScrollText:GetFontObject():GetFontHeight()
+			BugSackScrollText:SetFont(db.font, tonumber(currentsize) or db.default_fontsize, FLAGS)
+		else
+			BugSackScrollText:SetFontObject(ebfi_font)
+		end
 	else
 		warnprint "BugSack target frame not found. Could not set font."
 	end
