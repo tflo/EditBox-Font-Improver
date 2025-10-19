@@ -322,19 +322,22 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		local size = max(min(tonumber(args[1]), 28), 6)
 		db.default_fontsize = size
 		if validate_fontpath() then manual_setup() end
-		ebfiprint("Font size now set to " .. db.default_fontsize .. ". This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack).")
-	-- Debug functions (not exposed):
-	elseif args[1] == "sizedef" then
+		ebfiprint(
+			"Font size now set to "
+				.. db.default_fontsize
+				.. ". This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack)."
+		)
+	elseif args[1] == "unisize" then
 		db.wowlua.addon_fontsize = false
 		db.scriptlibrary.addon_fontsize = false
 		db.bugsack.addon_fontsize = false
 		ebfiprint "All addons set to use EBFI's default font size."
-	elseif args[1] == "sizeown" then
+	elseif args[1] == "ownsize" then
 		db.wowlua.addon_fontsize = true
 		db.scriptlibrary.addon_fontsize = true
 		db.bugsack.addon_fontsize = true
-		ebfiprint "All addons set to use their own font size setting."
+		ebfiprint "All addons with a configurable font size will keep their own size setting."
 	else
-		ebfiprint("Not a valid argument. Currently only the size setting is supported: just enter the desired font size, for example \"/ebfi 14\". Default size is 12.")
+		ebfiprint 'Supported arguments: Font Size, for example "14" (default is 12); "unisize" to force all addons to use EBFI\'s font size; "ownsize" to not override the addons\'s own size setting, if it has one (default).'
 	end
 end
