@@ -1,14 +1,12 @@
 -- SPDX-License-Identifier: GPL-3.0-or-later
 -- Copyright (c) 2022-2025 Thomas Floeren
 
-local me, A = ...
-local db
+local MYNAME, _ = ...
 
-local FLAGS = "" -- For our purpose, we do not want any outlining. Nope.
+local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
-
-
-local debug = false
+local FLAGS = "" -- For our purpose, we do not want any outlining.
+local debug = true
 
 local function debugprint(...)
 	if debug then
@@ -17,13 +15,14 @@ local function debugprint(...)
 	end
 end
 
-local COLOR_EBFI = "|cFFD783FF"
-local COLOR_WARN = "|cnWARNING_FONT_COLOR:"
-local MSG_PRE = COLOR_EBFI .. "EBFI|r:"
-local MSG_PREFIX = COLOR_EBFI .. "EditBox Font Improver|r:"
+local CLR_EBFI = "ffD783FF"
+local CLR_WARN = WARNING_FONT_COLOR
+local MSG_PREFIX = WrapTextInColorCode("EditBox Font Improver:", CLR_EBFI)
 
-local function warnprint(...)
-	print(format("%s %sWARNING:", MSG_PREFIX, COLOR_WARN), ...)
+-- We opt to not raise an error if a font cannot be set, and just print a one-time warning.
+-- The user will notice that the font is not set when they open the relevant addon.
+local function warnprint(msg)
+	print(format("%s %s %s", MSG_PREFIX, CLR_WARN:WrapTextInColorCode("WARNING:"), msg))
 end
 
 --[[===========================================================================
@@ -81,10 +80,14 @@ local function create_fontobj()
 	ebfi_font:SetFont(db.font, db.default_fontsize, FLAGS)
 end
 
-local function test_font()
-	if ebfi_font:GetFont() ~= db.font then
-		warnprint "Font path is not valid! Make sure there is a valid font path set in the addon's SavedVariables file. Check out the addon's readme/description for more information."
-	end
+create_fontobj()
+
+local function validate_fontpath()
+	if ebfi_font:GetFont() == db.font then return true end
+	warnprint(
+		RED_FONT_COLOR:WrapTextInColorCode("Font path is not valid!")
+			.. " Make sure there is a valid font path set in the addon's SavedVariables file. Check out the addon's readme/description for more information."
+	)
 end
 
 
