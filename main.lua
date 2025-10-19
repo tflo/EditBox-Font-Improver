@@ -27,32 +27,32 @@ end
 	Defaults
 ===========================================================================]]--
 
+-- Nilified all individual fontsizes, as no longer planned
 local defaults = {
 	font = [[Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf]],
 	default_fontsize = 12,
-	-- Individual sizes are not yet enabled.
 	macroeditors = {
 		enable = true,
+		ownsize = nil, -- Always EBFI default size, since these addons have no own size setting
 		fontsize = nil,
-		ownsize = false,
 	},
 	wowlua = {
 		enable = true,
-		fontsize = nil,
 		ownsize = true,
+		fontsize = nil,
 	},
 	scriptlibrary = {
 		enable = true,
-		fontsize = nil,
 		ownsize = true,
+		fontsize = nil,
 	},
 	bugsack = {
 		enable = true,
-		fontsize = nil,
 		ownsize = true,
+		fontsize = nil,
 	},
-	["Read Me!"] = "Hi there! Probably you have opened this SavedVariables file to directly edit the font path. Good idea! This help text is for you: ——— The default path ['font'] points to the PT Mono font, inside the 'fonts' folder of the addon itself. ——— The addon can load any font that is located in the World of 'Warcraft/_retail_/Interface/AddOns' directory, where 'Interface' serves as root folder for the path. ——— So, for example, to use a font that you already have installed for SharedMedia: 'Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf'. But you can also just toss the font into the AddOns folder and set the path like 'Interface/AddOns/MyFont.ttf'."
 	debugmode = false,
+	["Read Me!"] = "Hi there! Probably you have opened this SavedVariables file to directly edit the font path. Good idea! This help text is for you: ——— The default path ['font'] points to the PT Mono font, inside the 'fonts' folder of the addon itself. ——— The addon can load any font that is located in the World of 'Warcraft/_retail_/Interface/AddOns' directory, where 'Interface' serves as root folder for the path. ——— So, for example, to use a font that you already have installed for SharedMedia: 'Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf'. But you can also just toss the font into the AddOns folder and set the path like 'Interface/AddOns/MyFont.ttf'.",
 }
 
 local function merge_defaults(src, dst)
@@ -75,7 +75,7 @@ local db = _G.EBFI_DB
 
 
 --[[===========================================================================
-	Create Font Object
+	Setup
 ===========================================================================]]--
 
 local function debugprint(...)
@@ -115,6 +115,21 @@ local addons = {
 	},
 }
 
+-- The Size Situation:
+
+-- Blizz Macro:   fix 10
+-- M6 and OPie:   fix 12
+-- WoWLua:        configurable 5 to 24
+-- ScriptLibrary: configurable 8 to 16
+-- BugSack:       configurable 10 to 16
+
+-- BugSack's built-in sizes:
+-- Small: GameFontHighlightSmall: 10
+-- Medium: GameFontHighlight: 12
+-- Large: GameFontHighlightMedium: 14
+-- X-Large: GameFontHighlightLarge: 16
+
+
 --[[===========================================================================
 	Straightforward Frames (macro editors)
 ===========================================================================]]--
@@ -127,22 +142,20 @@ local addons = {
 -- OptionalDeps. A missing addon doesn't pose a problem, as it just creates a
 -- nil value in the table, which is ignored when we iterate.
 function addons.macroeditors.setup()
-	local t = {
+	local editboxes = {
 		MacroFrameText, -- Blizzard_MacroUI; also affects ImprovedMacroFrame.
--- 		M6EditBox, -- M6; it seems this frame was renamed; see next entry.
-		ABE_MacroInputEB, -- M6 and OPie; macro edit box.
+		ABE_MacroInputEB, -- M6 and OPie macro edit box.
 	}
-	-- We can't use `ipairs' here because a missing addon (nil) would stop iteration.
-	for _, v in pairs(t) do
-	print(v:GetFont())
-		v:SetFontObject(ebfi_font)
+	-- Don't use `ipairs' because the entries may be nil (addon not loaded).
+	for _, box in pairs(editboxes) do
+		box:SetFontObject(ebfi_font)
 	end
 	addons.macroeditors.setup_done = true
 	debugprint "Setup for misc macro editors run."
 end
 
 -- NOTE for the user:
--- You can add more addons by adding their edit box frame to the `targets` list.
+-- You can add more addons by adding their edit box frame to the `editboxes` list.
 -- To find the correct frame, use `/fstack` in the game UI. This will only work
 -- if the frame is created at addon load time, and not for every addon though.
 
@@ -185,12 +198,6 @@ end
 ===========================================================================]]--
 
 -- https://www.curseforge.com/wow/addons/bugsack
-
--- BugSack's built-in font sizes:
--- Small: GameFontHighlightSmall: 10
--- Medium: GameFontHighlight: 12
--- Large: GameFontHighlightMedium: 14
--- X-Large: GameFontHighlightLarge: 16
 
 function addons.bugsack.setup()
 	if BugSackScrollText then
