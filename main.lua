@@ -97,7 +97,7 @@ local function setup_misc()
 	for _, t in pairs(targets) do
 		t:SetFontObject(ebfi_font)
 	end
-	debugprint "`setup_misc` run."
+	debugprint "Setup for misc macro editors run."
 end
 
 -- NOTE for the user:
@@ -116,16 +116,20 @@ end
 -- user changes font size in WoWLua.
 -- We use the font size as actually set in the WowLua GUI.
 local function setup_wowlua()
-	if not WowLuaMonoFontSpaced then return end
-	WowLuaMonoFont:SetFont(font, WowLua_DB.fontSize, FLAGS)
-	WowLuaMonoFontSpaced:SetFont(font, WowLua_DB.fontSize, FLAGS)
-	WowLua:UpdateFontSize(WowLua_DB.fontSize)
+	if WowLuaMonoFontSpaced then
+		WowLuaMonoFont:SetFont(db.font, WowLua_DB.fontSize, FLAGS)
+		WowLuaMonoFontSpaced:SetFont(db.font, WowLua_DB.fontSize, FLAGS)
+		WowLua:UpdateFontSize(WowLua_DB.fontSize)
+	else
+		warnprint "WowLua's `WowLuaMonoFontSpaced` not found. Could not set font."
+	end
+	debugprint "WowLua setup run."
 
--- Disabled for the moment, since this messes up the cursor position
--- 	local spacing = tonumber(spacing_wowlua)
--- 	if spacing then
--- 		WowLuaMonoFontSpaced:SetSpacing(spacing)
--- 	end
+	-- Spacing disabled for the moment, since this messes up the cursor position
+	-- local spacing = tonumber(spacing_wowlua)
+	-- if spacing then
+	-- WowLuaMonoFontSpaced:SetSpacing(spacing)
+	-- end
 end
 
 
@@ -137,19 +141,22 @@ local function setup_bugsack()
 	if BugSackScrollText then
 		BugSackScrollText:SetFontObject(ebfi_font)
 	else
-		warnprint "BugSack target frame not found."
+		warnprint "BugSack target frame not found. Could not set font."
 	end
+	debugprint "BugSack setup run."
 end
 
 -- The main frame is not created before first open, so we have to hook.
 local function hook_bugsack()
-	if not BugSack then return end
+	if not BugSack.OpenSack then
+		warnprint "`BugSack.OpenSack` not found (needed for hook). Could not set font."
+		return
+	end
 	local done = false
 	hooksecurefunc(BugSack, "OpenSack", function()
 		if not done then
-			setup_bugsack()
 			done = true
-			debugprint "BugSack hook called."
+			setup_bugsack()
 		end
 	end)
 end
@@ -161,21 +168,29 @@ end
 
 local function setup_scriptlibrary()
 	if RuntimeEditorMainWindowCodeEditorCodeEditorEditBox then
-		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(db.font, db.default_fontsize, FLAGS)
+		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(
+			db.font,
+			db.default_fontsize,
+			FLAGS
+		)
 	else
-		warnprint "ScriptLibrary target frame not found."
+		warnprint "ScriptLibrary target frame not found. Could not set font."
 	end
+	debugprint "ScriptLibrary setup run."
 end
 
 -- The main frame is not created before first open, so we have to hook.
+-- Couldn't find any accessible 'open' function, so we use the slash command.
 local function hook_scriptlibrary()
-	if not SlashCmdList.SCRIPTLIBRARY then return end
+	if not SlashCmdList.SCRIPTLIBRARY then
+		warnprint "`SlashCmdList.SCRIPTLIBRARY` not found (needed for hook). Could not set font."
+		return
+	end
 	local done = false
 	hooksecurefunc(SlashCmdList, "SCRIPTLIBRARY", function()
 		if not done then
-			setup_scriptlibrary()
 			done = true
-			debugprint "ScriptLibrary hook called."
+			setup_scriptlibrary()
 		end
 	end)
 end
