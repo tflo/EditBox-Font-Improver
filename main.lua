@@ -90,6 +90,9 @@ local dfonts = {
 	'Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf',
 	'Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Regular.ttf',
 	'Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Medium.ttf',
+	'Interface/AddOns/EditBox-Font-Improver/font/InputMono-Regular.ttf',
+	'Interface/AddOns/EditBox-Font-Improver/font/InputMonoCompressed-Regular.ttf',
+	'Interface/AddOns/EditBox-Font-Improver/font/InputSans-Regular.ttf',
 }
 
 -- not yet implemented, TODO
@@ -101,7 +104,7 @@ local function debugprint(...)
 	if db.debugmode then
 		local a, b = strsplit('.', GetTimePreciseSec())
 		print(
-			format('[%s.%s] %sEBFI >>> Debug >>>\124r', a:sub(-3), b:sub(1, 3), '\124cffEE82EE'),
+			format('[%s.%s] %sEFI >>> Debug >>>\124r', a:sub(-3), b:sub(1, 3), '\124cffEE82EE'),
 			...
 		)
 	end
@@ -451,8 +454,11 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 			format('User font paths: \n   %s', listfontpaths(ufonts, '\n   ')),
 			format('Debug mode: %s', db.debugmode and 'On' or 'Off'),
 		}
-		for _, v in ipairs(lines) do print(v) end
+		for _, v in ipairs(lines) do
+			print(v)
+		end
 	-- END debug commands
+	-- Font selection by index
 	elseif args[1] == 'font' or args[1] == 'f' and tonumber(args[2]) then
 		local selection = tonumber(args[2])
 		if db.font == dfonts[selection] then
@@ -487,6 +493,6 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 			end
 		end
 	else
-		efiprint 'Supported arguments: Font Size, for example "14" (default is 12). \n"unisize" to force all addons to use EFI\'s font size; "ownsize" to not override the addons\'s own size setting, if it has one (default). \nSelect another font from your list with "f <number>".'
+		efiprint 'Supported arguments: Font Size, for example "14" (default is 12). \n"unisize" to force all addons to use EFI\'s font size; "ownsize" to not override the addons\'s own size setting, if it has one (default). \nSelect another font from the list with "f <number>".'
 	end
 end
