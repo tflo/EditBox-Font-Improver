@@ -43,14 +43,7 @@ local DB_VERSION_CURRENT = 1
 -- Nilified all individual fontsizes, as no longer planned
 local defaults = {
 	font = 1,
-	fonts = {
-		"Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf",
-		"Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Regular.ttf",
-		"Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Medium.ttf",
-		"Interface/AddOns/EditBox-Font-Improver/font/FiraCode-Retina.ttf",
-		"Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Regular.otf",
-		"Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Medium.otf",
-	},
+	-- not yet implemented, TODO
 	userfonts = {
 		"Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf",
 		"Interface/AddOns/WeakAuras/Media/Fonts/FiraMono-Medium.ttf",
@@ -89,7 +82,16 @@ local db = _G.EBFI_DB
 	Setup
 ===========================================================================]]--
 
-local efi_font = db.fonts[db.font]
+local dfonts = {
+	'Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf',
+	'Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Regular.ttf',
+	'Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Medium.ttf',
+}
+
+-- not yet implemented, TODO
+local ufonts = db.userfonts
+
+local efi_font = dfonts[db.font]
 
 local function debugprint(...)
 	if db.debugmode then
@@ -383,24 +385,24 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		local selection = tonumber(args[2])
 		if db.font == selection then
 			efiprint('The font you have selected (#' .. selection .. ') is already loaded.')
-		elseif not db.fonts[selection] then
+		elseif not dfonts[selection] then
 			efiprint(
 				format(
 					'The font you have selected (#%s) does not exist. Your font list contains %s fonts.',
 					selection,
-					#db.fonts
+					#dfonts
 				)
 			)
 		else
-			efi_font = db.fonts[selection]
+			efi_font = dfonts[selection]
 			if refresh_setup() then
 				db.font = selection
 				efiprint(
 					format(
 						'Your new font is "%s" (#%s of %s).',
-						fontname(db.fonts[db.font]),
+						fontname(dfonts[db.font]),
 						db.font,
-						#db.fonts
+						#dfonts
 					)
 				)
 			else
