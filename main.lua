@@ -3,20 +3,24 @@
 
 local MYNAME, _ = ...
 
+local WTC = WrapTextInColorCode
 local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 local FLAGS = '' -- For our purpose, we do not want any outlining.
 
-local CLR_EBFI = 'ffD783FF'
-local CLR_WARN = WARNING_FONT_COLOR
-local MSG_PREFIX = WrapTextInColorCode('EditBox Font Improver:', CLR_EBFI)
-local FONTPATH_WARNING = RED_FONT_COLOR:WrapTextInColorCode('Font path is not valid!')
+local CLR_EFI = 'ffD783FF'
+local CLR_WARN = 'ffFF4800'
+local CLR_BAD = 'ffDC143C'
+local CLR_FONT = 'ff00FA9A'
+local CLR_PATH = 'ff90EE90'
+local MSG_PREFIX = WTC('EditBox Font Improver:', CLR_EFI)
+local FONTPATH_WARNING = WTC('Font path is not valid!', CLR_WARN)
 	.. " Make sure that a font file exists at this location, or change the path: \n%s"
-
+local NOTHING_FOUND = WTC('<NOTHING FOUND>', CLR_BAD)
 -- We opt to not raise an error if a font cannot be set, and just print a one-time warning.
 -- The user will notice that the font is not set when they open the relevant addon.
 local function warnprint(msg)
-	print(format('%s %s %s', MSG_PREFIX, CLR_WARN:WrapTextInColorCode('WARNING:'), msg))
+	print(format('%s %s %s', MSG_PREFIX, WTC('WARNING:', CLR_WARN), msg))
 end
 
 local function efiprint(msg) print(format('%s %s', MSG_PREFIX, msg)) end
@@ -350,7 +354,7 @@ local function idx_from_path(path, array)
 			if v == path then return array == ufonts and 'u' .. i or i end
 		end
 	end
-	return 'no index'
+	return WTC('<no index>', CLR_BAD)
 end
 
 local function fontname(path, withidx, array)
@@ -358,17 +362,17 @@ local function fontname(path, withidx, array)
 	local idx = withidx and idx_from_path(path, array)
 	local pattern = db.debugmode and '[^/\\]+$' or '([^/\\]+)%.[tof]+'
 	local name = tostring(path):match(pattern)
-	if not name then return '<NOTHING FOUND>' end
-	return idx and '[' .. idx .. '] ' .. name or name
+	if not name then return NOTHING_FOUND end
+	return WTC(idx and '[' .. idx .. '] ' .. name or name, CLR_FONT)
 end
 
 local function fontpath(path)
 	local pattern = '.+[/\\]'
-	return tostring(path):match(pattern) or '<NOTHING FOUND>'
+	return WTC(tostring(path):match(pattern), CLR_PATH) or NOTHING_FOUND
 end
 
 local function listfonts(array, withpath, sep)
-	if #array == 0 then return '<NOTHING FOUND>' end
+	if #array == 0 then return NOTHING_FOUND end
 	sep = sep or ', '
 	local t ={}
 	local func = withpath and fontpath or fontname
@@ -379,7 +383,7 @@ local function listfonts(array, withpath, sep)
 end
 
 local function listfontpaths(array, sep)
-	if #array == 0 then return '<NOTHING FOUND>' end
+	if #array == 0 then return NOTHING_FOUND end
 	sep = sep or ', '
 	local seen, result = {}, {}
 	for _, v in ipairs(array) do
