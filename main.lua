@@ -11,7 +11,7 @@ local CLR_EBFI = 'ffD783FF'
 local CLR_WARN = WARNING_FONT_COLOR
 local MSG_PREFIX = WrapTextInColorCode('EditBox Font Improver:', CLR_EBFI)
 local FONTPATH_WARNING = RED_FONT_COLOR:WrapTextInColorCode('Font path is not valid!')
-	.. " Make sure there is a valid font path set in the addon's SavedVariables file. Check out the addon's readme/description for more information."
+	.. " Make sure that a font file exists at this location, or change the path: \n%s"
 
 -- We opt to not raise an error if a font cannot be set, and just print a one-time warning.
 -- The user will notice that the font is not set when they open the relevant addon.
@@ -107,7 +107,7 @@ local function create_fontobj()
 	local efi_fontobject = CreateFont 'efi_fontobject'
 	efi_fontobject:SetFont(efi_font, db.default_fontsize, FLAGS)
 	if efi_fontobject:GetFont() == efi_font then return true end
-	warnprint(FONTPATH_WARNING)
+	warnprint(FONTPATH_WARNING:format(efi_font))
 end
 
 local addons = {
@@ -309,7 +309,7 @@ end
 local function PLAYER_LOGIN()
 	if not create_fontobj() then
 		-- Print the msg once more when login chat spam is over.
-		C_Timer.After(25, function() warnprint(FONTPATH_WARNING) end)
+		C_Timer.After(25, function() warnprint(FONTPATH_WARNING:format(efi_font)) end)
 		return
 	end
 	addons.wowlua.loaded = C_AddOns_IsAddOnLoaded 'WowLua'
