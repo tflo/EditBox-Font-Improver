@@ -341,6 +341,11 @@ local function refresh_setup()
 	return true
 end
 
+local function fontname(path)
+	local pattern = db.debugmode and '[^/\\]+$' or '([^/\\]+)%.[tof]+'
+	return path:match(pattern) or '<NO MATCH>'
+end
+
 SLASH_EditBoxFontImprover1 = '/editboxfontimprover'
 SLASH_EditBoxFontImprover2 = '/ebfi'
 SlashCmdList.EditBoxFontImprover = function(msg)
@@ -392,7 +397,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 				ebfiprint(
 					format(
 						'Your new font is "%s" (#%s of %s).',
-						db.fonts[db.font]:match('[^/\\]+$'),
+						fontname(db.fonts[db.font]),
 						db.font,
 						#db.fonts
 					)
