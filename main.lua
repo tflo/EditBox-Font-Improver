@@ -25,6 +25,21 @@ local function ebfiprint(msg) print(format('%s %s', MSG_PREFIX, msg)) end
 	Defaults
 ===========================================================================]]--
 
+local function merge_defaults(src, dst)
+	for k, v in pairs(src) do
+		local src_type = type(v)
+		if src_type == 'table' then
+			if type(dst[k]) ~= 'table' then dst[k] = {} end
+			merge_defaults(v, dst[k])
+		elseif type(dst[k]) ~= src_type then
+			dst[k] = v
+		end
+	end
+end
+
+-- 1: Oct 20, 2025: significant; removed/added/renamed keys --> reset all
+local DB_VERSION_CURRENT = 1
+
 -- Nilified all individual fontsizes, as no longer planned
 local defaults = {
 	font = 1,
@@ -62,25 +77,18 @@ local defaults = {
 		fontsize = nil,
 	},
 	debugmode = false,
+	db_version = DB_VERSION_CURRENT,
 	["Read Me!"] = "Hi there! Probably you have opened this SavedVariables file to directly edit the font paths. Good idea! This help text is for you: ——— The default path, the first one in the ['fonts'] list, points to the PT Mono font, inside the 'fonts' folder of the addon itself. ——— The addon can load any font that is located in the World of 'Warcraft/_retail_/Interface/AddOns' directory, where 'Interface' serves as root folder for the path. ——— So, for example, to use a font that you already have installed for SharedMedia: 'Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf'. But you can also just toss the font into the AddOns folder and set the path like 'Interface/AddOns/MyFont.ttf'. You can add as many paths to the ['fonts'] list as you want. ——— Do not edit the ['font'] key, as this holds the index for the currently active font from the ['fonts'] list.",
 }
 
-local function merge_defaults(src, dst)
-	for k, v in pairs(src) do
-		local src_type = type(v)
-		if src_type == 'table' then
-			if type(dst[k]) ~= 'table' then dst[k] = {} end
-			merge_defaults(v, dst[k])
-		elseif type(dst[k]) ~= src_type then
-			dst[k] = v
-		end
-	end
+_G.EBFI_DB = _G.EBFI_DB or {}
+
+if not _G.EBFI_DB.db_version or _G.EBFI_DB.db_version < DB_VERSION_CURRENT then
+	_G.EBFI_DB = {}
 end
 
-_G.EBFI_DB = _G.EBFI_DB or {}
 merge_defaults(defaults, _G.EBFI_DB)
 local db = _G.EBFI_DB
-
 
 --[[===========================================================================
 	Setup
