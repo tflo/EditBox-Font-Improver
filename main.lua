@@ -29,7 +29,19 @@ end
 
 -- Nilified all individual fontsizes, as no longer planned
 local defaults = {
-	font = [[Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf]],
+	font = 1,
+	fonts = {
+		"Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf",
+		"Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Regular.ttf",
+		"Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Medium.ttf",
+		"Interface/AddOns/EditBox-Font-Improver/font/FiraCode-Retina.ttf",
+		"Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Regular.otf",
+		"Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Medium.otf",
+	},
+	userfonts = {
+		"Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf",
+		"Interface/AddOns/WeakAuras/Media/Fonts/FiraMono-Medium.ttf",
+	},
 	default_fontsize = 12,
 	macroeditors = {
 		enable = true,
@@ -52,7 +64,7 @@ local defaults = {
 		fontsize = nil,
 	},
 	debugmode = false,
-	["Read Me!"] = "Hi there! Probably you have opened this SavedVariables file to directly edit the font path. Good idea! This help text is for you: ——— The default path ['font'] points to the PT Mono font, inside the 'fonts' folder of the addon itself. ——— The addon can load any font that is located in the World of 'Warcraft/_retail_/Interface/AddOns' directory, where 'Interface' serves as root folder for the path. ——— So, for example, to use a font that you already have installed for SharedMedia: 'Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf'. But you can also just toss the font into the AddOns folder and set the path like 'Interface/AddOns/MyFont.ttf'.",
+	["Read Me!"] = "Hi there! Probably you have opened this SavedVariables file to directly edit the font paths. Good idea! This help text is for you: ——— The default path, the first one in the ['fonts'] list, points to the PT Mono font, inside the 'fonts' folder of the addon itself. ——— The addon can load any font that is located in the World of 'Warcraft/_retail_/Interface/AddOns' directory, where 'Interface' serves as root folder for the path. ——— So, for example, to use a font that you already have installed for SharedMedia: 'Interface/AddOns/SharedMedia_MyMedia/font/MyFont.ttf'. But you can also just toss the font into the AddOns folder and set the path like 'Interface/AddOns/MyFont.ttf'. You can add as many paths to the ['fonts'] list as you want. ——— Do not edit the ['font'] key, as this holds the index for the currently active font from the ['fonts'] list.",
 }
 
 local function merge_defaults(src, dst)
