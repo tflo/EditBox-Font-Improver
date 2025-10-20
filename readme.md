@@ -11,7 +11,7 @@ The addon lets you set your custom font and font size for the edit boxes of:
 - [ScriptLibrary](https://www.curseforge.com/wow/addons/script-library): Edit box
 - [BugSack](https://www.curseforge.com/wow/addons/bugsack): Main window text (not an edit box, but it contains code that should be readable)
 
-The main point is that in these macro/code boxes we want a clean, monospaced font, and not Friz Quadrata, Arial Narrow, or similar nonsense. (WoWLua is an exception, as it already uses a monospaced font. EBFI allows you to replace it with the one of your choice.)
+The main point is that in these macro/code boxes we want a clean, monospaced font, and not Friz Quadrata, Arial Narrow, or similar nonsense. (WoWLua is an exception, as it already uses a monospaced font. EFI allows you to replace it with the one of your choice.)
 
 This not an addon to globally change the WoW UI font! Its scope is to make the coding font of your choice available in macro and script editor addons (and BugSack), without affecting the rest of the UI.
 
@@ -38,15 +38,15 @@ The easiest way to add your own font paths is by editing the SavedVariables file
 
 The first one is the already mentioned PT Mono font that comes with the addon itself. The second one is the monospaced font in the WeakAuras folder. So if you happen to have WeakAuras installed, you can already switch between these two fonts.
 
-The command for this is `/ebfi font <number>` or shorter `/ebfi f <number>`. So, to select the WeakAuras Fira Mono font, you simply enter `/ebfi f 2`. With `/ebfi f 1` you select the included default font again.
+The command for this is `/efi font <number>` or shorter `/efi f <number>`. So, to select the WeakAuras Fira Mono font, you simply enter `/efi f 2`. With `/efi f 1` you select the included default font again.
 
-The point of this font list is not to provide you with an exhaustive font collection out of the box (EBFI is not a media addon), but to give you the possibility to add your own favorite fonts and easily switch between them.
+The point of this font list is not to provide you with an exhaustive font collection out of the box (EFI is not a media addon), but to give you the possibility to add your own favorite fonts and easily switch between them.
 
 You can use any font that is located inside the `World of Warcraft/_retail_/Interface/AddOns` directory. If you already have a bunch of fonts installed (for example in a [SharedMedia](https://www.curseforge.com/wow/addons/sharedmedia) folder like `Interface/AddOns/SharedMedia_MyMedia`), just add the paths.
 
 Note that `Interface` must be the root folder of *any* font path. 
 
-EBFI’s SavedVariables file is at the usual location: 
+EFI’s SavedVariables file is at the usual location: 
 `World of Warcraft/_retail_/WTF/Account/<number>/SavedVariables/EditBox-Font-Improver.lua`.
 
 To edit and save the SavedVariables file, you have to be logged out (but not necessary to quit the game). Otherwise the game client will overwrite your changes at logout.
@@ -76,13 +76,13 @@ Use `true` to re-enable.
 
 You can change the font size with a slash command:
 
-`/editboxfontimprover <font size>` or `/ebfi <font size>`
+`/editboxfontimprover <font size>` or `/efi <font size>`
 
-For example `/ebfi 14`.
+For example `/efi 14`.
 
-This affects only the addons that are set to use EBFI’s default font size, which are the addons that do not have their own font size setting (currently Blizz Macro UI, M6, and OPie). WowLua, ScriptLibrary, and BugSack have their own font size setting, and EBFI by default will not override it.
+This affects only the addons that are set to use EFI’s default font size, which are the addons that do not have their own font size setting (currently Blizz Macro UI, M6, and OPie). WowLua, ScriptLibrary, and BugSack have their own font size setting, and EFI by default will not override it.
 
-However you can enforce EBFI’s font size for these addons with the `/ebfi unisize` command. Revert back with `/ebfi ownsize`.
+However you can enforce EFI’s font size for these addons with the `/efi unisize` command. Revert back with `/efi ownsize`.
 
 Note that even with `unisize` you can still use the respective addon’s font size setting. The size will just be reset at login, or when you use the slash command to change the size or to switch to another font.
 
