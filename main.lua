@@ -42,7 +42,7 @@ local DB_VERSION_CURRENT = 1
 
 -- Nilified all individual fontsizes, as no longer planned
 local defaults = {
-	font = 1,
+	font = 'Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf',
 	-- not yet implemented, TODO
 	userfonts = {
 		"Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf",
@@ -91,7 +91,7 @@ local dfonts = {
 -- not yet implemented, TODO
 local ufonts = db.userfonts
 
-local efi_font = dfonts[db.font]
+local efi_font = db.font
 
 local function debugprint(...)
 	if db.debugmode then
@@ -444,7 +444,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		else
 			efi_font = dfonts[selection]
 			if refresh_setup() then
-				db.font = selection
+				db.font = dfonts[selection]
 				efiprint(
 					format(
 						'Your new font is "%s" (#%s of %s).',
