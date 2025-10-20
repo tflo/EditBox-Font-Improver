@@ -78,6 +78,8 @@ local db = _G.EBFI_DB
 	Setup
 ===========================================================================]]--
 
+local ebfi_font = db.fonts[db.font]
+
 local function debugprint(...)
 	if db.debugmode then
 		local a, b = strsplit(".", GetTimePreciseSec())
@@ -86,9 +88,9 @@ local function debugprint(...)
 end
 
 local function create_fontobj()
-	local ebfi_font = CreateFont "ebfi_font"
-	ebfi_font:SetFont(db.font, db.default_fontsize, FLAGS)
-	if ebfi_font:GetFont() == db.font then return true end
+	local ebfi_fontobject = CreateFont "ebfi_fontobject"
+	ebfi_fontobject:SetFont(ebfi_font, db.default_fontsize, FLAGS)
+	if ebfi_fontobject:GetFont() == ebfi_font then return true end
 	warnprint(FONTPATH_WARNING)
 end
 
@@ -148,7 +150,7 @@ function addons.macroeditors.setup()
 	}
 	-- Don't use `ipairs' because the entries may be nil (addon not loaded).
 	for _, box in pairs(editboxes) do
-		box:SetFontObject(ebfi_font)
+		box:SetFontObject(ebfi_fontobject)
 	end
 	addons.macroeditors.setup_done = true
 	debugprint "Setup for misc macro editors run."
@@ -175,8 +177,8 @@ end
 function addons.wowlua.setup()
 	if WowLuaMonoFontSpaced then
 		local size = db.wowlua.ownsize and WowLua_DB.fontSize or db.default_fontsize
-		WowLuaMonoFont:SetFont(db.font, size, FLAGS)
-		WowLuaMonoFontSpaced:SetFont(db.font, size, FLAGS)
+		WowLuaMonoFont:SetFont(ebfi_font, size, FLAGS)
+		WowLuaMonoFontSpaced:SetFont(ebfi_font, size, FLAGS)
 		-- Needed to apply the font (not only the size)
 		WowLua:UpdateFontSize(size)
 		addons.wowlua.setup_done = true
@@ -203,9 +205,9 @@ function addons.bugsack.setup()
 	if BugSackScrollText then
 		if db.bugsack.ownsize then
 			local currentsize = BugSackScrollText:GetFontObject():GetFontHeight()
-			BugSackScrollText:SetFont(db.font, tonumber(currentsize) or db.default_fontsize, FLAGS)
+			BugSackScrollText:SetFont(ebfi_font, tonumber(currentsize) or db.default_fontsize, FLAGS)
 		else
-			BugSackScrollText:SetFontObject(ebfi_font)
+			BugSackScrollText:SetFontObject(ebfi_fontobject)
 		end
 		addons.bugsack.setup_done = true
 	else
@@ -241,7 +243,7 @@ function addons.scriptlibrary.setup()
 		local size = db.scriptlibrary.ownsize
 				and tonumber((select(2, RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:GetFont())))
 			or db.default_fontsize
-		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(db.font, size, FLAGS)
+		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(ebfi_font, size, FLAGS)
 		addons.scriptlibrary.setup_done = true
 	else
 		warnprint "ScriptLibrary target frame not found. Could not set font."
@@ -317,6 +319,7 @@ local function refresh_setup()
 	for k, v in pairs(addons) do
 		if db[k].enable and v.setup_done then v.setup() end
 	end
+	return true
 end
 
 SLASH_EditBoxFontImprover1 = "/editboxfontimprover"
@@ -330,9 +333,10 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		local size = max(min(tonumber(args[1]), 28), 6)
 		db.default_fontsize = size
 		ebfiprint(
-			"Font size now set to "
-				.. db.default_fontsize
-				.. ". This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack)."
+			format(
+				"Font size now set to %s. This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack).",
+				db.default_fontsize
+			)
 		)
 		refresh_setup()
 	elseif args[1] == "unisize" then
@@ -350,7 +354,40 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	elseif args[1] == "dm" or args[1] == "debug" then
 		db.debugmode = not db.debugmode
 		ebfiprint("Debug mode: " .. (db.debugmode and "On" or "Off"))
+	elseif args[1] == "font" or args[1] == "f" and tonumber(args[2]) then
+		local selection = tonumber(args[2])
+		if db.font == selection then
+			ebfiprint("The font you have selected (#" .. selection .. ") is already loaded.")
+		elseif not db.fonts[selection] then
+			ebfiprint(
+				format(
+					"The font you have selected (#%s) does not exist. Your font list contains %s fonts.",
+					selection,
+					#db.fonts
+				)
+			)
+		else
+			ebfi_font = db.fonts[selection]
+			if refresh_setup() then
+				db.font = selection
+				ebfiprint(
+					format(
+						'Your new font is "%s" (#%s of %s).',
+						db.fonts[db.font]:match("[^/\\]+$"),
+						db.font,
+						#db.fonts
+					)
+				)
+			else
+				ebfiprint(
+					format(
+						"The path of your selected font (#%s) is not valid!. Your previous font will be used instead.",
+						selection
+					)
+				)
+			end
+		end
 	else
-		ebfiprint 'Supported arguments: Font Size, for example "14" (default is 12); "unisize" to force all addons to use EBFI\'s font size; "ownsize" to not override the addons\'s own size setting, if it has one (default).'
+		ebfiprint 'Supported arguments: Font Size, for example "14" (default is 12). \n"unisize" to force all addons to use EBFI\'s font size; "ownsize" to not override the addons\'s own size setting, if it has one (default). \nSelect another font from your list with "f <number>".'
 	end
 end
