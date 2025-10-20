@@ -5,23 +5,21 @@ local MYNAME, _ = ...
 
 local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
-local FLAGS = "" -- For our purpose, we do not want any outlining.
+local FLAGS = '' -- For our purpose, we do not want any outlining.
 
-local CLR_EBFI = "ffD783FF"
+local CLR_EBFI = 'ffD783FF'
 local CLR_WARN = WARNING_FONT_COLOR
-local MSG_PREFIX = WrapTextInColorCode("EditBox Font Improver:", CLR_EBFI)
-local FONTPATH_WARNING = RED_FONT_COLOR:WrapTextInColorCode("Font path is not valid!")
+local MSG_PREFIX = WrapTextInColorCode('EditBox Font Improver:', CLR_EBFI)
+local FONTPATH_WARNING = RED_FONT_COLOR:WrapTextInColorCode('Font path is not valid!')
 	.. " Make sure there is a valid font path set in the addon's SavedVariables file. Check out the addon's readme/description for more information."
 
 -- We opt to not raise an error if a font cannot be set, and just print a one-time warning.
 -- The user will notice that the font is not set when they open the relevant addon.
 local function warnprint(msg)
-	print(format("%s %s %s", MSG_PREFIX, CLR_WARN:WrapTextInColorCode("WARNING:"), msg))
+	print(format('%s %s %s', MSG_PREFIX, CLR_WARN:WrapTextInColorCode('WARNING:'), msg))
 end
 
-local function ebfiprint(msg)
-	print(format("%s %s", MSG_PREFIX, msg))
-end
+local function ebfiprint(msg) print(format('%s %s', MSG_PREFIX, msg)) end
 
 --[[===========================================================================
 	Defaults
@@ -71,9 +69,7 @@ local function merge_defaults(src, dst)
 	for k, v in pairs(src) do
 		local src_type = type(v)
 		if src_type == 'table' then
-			if type(dst[k]) ~= 'table' then
-				dst[k] = {}
-			end
+			if type(dst[k]) ~= 'table' then dst[k] = {} end
 			merge_defaults(v, dst[k])
 		elseif type(dst[k]) ~= src_type then
 			dst[k] = v
@@ -94,13 +90,16 @@ local ebfi_font = db.fonts[db.font]
 
 local function debugprint(...)
 	if db.debugmode then
-		local a, b = strsplit(".", GetTimePreciseSec())
-		print(format("[%s.%s] %sEBFI >>> Debug >>>\124r", a:sub(-3), b:sub(1, 3), "\124cffEE82EE"), ...)
+		local a, b = strsplit('.', GetTimePreciseSec())
+		print(
+			format('[%s.%s] %sEBFI >>> Debug >>>\124r', a:sub(-3), b:sub(1, 3), '\124cffEE82EE'),
+			...
+		)
 	end
 end
 
 local function create_fontobj()
-	local ebfi_fontobject = CreateFont "ebfi_fontobject"
+	local ebfi_fontobject = CreateFont 'ebfi_fontobject'
 	ebfi_fontobject:SetFont(ebfi_font, db.default_fontsize, FLAGS)
 	if ebfi_fontobject:GetFont() == ebfi_font then return true end
 	warnprint(FONTPATH_WARNING)
@@ -165,7 +164,7 @@ function addons.macroeditors.setup()
 		box:SetFontObject(ebfi_fontobject)
 	end
 	addons.macroeditors.setup_done = true
-	debugprint "Setup for misc macro editors run."
+	debugprint 'Setup for misc macro editors run.'
 end
 
 -- NOTE for the user:
@@ -197,7 +196,7 @@ function addons.wowlua.setup()
 	else
 		warnprint "WowLua's `WowLuaMonoFontSpaced` not found. Could not set font."
 	end
-	debugprint "WowLua setup run."
+	debugprint 'WowLua setup run.'
 
 	-- Spacing disabled for the moment, since this messes up the cursor position
 	-- local spacing = tonumber(spacing_wowlua)
@@ -217,25 +216,29 @@ function addons.bugsack.setup()
 	if BugSackScrollText then
 		if db.bugsack.ownsize then
 			local currentsize = BugSackScrollText:GetFontObject():GetFontHeight()
-			BugSackScrollText:SetFont(ebfi_font, tonumber(currentsize) or db.default_fontsize, FLAGS)
+			BugSackScrollText:SetFont(
+				ebfi_font,
+				tonumber(currentsize) or db.default_fontsize,
+				FLAGS
+			)
 		else
 			BugSackScrollText:SetFontObject(ebfi_fontobject)
 		end
 		addons.bugsack.setup_done = true
 	else
-		warnprint "BugSack target frame not found. Could not set font."
+		warnprint 'BugSack target frame not found. Could not set font.'
 	end
-	debugprint "BugSack setup run."
+	debugprint 'BugSack setup run.'
 end
 
 -- The main frame is not created before first open, so we have to hook.
 function addons.bugsack.hook()
 	if not BugSack.OpenSack then
-		warnprint "`BugSack.OpenSack` not found (needed for hook). Could not set font."
+		warnprint '`BugSack.OpenSack` not found (needed for hook). Could not set font.'
 		return
 	end
 	local done = false
-	hooksecurefunc(BugSack, "OpenSack", function()
+	hooksecurefunc(BugSack, 'OpenSack', function()
 		if not done then
 			done = true
 			addons.bugsack.setup()
@@ -253,25 +256,27 @@ end
 function addons.scriptlibrary.setup()
 	if RuntimeEditorMainWindowCodeEditorCodeEditorEditBox then
 		local size = db.scriptlibrary.ownsize
-				and tonumber((select(2, RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:GetFont())))
+				and tonumber(
+					(select(2, RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:GetFont()))
+				)
 			or db.default_fontsize
 		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(ebfi_font, size, FLAGS)
 		addons.scriptlibrary.setup_done = true
 	else
-		warnprint "ScriptLibrary target frame not found. Could not set font."
+		warnprint 'ScriptLibrary target frame not found. Could not set font.'
 	end
-	debugprint "ScriptLibrary setup run."
+	debugprint 'ScriptLibrary setup run.'
 end
 
 -- The main frame is not created before first open, so we have to hook.
 -- Couldn't find any accessible 'open' function, so we use the slash command.
 function addons.scriptlibrary.hook()
 	if not SlashCmdList.SCRIPTLIBRARY then
-		warnprint "`SlashCmdList.SCRIPTLIBRARY` not found (needed for hook). Could not set font."
+		warnprint '`SlashCmdList.SCRIPTLIBRARY` not found (needed for hook). Could not set font.'
 		return
 	end
 	local done = false
-	hooksecurefunc(SlashCmdList, "SCRIPTLIBRARY", function()
+	hooksecurefunc(SlashCmdList, 'SCRIPTLIBRARY', function()
 		if not done then
 			done = true
 			addons.scriptlibrary.setup()
@@ -288,7 +293,7 @@ end
 	Run the Stuff
 ===========================================================================]]--
 
-local ef = CreateFrame("Frame", MYNAME .. "_eventframe")
+local ef = CreateFrame('Frame', MYNAME .. '_eventframe')
 
 local function initial_setup()
 	for k, v in pairs(addons) do
@@ -302,22 +307,21 @@ local function PLAYER_LOGIN()
 		C_Timer.After(25, function() warnprint(FONTPATH_WARNING) end)
 		return
 	end
-	addons.wowlua.loaded = C_AddOns_IsAddOnLoaded "WowLua"
-	addons.scriptlibrary.loaded = C_AddOns_IsAddOnLoaded "ScriptLibrary"
-	addons.bugsack.loaded = C_AddOns_IsAddOnLoaded "BugSack"
+	addons.wowlua.loaded = C_AddOns_IsAddOnLoaded 'WowLua'
+	addons.scriptlibrary.loaded = C_AddOns_IsAddOnLoaded 'ScriptLibrary'
+	addons.bugsack.loaded = C_AddOns_IsAddOnLoaded 'BugSack'
 	initial_setup()
 end
 
 local event_handlers = {
-	["PLAYER_LOGIN"] = PLAYER_LOGIN,
+	['PLAYER_LOGIN'] = PLAYER_LOGIN,
 }
 
 for event in pairs(event_handlers) do
 	ef:RegisterEvent(event)
 end
 
-
-ef:SetScript("OnEvent", function(_, event, ...)
+ef:SetScript('OnEvent', function(_, event, ...)
 	event_handlers[event](...) ---@diagnostic disable-line: redundant-parameter
 end)
 
@@ -334,11 +338,11 @@ local function refresh_setup()
 	return true
 end
 
-SLASH_EditBoxFontImprover1 = "/editboxfontimprover"
-SLASH_EditBoxFontImprover2 = "/ebfi"
+SLASH_EditBoxFontImprover1 = '/editboxfontimprover'
+SLASH_EditBoxFontImprover2 = '/ebfi'
 SlashCmdList.EditBoxFontImprover = function(msg)
 	local args = {}
-	for arg in msg:gmatch("[^ ]+") do
+	for arg in msg:gmatch('[^ ]+') do
 		tinsert(args, arg)
 	end
 	if tonumber(args[1]) then
@@ -346,34 +350,34 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		db.default_fontsize = size
 		ebfiprint(
 			format(
-				"Font size now set to %s. This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack).",
+				'Font size now set to %s. This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack).',
 				db.default_fontsize
 			)
 		)
 		refresh_setup()
-	elseif args[1] == "unisize" then
+	elseif args[1] == 'unisize' then
 		for k, v in pairs(addons) do
 			if v.has_sizecfg then db[k].ownsize = false end
 		end
 		ebfiprint "All addons set to use EBFI's default font size."
 		refresh_setup()
-	elseif args[1] == "ownsize" then
+	elseif args[1] == 'ownsize' then
 		for k, v in pairs(addons) do
 			if v.has_sizecfg then db[k].ownsize = true end
 		end
-		ebfiprint "All addons with a configurable font size will keep their own size setting."
+		ebfiprint 'All addons with a configurable font size will keep their own size setting.'
 		refresh_setup()
-	elseif args[1] == "dm" or args[1] == "debug" then
+	elseif args[1] == 'dm' or args[1] == 'debug' then
 		db.debugmode = not db.debugmode
-		ebfiprint("Debug mode: " .. (db.debugmode and "On" or "Off"))
-	elseif args[1] == "font" or args[1] == "f" and tonumber(args[2]) then
+		ebfiprint('Debug mode: ' .. (db.debugmode and 'On' or 'Off'))
+	elseif args[1] == 'font' or args[1] == 'f' and tonumber(args[2]) then
 		local selection = tonumber(args[2])
 		if db.font == selection then
-			ebfiprint("The font you have selected (#" .. selection .. ") is already loaded.")
+			ebfiprint('The font you have selected (#' .. selection .. ') is already loaded.')
 		elseif not db.fonts[selection] then
 			ebfiprint(
 				format(
-					"The font you have selected (#%s) does not exist. Your font list contains %s fonts.",
+					'The font you have selected (#%s) does not exist. Your font list contains %s fonts.',
 					selection,
 					#db.fonts
 				)
@@ -385,7 +389,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 				ebfiprint(
 					format(
 						'Your new font is "%s" (#%s of %s).',
-						db.fonts[db.font]:match("[^/\\]+$"),
+						db.fonts[db.font]:match('[^/\\]+$'),
 						db.font,
 						#db.fonts
 					)
@@ -393,7 +397,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 			else
 				ebfiprint(
 					format(
-						"The path of your selected font (#%s) is not valid!. Your previous font will be used instead.",
+						'The path of your selected font (#%s) is not valid!. Your previous font will be used instead.',
 						selection
 					)
 				)
