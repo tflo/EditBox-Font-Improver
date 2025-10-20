@@ -434,6 +434,12 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	elseif args[1] == 'resetdb' or args[1] == 'dbreset' then
 		wipe(db)
 		efiprint(format('Database reset: %s', next(db) == nil and 'Yes' or 'FAILED TO RESET DB!'))
+	elseif args[1] == 'inv' or args[1] == 'font' then
+		db.font = db.font:gsub('Interface', 'InterfaceX')
+		efiprint(format('Font path invalidated to: %s', db.font))
+	elseif args[1] == 'rev' or args[1] == 'font' then
+		db.font = db.font:gsub('InterfaceX', 'Interface')
+		efiprint(format('Font path revalidated to: %s', db.font))
 	elseif args[1] == 'status' or args[1] == 's' then
 		efiprint(format('Status:'))
 		local lines = {
