@@ -343,9 +343,23 @@ local function refresh_setup()
 	return true
 end
 
-local function fontname(path)
+local function idx_from_path(path, array)
+	local arrays = array and { array } or { dfonts, ufonts }
+	for _, array in ipairs(arrays) do
+		for i, v in ipairs(array) do
+			if v == path then return array == ufonts and 'u' .. i or i end
+		end
+	end
+	return 'no index'
+end
+
+local function fontname(path, withidx, array)
+	withidx = withidx == nil and true or withidx
+	local idx = withidx and idx_from_path(path, array)
 	local pattern = db.debugmode and '[^/\\]+$' or '([^/\\]+)%.[tof]+'
-	return tostring(path):match(pattern) or '<NOTHING FOUND>'
+	local name = tostring(path):match(pattern)
+	if not name then return '<NOTHING FOUND>' end
+	return idx and '[' .. idx .. '] ' .. name or name
 end
 
 local function fontpath(path)
@@ -359,7 +373,7 @@ local function listfonts(array, withpath, sep)
 	local t ={}
 	local func = withpath and fontpath or fontname
 	for _,v in ipairs(array) do
-		tinsert(t, func(v))
+		tinsert(t, func(v)) -- , true, array
 	end
 	return table.concat(t, sep)
 end
@@ -431,12 +445,17 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	-- END debug commands
 	elseif args[1] == 'font' or args[1] == 'f' and tonumber(args[2]) then
 		local selection = tonumber(args[2])
-		if db.font == selection then
-			efiprint('The font you have selected (#' .. selection .. ') is already loaded.')
+		if db.font == dfonts[selection] then
+			efiprint(
+				format(
+					'The font you have selected (%s) is already loaded.',
+					fontname(dfonts[selection])
+				)
+			)
 		elseif not dfonts[selection] then
 			efiprint(
 				format(
-					'The font you have selected (#%s) does not exist. Your font list contains %s fonts.',
+					'The font you have selected (default font [%s]) does not exist. The font list contains %s fonts.',
 					selection,
 					#dfonts
 				)
@@ -446,17 +465,12 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 			if refresh_setup() then
 				db.font = dfonts[selection]
 				efiprint(
-					format(
-						'Your new font is "%s" (#%s of %s).',
-						fontname(dfonts[db.font]),
-						db.font,
-						#dfonts
-					)
+					format('Your new font is %s.', fontname(db.font))
 				)
 			else
 				efiprint(
 					format(
-						'The path of your selected font (#%s) is not valid!. Your previous font will be used instead.',
+						'The path of your selected font (default font [%s]) is not valid!. Your previous font will be used instead.',
 						selection
 					)
 				)
