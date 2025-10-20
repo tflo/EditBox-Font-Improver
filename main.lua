@@ -345,7 +345,38 @@ end
 
 local function fontname(path)
 	local pattern = db.debugmode and '[^/\\]+$' or '([^/\\]+)%.[tof]+'
-	return path:match(pattern) or '<NO MATCH>'
+	return tostring(path):match(pattern) or '<NOTHING FOUND>'
+end
+
+local function fontpath(path)
+	local pattern = '.+[/\\]'
+	return tostring(path):match(pattern) or '<NOTHING FOUND>'
+end
+
+local function listfonts(array, withpath, sep)
+	if #array == 0 then return '<NOTHING FOUND>' end
+	sep = sep or ', '
+	local t ={}
+	local func = withpath and fontpath or fontname
+	for _,v in ipairs(array) do
+		tinsert(t, func(v))
+	end
+	return table.concat(t, sep)
+end
+
+local function listfontpaths(array, sep)
+	if #array == 0 then return '<NOTHING FOUND>' end
+	sep = sep or ', '
+	local seen, result = {}, {}
+	for _, v in ipairs(array) do
+		local path = fontpath(v)
+		if not seen[path] then
+			seen[path] = true
+			tinsert(result, path)
+		end
+	end
+	table.sort(result)
+	return table.concat(result, sep)
 end
 
 SLASH_EditBoxFontImprover1 = '/efi'
@@ -378,9 +409,26 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		end
 		efiprint 'All addons with a configurable font size will keep their own size setting.'
 		refresh_setup()
+	-- BEGIN debug commands
 	elseif args[1] == 'dm' or args[1] == 'debug' then
 		db.debugmode = not db.debugmode
-		efiprint('Debug mode: ' .. (db.debugmode and 'On' or 'Off'))
+		efiprint(format('Debug mode: ', db.debugmode and 'On' or 'Off'))
+	elseif args[1] == 'resetdb' or args[1] == 'dbreset' then
+		wipe(db)
+		efiprint(format('Database reset: %s', next(db) == nil and 'Yes' or 'FAILED TO RESET DB!'))
+	elseif args[1] == 'status' or args[1] == 's' then
+		efiprint(format('Status:'))
+		local lines = {
+			format('Current font: %s', fontname(db.font)),
+			format('Current font path: %s', fontpath(db.font)),
+			format('Num fonts: default: %s; user: %s', #dfonts, #ufonts),
+			format('Default fonts: %s', listfonts(dfonts)),
+			format('User fonts: %s', listfonts(ufonts)),
+			format('User font paths: \n   %s', listfontpaths(ufonts, '\n   ')),
+			format('Debug mode: %s', db.debugmode and 'On' or 'Off'),
+		}
+		for _, v in ipairs(lines) do print(v) end
+	-- END debug commands
 	elseif args[1] == 'font' or args[1] == 'f' and tonumber(args[2]) then
 		local selection = tonumber(args[2])
 		if db.font == selection then
