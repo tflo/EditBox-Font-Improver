@@ -360,6 +360,10 @@ local function refresh_setup()
 	return true
 end
 
+local function prettyname(name)
+	return name:gsub('[_-]+', ' '):gsub('%W%l', strupper):gsub('^pt ', 'PT ')
+end
+
 local function idx_from_path(path, array)
 	local arrays = array and { array } or { dfonts, ufonts }
 	for _, array in ipairs(arrays) do
@@ -376,6 +380,7 @@ local function fontname(path, withidx, array)
 	local pattern = db.debugmode and '[^/\\]+$' or '([^/\\]+)%.[tof]+'
 	local name = tostring(path):match(pattern)
 	if not name then return NOTHING_FOUND end
+	name = db.debugmode and name or prettyname(name)
 	return WTC(idx and '[' .. idx .. '] ' .. name or name, CLR_FONT)
 end
 
