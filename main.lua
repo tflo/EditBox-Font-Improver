@@ -443,7 +443,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	-- BEGIN debug commands
 	elseif args[1] == 'dm' or args[1] == 'debug' then
 		db.debugmode = not db.debugmode
-		efiprint(format('Debug mode: ', db.debugmode and 'On' or 'Off'))
+		efiprint(format('Debug mode: %s', db.debugmode and 'On' or 'Off'))
 	elseif args[1] == 'resetdb' or args[1] == 'dbreset' then
 		wipe(db)
 		efiprint(format('Database reset: %s', next(db) == nil and 'Yes' or 'FAILED TO RESET DB!'))
