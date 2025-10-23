@@ -86,14 +86,24 @@ local db = _G.EBFI_DB
 	Setup
 ===========================================================================]]--
 
-local dfonts = {
-	'Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf',
-	'Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Regular.ttf',
-	'Interface/AddOns/EditBox-Font-Improver/font/FiraMono-Medium.ttf',
-	'Interface/AddOns/EditBox-Font-Improver/font/InputMono-Regular.ttf',
-	'Interface/AddOns/EditBox-Font-Improver/font/InputMonoCompressed-Regular.ttf',
-	'Interface/AddOns/EditBox-Font-Improver/font/InputSans-Regular.ttf',
+local font_names = {
+	'pt-mono_regular.ttf',
+	'FiraMono-Regular.ttf',
+	'FiraMono-Medium.ttf',
+	'Hack-Regular.ttf',
+	'IBMPlexMono-Light.ttf',
+	'IBMPlexMono-Regular.ttf',
+	'IBMPlexMono-Text.ttf',
+	'IBMPlexMono-Medium.ttf',
+	'IBMPlexMono-SemiBold.ttf',
 }
+
+local base_path = 'Interface/AddOns/EditBox-Font-Improver/font/'
+
+local dfonts = {}
+for i, name in ipairs(font_names) do
+	dfonts[i] = base_path .. name
+end
 
 -- not yet implemented, TODO
 local ufonts = db.userfonts
