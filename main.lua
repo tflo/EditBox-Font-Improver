@@ -460,13 +460,19 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		efiprint(format('Font path revalidated to: %s', db.font))
 	elseif args[1] == 's' or args[1] == 'status' or args[1] == 'info' then
 		efiprint(format('Status:'))
-		local lines = {
+		local lines = db.debugmode and {
 			format('Current font: %s', fontname(db.font)),
-			format('Current font path: %s', fontpath(db.font)),
-			format('Num fonts: default: %s; user: %s', #dfonts, #ufonts),
+			format('Current font path: %s', fontpath(db.font)), -- TODO: user fonts
+			format('Num fonts: default: %s; user [NYI!]: %s', #dfonts, #ufonts), -- TODO: user fonts
 			format('Default fonts: %s', listfonts(dfonts)),
-			format('User fonts: %s', listfonts(ufonts)),
-			format('User font paths: \n   %s', listfontpaths(ufonts, '\n   ')),
+			format('User fonts [NYI!]: %s', listfonts(ufonts)), -- TODO: user fonts
+			format('User font paths [NYI!]: \n   %s', listfontpaths(ufonts, '\n   ')), -- TODO: user fonts
+			format('Debug mode: %s', db.debugmode and 'On' or 'Off'),
+		}
+		or {
+			format('Current font: %s', fontname(db.font)),
+			format('Num available fonts: %s', #dfonts),
+			format('Available fonts: %s', listfonts(dfonts)),
 			format('Debug mode: %s', db.debugmode and 'On' or 'Off'),
 		}
 		for _, v in ipairs(lines) do
