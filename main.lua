@@ -453,7 +453,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	elseif args[1] == 'rev' or args[1] == 'font' then
 		db.font = db.font:gsub('AddOnsXXX', 'AddOns')
 		efiprint(format('Font path revalidated to: %s', db.font))
-	elseif args[1] == 'status' or args[1] == 's' then
+	elseif args[1] == 's' or args[1] == 'status' or args[1] == 'info' then
 		efiprint(format('Status:'))
 		local lines = {
 			format('Current font: %s', fontname(db.font)),
