@@ -8,19 +8,22 @@ local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 local FLAGS = '' -- For our purpose, we do not want any outlining.
 
-local CLR_EFI = 'ffD783FF'
-local CLR_WARN = 'ffFF4800'
-local CLR_BAD = 'ffDC143C'
-local CLR_FONT = 'ff00FA9A'
-local CLR_PATH = 'ff90EE90'
-local MSG_PREFIX = WTC('EditBox Font Improver:', CLR_EFI)
-local FONTPATH_WARNING = WTC('Font path is not valid!', CLR_WARN)
+local CLR = {
+	EFI = 'ffD783FF',
+	WARN = 'ffFF4800',
+	BAD = 'ffDC143C',
+	FONT = 'ff00FA9A',
+	PATH = 'ff90EE90',
+}
+
+local MSG_PREFIX = WTC('EditBox Font Improver:', CLR.EFI)
+local FONTPATH_WARNING = WTC('Font path is not valid!', CLR.WARN)
 	.. " Make sure that a font file exists at this location, or change the path: \n%s"
-local NOTHING_FOUND = WTC('<NOTHING FOUND>', CLR_BAD)
+local NOTHING_FOUND = WTC('<NOTHING FOUND>', CLR.BAD)
 -- We opt to not raise an error if a font cannot be set, and just print a one-time warning.
 -- The user will notice that the font is not set when they open the relevant addon.
 local function warnprint(msg)
-	print(format('%s %s %s', MSG_PREFIX, WTC('WARNING:', CLR_WARN), msg))
+	print(format('%s %s %s', MSG_PREFIX, WTC('WARNING:', CLR.WARN), msg))
 end
 
 local function efiprint(msg) print(format('%s %s', MSG_PREFIX, msg)) end
@@ -371,7 +374,7 @@ local function idx_from_path(path, array)
 			if v == path then return array == ufonts and 'u' .. i or i end
 		end
 	end
-	return WTC('<no index>', CLR_BAD)
+	return WTC('<no index>', CLR.BAD)
 end
 
 local function fontname(path, withidx, array)
@@ -381,12 +384,12 @@ local function fontname(path, withidx, array)
 	local name = tostring(path):match(pattern)
 	if not name then return NOTHING_FOUND end
 	name = db.debugmode and name or prettyname(name)
-	return WTC(idx and '[' .. idx .. ']\194\160' .. name or name, CLR_FONT)
+	return WTC(idx and '[' .. idx .. ']\194\160' .. name or name, CLR.FONT)
 end
 
 local function fontpath(path)
 	local pattern = '.+[/\\]'
-	return WTC(tostring(path):match(pattern), CLR_PATH) or NOTHING_FOUND
+	return WTC(tostring(path):match(pattern), CLR.PATH) or NOTHING_FOUND
 end
 
 local function listfonts(array, withpath, sep)
