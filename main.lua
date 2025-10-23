@@ -381,7 +381,7 @@ local function fontname(path, withidx, array)
 	local name = tostring(path):match(pattern)
 	if not name then return NOTHING_FOUND end
 	name = db.debugmode and name or prettyname(name)
-	return WTC(idx and '[' .. idx .. '] ' .. name or name, CLR_FONT)
+	return WTC(idx and '[' .. idx .. ']\194\160' .. name or name, CLR_FONT)
 end
 
 local function fontpath(path)
