@@ -86,23 +86,23 @@ local db = _G.EBFI_DB
 	Setup
 ===========================================================================]]--
 
-local font_names = {
-	'pt-mono_regular.ttf',
-	'FiraMono-Regular.ttf',
-	'FiraMono-Medium.ttf',
-	'Hack-Regular.ttf',
-	'IBMPlexMono-Light.ttf',
-	'IBMPlexMono-Regular.ttf',
-	'IBMPlexMono-Text.ttf',
-	'IBMPlexMono-Medium.ttf',
-	'IBMPlexMono-SemiBold.ttf',
+local dnames = {
+	'pt-mono_regular',
+	'FiraMono-Regular',
+	'FiraMono-Medium',
+	'Hack-Regular',
+	'IBMPlexMono-Light',
+	'IBMPlexMono-Regular',
+	'IBMPlexMono-Text',
+	'IBMPlexMono-Medium',
+	'IBMPlexMono-SemiBold',
 }
 
-local base_path = 'Interface/AddOns/EditBox-Font-Improver/font/'
+local base_path, extension = 'Interface/AddOns/EditBox-Font-Improver/font/', '.ttf'
 
 local dfonts = {}
-for i, name in ipairs(font_names) do
-	dfonts[i] = base_path .. name
+for i, name in ipairs(dnames) do
+	dfonts[i] = base_path .. name .. extension
 end
 
 -- not yet implemented, TODO
