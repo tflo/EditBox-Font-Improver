@@ -100,7 +100,7 @@ local db = _G.EBFI_DB
 	Setup
 ===========================================================================]]--
 
-local dnames = {
+local dfonts = {
 	'pt-mono_regular',
 	'FiraMono-Regular',
 	'FiraMono-Medium',
@@ -114,9 +114,8 @@ local dnames = {
 
 local base_path, extension = 'Interface/AddOns/EditBox-Font-Improver/font/', '.ttf'
 
-local dfonts = {}
-for i, name in ipairs(dnames) do
-	dfonts[i] = base_path .. name .. extension
+for i, v in ipairs(dfonts) do
+	dfonts[i] = base_path .. v .. extension
 end
 
 -- not yet implemented, TODO
