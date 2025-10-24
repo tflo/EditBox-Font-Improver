@@ -467,6 +467,7 @@ local function listfontpaths(array, sep)
 	return table.concat(result, sep)
 end
 
+
 --[[----------------------------------------------------------------------------
 	Large texts
 ----------------------------------------------------------------------------]]--
@@ -558,7 +559,7 @@ local BLOCKSEP = CLR.EFI(strrep('+', 42))
 
 
 --[[----------------------------------------------------------------------------
-	Slash cmd
+	Slash function
 ----------------------------------------------------------------------------]]--
 
 SLASH_EditBoxFontImprover1 = '/efi'
@@ -569,7 +570,76 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	for arg in msg:gmatch('[^ ]+') do
 		tinsert(args, arg)
 	end
-	if tonumber(args[1]) then
+	-- Multi args: F
+	-- Font selection by index
+	if (args[1] == 'f' or args[1] == 'font') and tonumber(args[2]) then
+		local selection = floor(args[2])
+		if db.font == dfonts[selection] then
+			efiprint(
+				format(
+					'The font you have selected (%s) is already loaded.',
+					CLR.FONT(fontname(dfonts[selection]))
+				)
+			)
+		elseif not dfonts[selection] then
+			efiprint(
+				format(
+					'The font you have selected (%s) does not exist. The font list contains only %s fonts.',
+					CLR.FONT('[' .. selection .. ']'),
+					CLR.KEY(#dfonts)
+				)
+			)
+		else
+			efi_font = dfonts[selection]
+			if refresh_setup() then
+				db.font = dfonts[selection]
+				efiprint(format('Your new font is %s.', CLR.FONT(fontname(db.font))))
+			else
+				efiprint(
+					format(
+						'The path of your selected font (%s) is not valid!. Your previous font will be used instead.',
+						CLR.FONT('[' .. selection .. ']')
+					)
+				)
+			end
+		end
+	elseif args[1] == 'f' and args[2] == 'inval' then -- Debug
+		db.font = db.font:gsub('AddOns', 'AddOnsXXX')
+		efiprint(format('Font path invalidated to: %s', db.font))
+	elseif args[1] == 'f' and args[2] == 'reval' then -- Debug
+		db.font = db.font:gsub('AddOnsXXX', 'AddOns')
+		efiprint(format('Font path revalidated to: %s', db.font))
+	-- Multi args: DB (debug)
+	elseif args[1] == 'db' and args[2] == 'reset' then -- Debug
+		empty_db()
+		merge_defaults(defaults, _G.EBFI_DB)
+		db = _G.EBFI_DB
+		efiprint(
+			format(
+				'Database reset to defaults: %s',
+				db.db_touched and CLR.BAD('Failed to reset the DB!') or 'Yes.'
+			)
+		)
+	elseif args[1] == 'db' and (args[2] == 'empty' or args[2] == 'wipe') then -- Debug
+		empty_db()
+		efiprint(
+			format(
+				'Database emptied: %s',
+				next(db) == nil and 'Yes. Reload now.' or CLR.BAD('Failed to wipe the DB!')
+			)
+		)
+	elseif args[1] == 'db' and args[2] == 'delete' then -- Debug
+		_G.EBFI_DB, db = nil, nil
+		efiprint(
+			format(
+				'Database deleted: %s',
+				db == nil and 'Yes. Reload now.' or CLR.BAD('Failed to delete the DB!')
+			)
+		)
+	elseif args[1] == 'db' and (args[2] == 'show' or args[2] == 'dump') then -- Debug
+		DevTools_Dump(db)
+	-- Single arg
+	elseif tonumber(args[1]) then
 		local size = max(min(tonumber(args[1]), 28), 6)
 		db.fontsize = size
 		efiprint(
@@ -591,30 +661,6 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		end
 		efiprint 'All addons with a configurable font size will keep their own size setting.'
 		refresh_setup()
-	-- BEGIN debug commands
-	elseif args[1] == 'dm' or args[1] == 'debug' then
-		db.debugmode = not db.debugmode
-		efiprint(format('Debug mode: %s', db.debugmode and 'On' or 'Off'))
-	elseif args[1] == 'resetdb' or args[1] == 'dbreset' then
-		empty_db()
-		merge_defaults(defaults, _G.EBFI_DB)
-		db = _G.EBFI_DB
-		efiprint(format('Database reset to defaults: %s', db.db_touched and CLR.BAD('Failed to reset the DB!') or 'Yes.'))
-	elseif args[1] == 'emptydb' or args[1] == 'dbempty' or args[1] == 'dbwipe' or args[1] == 'wipedb' then
-		empty_db()
-		efiprint(format('Database emptied: %s', next(db) == nil and 'Yes. Reload now.' or CLR.BAD('Failed to wipe the DB!')))
-	elseif args[1] == 'deletedb' or args[1] == 'dbdelete' then
-		_G.EBFI_DB, db = nil, nil
-		efiprint(format('Database deleted: %s', db == nil and 'Yes. Reload now.' or CLR.BAD('Failed to delete the DB!')))
-	elseif args[1] == 'showdb' or args[1] == 'dbshow' then
-		DevTools_Dump(db)
-	elseif args[1] == 'inv' or args[1] == 'font' then
-		db.font = db.font:gsub('AddOns', 'AddOnsXXX')
-		efiprint(format('Font path invalidated to: %s', db.font))
-	elseif args[1] == 'rev' or args[1] == 'font' then
-		db.font = db.font:gsub('AddOnsXXX', 'AddOns')
-		efiprint(format('Font path revalidated to: %s', db.font))
-	-- END debug commands
 	elseif args[1] == nil or args[1] == 's' or args[1] == 'status' or args[1] == 'info' then
 		print(BLOCKSEP)
 		efiprint(CLR.HEAD('Status & Info:'))
@@ -626,43 +672,16 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		efiprint(CLR.HEAD('Command Help:'))
 		print_multi(fullhelpbody())
 		print(BLOCKSEP)
-	-- Font selection by index
-	elseif args[1] == 'f' or args[1] == 'font' and tonumber(args[2]) then
-		local selection = tonumber(args[2])
-		if db.font == dfonts[selection] then
-			efiprint(
-				format(
-					'The font you have selected (%s) is already loaded.',
-					fontname(dfonts[selection])
-				)
-			)
-		elseif not dfonts[selection] then
-			efiprint(
-				format(
-					'The font you have selected (default font [%s]) does not exist. The font list contains %s fonts.',
-					selection,
-					#dfonts
-				)
-			)
-		else
-			efi_font = dfonts[selection]
-			if refresh_setup() then
-				db.font = dfonts[selection]
-				efiprint(
-					format('Your new font is %s.', fontname(db.font))
-				)
-			else
-				efiprint(
-					format(
-						'The path of your selected font (default font [%s]) is not valid!. Your previous font will be used instead.',
-						selection
-					)
-				)
-			end
-		end
+	elseif args[1] == 'dm' or args[1] == 'debug' then
+		db.debugmode = not db.debugmode
+		efiprint(format('Debug mode: %s', db.debugmode and 'On' or 'Off'))
 	else
 		print(BLOCKSEP)
-		efiprint(CLR.BAD(format('Your input %q was not a valid input.', CLR.KEY(table.concat(args, '\32')))))
+		efiprint(
+			CLR.BAD(
+				format('Your input %q was not a valid input.', CLR.KEY(table.concat(args, '\32')))
+			)
+		)
 		print(shorthelpbody())
 		print(BLOCKSEP)
 	end
