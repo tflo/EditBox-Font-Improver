@@ -12,7 +12,10 @@ local colors = {
 	EFI = '1E90FF', -- dodgerblue
 	WARN = 'FF4500', -- orangered
 	BAD = 'DC143C', -- crimson
-	CMD = '6495ED', -- cornflowerblue
+	ON = '32CD32', -- limegreen
+	OFF = 'C0C0C0', -- silver
+-- 	CMD = '6495ED', -- cornflowerblue
+	CMD = 'FFA500', -- orange
 	KEY = 'FFD700', -- gold
 	FONT = '00FA9A', -- mediumspringgreen
 	PATH = '90EE90', -- lightgreen
@@ -61,9 +64,9 @@ local DB_VERSION_CURRENT = 1
 -- Nilified all individual fontsizes, as no longer planned
 local defaults = {
 	font = 'Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf',
-	-- not yet implemented, TODO
+	-- Dummies, not yet implemented, TODO
 	userfonts = {
-		"Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf",
+		"Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Serif/PTF55F.ttf",
 		"Interface/AddOns/WeakAuras/Media/Fonts/FiraMono-Medium.ttf",
 	},
 	fontsize = 12,
@@ -89,7 +92,7 @@ local defaults = {
 
 _G.EBFI_DB = _G.EBFI_DB or {}
 
-if not _G.EBFI_DB.db_version or _G.EBFI_DB.db_version < DB_VERSION_CURRENT then
+if not _G.EBFI_DB.db_version or _G.EBFI_DB.db_version ~= DB_VERSION_CURRENT then
 	_G.EBFI_DB = {}
 end
 
@@ -377,6 +380,10 @@ local function refresh_setup()
 	return true
 end
 
+--[[----------------------------------------------------------------------------
+	Formatters
+----------------------------------------------------------------------------]]--
+
 local function prettyname(name)
 	return name:gsub('[_-]+', ' '):gsub('%W%l', strupper):gsub('^pt ', 'PT ')
 end
@@ -442,7 +449,7 @@ local function print_multi(lines)
 	end
 end
 
-local function statustext()
+local function statusbody()
 	-- addon efi-enabled / loaded
 	local states = {}
 	for k, v in pairs(addons) do
@@ -495,7 +502,7 @@ local function statustext()
 		}
 end
 
-local function shorthelptext()
+local function shorthelpbody()
 	return format(
 		'%s %q to set the font size, %q to select a font by index, %q for the complete help with all commands explained.',
 		CLR.EFI('Usage examples:'),
@@ -505,13 +512,13 @@ local function shorthelptext()
 	)
 end
 
-local function longhelptext()
+local function fullhelpbody()
 	return {
 		format('%s : Select font by index (1 to %s)', CLR.CMD('/efi f <index>'), CLR.KEY(#dfonts)),
 		format('%s : Set fontsize (default: %s)', CLR.CMD('/efi <number>'), CLR.KEY(defaults.fontsize)),
 		format('%s : Do not change the font size of addons that have their own size setting (default).', CLR.CMD('/efi ownsize')),
 		format('%s : Apply font size to all addons, regardless of their own settings.', CLR.CMD('/efi unisize')),
-		format('%s or just %s : Display status and info (index of fonts, current fonr, settings).', CLR.CMD('/efi s'), CLR.CMD('/efi')),
+		format('%s or just %s : Display status and info (index of fonts, current font, settings).', CLR.CMD('/efi s'), CLR.CMD('/efi')),
 		format('%s : Display this help text.', CLR.CMD('/efi h')),
 	}
 end
@@ -615,7 +622,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	else
 		print(BLOCKSEP)
 		efiprint(CLR.BAD(format('Your input %q was not a valid input.', CLR.KEY(table.concat(args, '\32')))))
-		print(shorthelptext())
+		print(shorthelpbody())
 		print(BLOCKSEP)
 	end
 end
