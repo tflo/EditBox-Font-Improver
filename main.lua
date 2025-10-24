@@ -10,6 +10,8 @@ local FLAGS = '' -- For our purpose, we do not want any outlining.
 
 local colors = {
 	EFI = '1E90FF', -- dodgerblue
+-- 	HEAD = 'FFEFD5', -- papayawhip
+	HEAD = 'FFE4B5', -- moccasin
 	WARN = 'FF4500', -- orangered
 	BAD = 'DC143C', -- crimson
 	ON = '32CD32', -- limegreen
@@ -477,28 +479,30 @@ local function statusbody()
 	sizepols = table.concat(sizepols, '; ')
 	return db.debugmode
 			and {
-				format('Current font: %s', fontname(db.font)),
-				format('Current font size: %s', CLR.KEY(db.fontsize)),
-				format('Current font path: %s', fontpath(db.font)), -- TODO: user fonts
+				format('%s %s', CLR.HEAD('Current font:'), fontname(db.font)),
+				format('%s %s', CLR.HEAD('Current font size:'), CLR.KEY(db.fontsize)),
+				format('%s %s', CLR.HEAD('Current font path:'), fontpath(db.font)), -- TODO: user fonts
 				format(
-					'Num fonts: default: %s; user [NYI!]: %s',
+					'%s %s; %s %s',
+					CLR.HEAD('Num fonts: default:'),
+					CLR.HEAD('user [NYI!]:'),
 					CLR.KEY(#dfonts),
 					CLR.KEY(#ufonts)
 				), -- TODO: user fonts
-				format('Default fonts: %s', listfonts(dfonts)),
-				format('User fonts [NYI!]: %s', listfonts(ufonts)), -- TODO: user fonts
-				format('User font paths [NYI!]: \n   %s', listfontpaths(ufonts, '\n   ')), -- TODO: user fonts
-				format('Enabled for addon/loaded: %s', states),
-				format('Ownsize/Unisize: %s', sizepols),
-				format('Debug mode: %s', db.debugmode and 'On' or 'Off'),
+				format('%s %s', CLR.HEAD('Default fonts:'), listfonts(dfonts)),
+				format('%s %s', CLR.HEAD('User fonts [NYI!]:'), listfonts(ufonts)), -- TODO: user fonts
+				format('%s \n   %s', CLR.HEAD('User font paths [NYI!]:'), listfontpaths(ufonts, '\n   ')), -- TODO: user fonts
+				format('%s %s', CLR.HEAD('Enabled for addon/loaded:'), states),
+				format('%s %s', CLR.HEAD('Ownsize/Unisize:'), sizepols),
+				format('%s %s', CLR.HEAD('Debug mode:'), db.debugmode and 'On' or 'Off'),
 			}
 		or {
-			format('Current font: %s', fontname(db.font)),
-			format('Current font size: %s', CLR.KEY(db.fontsize)),
-			format('Num available fonts: %s', CLR.KEY(#dfonts)),
-			format('Available fonts: %s', listfonts(dfonts)),
-			format('Enabled for addon/loaded: %s', states),
-			format('Ownsize/Unisize: %s', sizepols),
+			format('%s %s', CLR.HEAD('Current font:'), fontname(db.font)),
+			format('%s %s', CLR.HEAD('Current font size:'), CLR.KEY(db.fontsize)),
+			format('%s %s', CLR.HEAD('Num available fonts:'), CLR.KEY(#dfonts)),
+			format('%s %s', CLR.HEAD('Available fonts:'), listfonts(dfonts)),
+			format('%s %s', CLR.HEAD('Enabled for addon/loaded:'), states),
+			format('%s %s', CLR.HEAD('Ownsize/Unisize:'), sizepols),
 		}
 end
 
@@ -576,14 +580,14 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	-- END debug commands
 	elseif args[1] == nil or args[1] == 's' or args[1] == 'status' or args[1] == 'info' then
 		print(BLOCKSEP)
-		efiprint('Status & Info:')
-		print_multi(statustext())
-		print(shorthelptext())
+		efiprint(CLR.HEAD('Status & Info:'))
+		print_multi(statusbody())
+		print(shorthelpbody())
 		print(BLOCKSEP)
 	elseif args[1] == 'h' or args[1] == 'help' then
 		print(BLOCKSEP)
-		efiprint('Command Help:')
-		print_multi(longhelptext())
+		efiprint(CLR.HEAD('Command Help:'))
+		print_multi(fullhelpbody())
 		print(BLOCKSEP)
 	-- Font selection by index
 	elseif args[1] == 'f' or args[1] == 'font' and tonumber(args[2]) then
