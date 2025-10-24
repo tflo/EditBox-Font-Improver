@@ -416,7 +416,8 @@ local function prettyname(name)
 end
 
 local function idx_from_path(path, array)
-	local arrays = array and { array } or { dfonts, ufonts }
+	local arrays = array and { array } or type(ufonts) == 'table' and { dfonts, ufonts } or { dfonts }
+	if not arrays or type(arrays[1]) ~= 'table' then return CLR.BAD('<invalid array>') end
 	for _, array in ipairs(arrays) do
 		for i, v in ipairs(array) do
 			if v == path then return array == ufonts and 'u' .. i or i end
@@ -441,7 +442,7 @@ local function fontpath(path)
 end
 
 local function listfonts(array, withpath, sep)
-	if #array == 0 then return NOTHING_FOUND end
+	if type(array) ~= 'table' or #array == 0 then return NOTHING_FOUND end
 	sep = sep or ', '
 	local t ={}
 	local func = withpath and fontpath or fontname
@@ -452,7 +453,7 @@ local function listfonts(array, withpath, sep)
 end
 
 local function listfontpaths(array, sep)
-	if #array == 0 then return NOTHING_FOUND end
+	if type(array) ~= 'table' or #array == 0 then return NOTHING_FOUND end
 	sep = sep or ', '
 	local seen, result = {}, {}
 	for _, v in ipairs(array) do
@@ -512,7 +513,7 @@ local function statusbody()
 					CLR.HEAD('Num fonts: default:'),
 					CLR.HEAD('user [NYI!]:'),
 					CLR.KEY(#dfonts),
-					CLR.KEY(#ufonts)
+					CLR.KEY(type(ufonts) == 'table' and #ufonts or 'nil')
 				), -- TODO: user fonts
 				format('%s %s', CLR.HEAD('Default fonts:'), listfonts(dfonts)),
 				format('%s %s', CLR.HEAD('User fonts [NYI!]:'), listfonts(ufonts)), -- TODO: user fonts
