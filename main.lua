@@ -2,6 +2,7 @@
 -- Copyright (c) 2022-2025 Thomas Floeren
 
 local MYNAME, _ = ...
+local user_is_author = false
 
 local WTC = WrapTextInColorCode
 local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
@@ -35,6 +36,11 @@ local CLR = setmetatable({}, {
 local MSG_PREFIX = CLR.EFI('EditBox Font Improver:')
 local FONTPATH_WARNING = CLR.WARN('Font path is not valid!')
 	.. " Make sure that a font file exists at this location, or change the path: \n%s"
+local RESET_WARNING = format(
+	'Due to an update to the database structure, %s. If you were using EFI version 2 or older, please %s, as there are numerous changes in settings and usage.',
+	CLR.WARN("EFI's database has been reset to its default values"),
+	CLR.KEY('refer to the ReadMe or the description on CurseForge')
+)
 local NOTHING_FOUND = CLR.BAD('<NOTHING FOUND>')
 -- We opt to not raise an error if a font cannot be set, and just print a one-time warning.
 -- The user will notice that the font is not set when they open the relevant addon.
@@ -60,7 +66,19 @@ local function merge_defaults(src, dst)
 	end
 end
 
--- 1: Oct 20, 2025: significant; removed/added/renamed keys --> reset all
+local db_emptied = nil
+local function empty_db()
+	if type(_G.EBFI_DB) == 'table' then
+		wipe(_G.EBFI_DB)
+		db_emptied = true
+	else
+		-- Should never happen.
+		warnprint "Unexpected: Failed to empty EBFI_DB, as it is not a table."
+		_G.EBFI_DB = {}
+	end
+end
+
+-- 1: v3.0.0, Oct 24, 2025: significant; removed/added/renamed keys --> reset all
 local DB_VERSION_CURRENT = 1
 
 -- Nilified all individual fontsizes, as no longer planned
@@ -90,16 +108,19 @@ local defaults = {
 	},
 	debugmode = false,
 	db_version = DB_VERSION_CURRENT,
+	db_touched = nil,
 }
 
-_G.EBFI_DB = _G.EBFI_DB or {}
-
-if not _G.EBFI_DB.db_version or _G.EBFI_DB.db_version ~= DB_VERSION_CURRENT then
+if type(_G.EBFI_DB) ~= 'table' then
 	_G.EBFI_DB = {}
+-- empty_db() triggers a warn print that we don’t want to see during a first installation.
+elseif not _G.EBFI_DB.db_version or _G.EBFI_DB.db_version ~= DB_VERSION_CURRENT then
+	empty_db()
 end
 
 merge_defaults(defaults, _G.EBFI_DB)
 local db = _G.EBFI_DB
+
 
 --[[===========================================================================
 	Setup
@@ -355,6 +376,10 @@ local function PLAYER_LOGIN()
 	addons.scriptlibrary.loaded = C_AddOns_IsAddOnLoaded 'ScriptLibrary'
 	addons.bugsack.loaded = C_AddOns_IsAddOnLoaded 'BugSack'
 	initial_setup()
+	-- Debug
+	user_is_author = tf6 and tf6.user_is_tflo
+	if user_is_author then db.db_touched = true end
+
 end
 
 local event_handlers = {
@@ -495,6 +520,7 @@ local function statusbody()
 				format('%s %s', CLR.HEAD('Enabled for addon/loaded:'), states),
 				format('%s %s', CLR.HEAD('Ownsize/Unisize:'), sizepols),
 				format('%s %s', CLR.HEAD('Debug mode:'), db.debugmode and 'On' or 'Off'),
+				format('%s %s', CLR.HEAD('User is author:'), user_is_author and 'Yes' or 'No'),
 			}
 		or {
 			format('%s %s', CLR.HEAD('Current font:'), fontname(db.font)),
@@ -569,8 +595,18 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		db.debugmode = not db.debugmode
 		efiprint(format('Debug mode: %s', db.debugmode and 'On' or 'Off'))
 	elseif args[1] == 'resetdb' or args[1] == 'dbreset' then
-		wipe(db)
-		efiprint(format('Database reset: %s', next(db) == nil and 'Yes' or 'FAILED TO RESET DB!'))
+		empty_db()
+		merge_defaults(defaults, _G.EBFI_DB)
+		db = _G.EBFI_DB
+		efiprint(format('Database reset to defaults: %s', db.db_touched and CLR.BAD('Failed to reset the DB!') or 'Yes.'))
+	elseif args[1] == 'emptydb' or args[1] == 'dbempty' or args[1] == 'dbwipe' or args[1] == 'wipedb' then
+		empty_db()
+		efiprint(format('Database emptied: %s', next(db) == nil and 'Yes. Reload now.' or CLR.BAD('Failed to wipe the DB!')))
+	elseif args[1] == 'deletedb' or args[1] == 'dbdelete' then
+		_G.EBFI_DB, db = nil, nil
+		efiprint(format('Database deleted: %s', db == nil and 'Yes. Reload now.' or CLR.BAD('Failed to delete the DB!')))
+	elseif args[1] == 'showdb' or args[1] == 'dbshow' then
+		DevTools_Dump(db)
 	elseif args[1] == 'inv' or args[1] == 'font' then
 		db.font = db.font:gsub('AddOns', 'AddOnsXXX')
 		efiprint(format('Font path invalidated to: %s', db.font))
