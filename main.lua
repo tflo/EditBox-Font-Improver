@@ -142,21 +142,25 @@ end
 
 local addons = {
 	macroeditors = {
+		name = 'macro editors',
 		has_sizecfg = false,
 		loaded = true,
 		setup_done = false,
 	},
 	wowlua = {
+		name = 'WowLua',
 		has_sizecfg = true,
 		loaded = false,
 		setup_done = false,
 	},
 	scriptlibrary = {
+		name = 'ScriptLibrary',
 		has_sizecfg = true,
 		loaded = false,
 		setup_done = false,
 	},
 	bugsack = {
+		name = 'BugSack',
 		has_sizecfg = true,
 		loaded = false,
 		setup_done = false,
@@ -428,6 +432,97 @@ local function listfontpaths(array, sep)
 	return table.concat(result, sep)
 end
 
+--[[----------------------------------------------------------------------------
+	Large texts
+----------------------------------------------------------------------------]]--
+
+local function print_multi(lines)
+	for _, v in ipairs(lines) do
+		print(v)
+	end
+end
+
+local function statustext()
+	-- addon efi-enabled / loaded
+	local states = {}
+	for k, v in pairs(addons) do
+		local str = format(
+			'%s: %s/%s',
+			v.name,
+			db[k].enable and CLR.ON('Yes') or CLR.OFF('No'),
+			v.loaded and CLR.ON('Yes') or CLR.OFF('No')
+		)
+		tinsert(states, str)
+	end
+	table.sort(states)
+	states = table.concat(states, '; ')
+	-- size policies TODO
+	local sizepols = {}
+	for k, v in pairs(addons) do
+		local str = format(
+			'%s: %s',
+			v.name,
+			db[k].ownsize and CLR.KEY('Own') or CLR.KEY('Uni')
+		)
+		tinsert(sizepols, str)
+	end
+	table.sort(sizepols)
+	sizepols = table.concat(sizepols, '; ')
+	return db.debugmode
+			and {
+				format('Current font: %s', fontname(db.font)),
+				format('Current font size: %s', CLR.KEY(db.fontsize)),
+				format('Current font path: %s', fontpath(db.font)), -- TODO: user fonts
+				format(
+					'Num fonts: default: %s; user [NYI!]: %s',
+					CLR.KEY(#dfonts),
+					CLR.KEY(#ufonts)
+				), -- TODO: user fonts
+				format('Default fonts: %s', listfonts(dfonts)),
+				format('User fonts [NYI!]: %s', listfonts(ufonts)), -- TODO: user fonts
+				format('User font paths [NYI!]: \n   %s', listfontpaths(ufonts, '\n   ')), -- TODO: user fonts
+				format('Enabled for addon/loaded: %s', states),
+				format('Ownsize/Unisize: %s', sizepols),
+				format('Debug mode: %s', db.debugmode and 'On' or 'Off'),
+			}
+		or {
+			format('Current font: %s', fontname(db.font)),
+			format('Current font size: %s', CLR.KEY(db.fontsize)),
+			format('Num available fonts: %s', CLR.KEY(#dfonts)),
+			format('Available fonts: %s', listfonts(dfonts)),
+			format('Enabled for addon/loaded: %s', states),
+			format('Ownsize/Unisize: %s', sizepols),
+		}
+end
+
+local function shorthelptext()
+	return format(
+		'%s %q to set the font size, %q to select a font by index, %q for the complete help with all commands explained.',
+		CLR.EFI('Usage examples:'),
+		CLR.CMD('/efi\194\16014'),
+		CLR.CMD('/efi\194\160f\194\1603'),
+		CLR.CMD('/efi\194\160h')
+	)
+end
+
+local function longhelptext()
+	return {
+		format('%s : Select font by index (1 to %s)', CLR.CMD('/efi f <index>'), CLR.KEY(#dfonts)),
+		format('%s : Set fontsize (default: %s)', CLR.CMD('/efi <number>'), CLR.KEY(defaults.fontsize)),
+		format('%s : Do not change the font size of addons that have their own size setting (default).', CLR.CMD('/efi ownsize')),
+		format('%s : Apply font size to all addons, regardless of their own settings.', CLR.CMD('/efi unisize')),
+		format('%s or just %s : Display status and info (index of fonts, current fonr, settings).', CLR.CMD('/efi s'), CLR.CMD('/efi')),
+		format('%s : Display this help text.', CLR.CMD('/efi h')),
+	}
+end
+
+local BLOCKSEP = CLR.EFI(strrep('+', 42))
+
+
+--[[----------------------------------------------------------------------------
+	Slash cmd
+----------------------------------------------------------------------------]]--
+
 SLASH_EditBoxFontImprover1 = '/efi'
 SLASH_EditBoxFontImprover2 = '/ebfi'
 SLASH_EditBoxFontImprover3 = '/editboxfontimprover'
@@ -471,27 +566,18 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	elseif args[1] == 'rev' or args[1] == 'font' then
 		db.font = db.font:gsub('AddOnsXXX', 'AddOns')
 		efiprint(format('Font path revalidated to: %s', db.font))
-	elseif args[1] == 's' or args[1] == 'status' or args[1] == 'info' then
-		efiprint(format('Status:'))
-		local lines = db.debugmode and {
-			format('Current font: %s', fontname(db.font)),
-			format('Current font path: %s', fontpath(db.font)), -- TODO: user fonts
-			format('Num fonts: default: %s; user [NYI!]: %s', #dfonts, #ufonts), -- TODO: user fonts
-			format('Default fonts: %s', listfonts(dfonts)),
-			format('User fonts [NYI!]: %s', listfonts(ufonts)), -- TODO: user fonts
-			format('User font paths [NYI!]: \n   %s', listfontpaths(ufonts, '\n   ')), -- TODO: user fonts
-			format('Debug mode: %s', db.debugmode and 'On' or 'Off'),
-		}
-		or {
-			format('Current font: %s', fontname(db.font)),
-			format('Num available fonts: %s', #dfonts),
-			format('Available fonts: %s', listfonts(dfonts)),
-			format('Debug mode: %s', db.debugmode and 'On' or 'Off'),
-		}
-		for _, v in ipairs(lines) do
-			print(v)
-		end
 	-- END debug commands
+	elseif args[1] == nil or args[1] == 's' or args[1] == 'status' or args[1] == 'info' then
+		print(BLOCKSEP)
+		efiprint('Status & Info:')
+		print_multi(statustext())
+		print(shorthelptext())
+		print(BLOCKSEP)
+	elseif args[1] == 'h' or args[1] == 'help' then
+		print(BLOCKSEP)
+		efiprint('Command Help:')
+		print_multi(longhelptext())
+		print(BLOCKSEP)
 	-- Font selection by index
 	elseif args[1] == 'f' or args[1] == 'font' and tonumber(args[2]) then
 		local selection = tonumber(args[2])
@@ -527,6 +613,9 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 			end
 		end
 	else
-		efiprint 'Supported arguments: Font Size, for example "14" (default is 12). \n"unisize" to force all addons to use EFI\'s font size; "ownsize" to not override the addons\'s own size setting, if it has one (default). \nSelect another font from the list with "f <number>".'
+		print(BLOCKSEP)
+		efiprint(CLR.BAD(format('Your input %q was not a valid input.', CLR.KEY(table.concat(args, '\32')))))
+		print(shorthelptext())
+		print(BLOCKSEP)
 	end
 end
