@@ -66,7 +66,7 @@ local defaults = {
 		"Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf",
 		"Interface/AddOns/WeakAuras/Media/Fonts/FiraMono-Medium.ttf",
 	},
-	default_fontsize = 12,
+	fontsize = 12,
 	macroeditors = {
 		enable = true,
 		ownsize = nil, -- Always EFI default size, since these addons have no own size setting
@@ -135,7 +135,7 @@ end
 
 local function create_fontobj()
 	local efi_fontobject = CreateFont 'efi_fontobject'
-	efi_fontobject:SetFont(efi_font, db.default_fontsize, FLAGS)
+	efi_fontobject:SetFont(efi_font, db.fontsize, FLAGS)
 	if efi_fontobject:GetFont() == efi_font then return true end
 	warnprint(FONTPATH_WARNING:format(efi_font))
 end
@@ -222,7 +222,7 @@ end
 -- We use the font size as actually set in the WowLua GUI.
 function addons.wowlua.setup()
 	if WowLuaMonoFontSpaced then
-		local size = db.wowlua.ownsize and WowLua_DB.fontSize or db.default_fontsize
+		local size = db.wowlua.ownsize and WowLua_DB.fontSize or db.fontsize
 		WowLuaMonoFont:SetFont(efi_font, size, FLAGS)
 		WowLuaMonoFontSpaced:SetFont(efi_font, size, FLAGS)
 		-- Needed to apply the font (not only the size)
@@ -253,7 +253,7 @@ function addons.bugsack.setup()
 			local currentsize = BugSackScrollText:GetFontObject():GetFontHeight()
 			BugSackScrollText:SetFont(
 				efi_font,
-				tonumber(currentsize) or db.default_fontsize,
+				tonumber(currentsize) or db.fontsize,
 				FLAGS
 			)
 		else
@@ -294,7 +294,7 @@ function addons.scriptlibrary.setup()
 				and tonumber(
 					(select(2, RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:GetFont()))
 				)
-			or db.default_fontsize
+			or db.fontsize
 		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(efi_font, size, FLAGS)
 		addons.scriptlibrary.setup_done = true
 	else
@@ -438,11 +438,11 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	end
 	if tonumber(args[1]) then
 		local size = max(min(tonumber(args[1]), 28), 6)
-		db.default_fontsize = size
+		db.fontsize = size
 		efiprint(
 			format(
 				'Font size now set to %s. This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack).',
-				db.default_fontsize
+				db.fontsize
 			)
 		)
 		refresh_setup()
