@@ -5,7 +5,6 @@ local MYNAME, _ = ...
 local user_is_author = false
 
 local WTC = WrapTextInColorCode
-local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 local FLAGS = '' -- For our purpose, we do not want any outlining.
 
@@ -35,7 +34,7 @@ local CLR = setmetatable({}, {
 
 local MSG_PREFIX = CLR.EFI('EditBox Font Improver:')
 local FONTPATH_WARNING = CLR.WARN('Font path is not valid!')
-	.. " Make sure that a font file exists at this location, or change the path: \n%s"
+	.. ' Make sure that a font file exists at this location, or change the path: \n%s'
 local RESET_WARNING = format(
 	'Due to an update to the database structure, %s. If you were using EFI version 2 or older, please %s, as there are numerous changes in settings and usage.',
 	CLR.WARN("EFI's database has been reset to its default values"),
@@ -81,18 +80,13 @@ end
 -- 1: v3.0.0, Oct 24, 2025: significant; removed/added/renamed keys --> reset all
 local DB_VERSION_CURRENT = 1
 
--- Nilified all individual fontsizes, as no longer planned
 local defaults = {
 	font = 'Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf',
-	-- Dummies, not yet implemented, TODO
-	userfonts = {
-		"Interface/AddOns/SharedMedia_MyMedia/font/PT/PT_Serif/PTF55F.ttf",
-		"Interface/AddOns/WeakAuras/Media/Fonts/FiraMono-Medium.ttf",
-	},
 	fontsize = 12,
+	userfonts = nil, -- TODO: user fonts
 	macroeditors = {
 		enable = true,
-		ownsize = nil, -- Always EFI default size, since these addons have no own size setting
+		ownsize = nil, -- Always EFI size, since these addons have no own size setting
 	},
 	wowlua = {
 		enable = true,
@@ -165,6 +159,11 @@ local function create_fontobj()
 	if efi_fontobject:GetFont() == efi_font then return true end
 	warnprint(FONTPATH_WARNING:format(efi_font))
 end
+
+-- Potential candidates to add:
+-- PasteNG
+-- Chattynator chat EditBox
+-- Blizz chat editbox
 
 local addons = {
 	macroeditors = {
@@ -369,12 +368,13 @@ end
 local function PLAYER_LOGIN()
 	if not create_fontobj() then
 		-- Print the msg once more when login chat spam is over.
-		C_Timer.After(25, function() warnprint(FONTPATH_WARNING:format(efi_font)) end)
+		C_Timer.After(20, function() warnprint(FONTPATH_WARNING:format(efi_font)) end)
 		return
 	end
-	addons.wowlua.loaded = C_AddOns_IsAddOnLoaded 'WowLua'
-	addons.scriptlibrary.loaded = C_AddOns_IsAddOnLoaded 'ScriptLibrary'
-	addons.bugsack.loaded = C_AddOns_IsAddOnLoaded 'BugSack'
+	if db_emptied then C_Timer.After(20, function() warnprint(RESET_WARNING) end) end
+	addons.wowlua.loaded = C_AddOns.IsAddOnLoaded 'WowLua'
+	addons.scriptlibrary.loaded = C_AddOns.IsAddOnLoaded 'ScriptLibrary'
+	addons.bugsack.loaded = C_AddOns.IsAddOnLoaded 'BugSack'
 	initial_setup()
 	-- Debug
 	user_is_author = tf6 and tf6.user_is_tflo
