@@ -8,22 +8,33 @@ local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 local FLAGS = '' -- For our purpose, we do not want any outlining.
 
-local CLR = {
-	EFI = 'ffD783FF',
-	WARN = 'ffFF4800',
-	BAD = 'ffDC143C',
-	FONT = 'ff00FA9A',
-	PATH = 'ff90EE90',
+local colors = {
+	EFI = '1E90FF', -- dodgerblue
+	WARN = 'FF4500', -- orangered
+	BAD = 'DC143C', -- crimson
+	CMD = '6495ED', -- cornflowerblue
+	KEY = 'FFD700', -- gold
+	FONT = '00FA9A', -- mediumspringgreen
+	PATH = '90EE90', -- lightgreen
 }
 
-local MSG_PREFIX = WTC('EditBox Font Improver:', CLR.EFI)
-local FONTPATH_WARNING = WTC('Font path is not valid!', CLR.WARN)
+local CLR = setmetatable({}, {
+	__index = function(_, k)
+		local color = colors[k]
+		assert(color, format('Color %q not defined.', k))
+		color = 'FF' .. color
+		return function(text) return text and WTC(text, color) or color end
+	end,
+})
+
+local MSG_PREFIX = CLR.EFI('EditBox Font Improver:')
+local FONTPATH_WARNING = CLR.WARN('Font path is not valid!')
 	.. " Make sure that a font file exists at this location, or change the path: \n%s"
-local NOTHING_FOUND = WTC('<NOTHING FOUND>', CLR.BAD)
+local NOTHING_FOUND = CLR.BAD('<NOTHING FOUND>')
 -- We opt to not raise an error if a font cannot be set, and just print a one-time warning.
 -- The user will notice that the font is not set when they open the relevant addon.
 local function warnprint(msg)
-	print(format('%s %s %s', MSG_PREFIX, WTC('WARNING:', CLR.WARN), msg))
+	print(format('%s %s %s', MSG_PREFIX, CLR.WARN('WARNING:'), msg))
 end
 
 local function efiprint(msg) print(format('%s %s', MSG_PREFIX, msg)) end
@@ -374,7 +385,7 @@ local function idx_from_path(path, array)
 			if v == path then return array == ufonts and 'u' .. i or i end
 		end
 	end
-	return WTC('<no index>', CLR.BAD)
+	return CLR.BAD('<no index>')
 end
 
 local function fontname(path, withidx, array)
@@ -384,12 +395,12 @@ local function fontname(path, withidx, array)
 	local name = tostring(path):match(pattern)
 	if not name then return NOTHING_FOUND end
 	name = db.debugmode and name or prettyname(name)
-	return WTC(idx and '[' .. idx .. ']\194\160' .. name or name, CLR.FONT)
+	return CLR.FONT(idx and '[' .. idx .. ']\194\160' .. name or name)
 end
 
 local function fontpath(path)
 	local pattern = '.+[/\\]'
-	return WTC(tostring(path):match(pattern), CLR.PATH) or NOTHING_FOUND
+	return CLR.PATH(tostring(path):match(pattern)) or NOTHING_FOUND
 end
 
 local function listfonts(array, withpath, sep)
@@ -483,7 +494,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		end
 	-- END debug commands
 	-- Font selection by index
-	elseif args[1] == 'font' or args[1] == 'f' and tonumber(args[2]) then
+	elseif args[1] == 'f' or args[1] == 'font' and tonumber(args[2]) then
 		local selection = tonumber(args[2])
 		if db.font == dfonts[selection] then
 			efiprint(
