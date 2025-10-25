@@ -168,24 +168,28 @@ end
 local addons = {
 	macroeditors = {
 		name = 'macro editors',
+		abbrev = 'me',
 		has_sizecfg = false,
 		loaded = true,
 		setup_done = false,
 	},
 	wowlua = {
 		name = 'WowLua',
+		abbrev = 'wl',
 		has_sizecfg = true,
 		loaded = false,
 		setup_done = false,
 	},
 	scriptlibrary = {
 		name = 'ScriptLibrary',
+		abbrev = 'sl',
 		has_sizecfg = true,
 		loaded = false,
 		setup_done = false,
 	},
 	bugsack = {
 		name = 'BugSack',
+		abbrev = 'bs',
 		has_sizecfg = true,
 		loaded = false,
 		setup_done = false,
@@ -406,6 +410,23 @@ local function refresh_setup()
 	end
 	return true
 end
+
+local function toggle_target(trg)
+	local enable = not db[trg].enable
+	db[trg].enable = enable
+	efiprint(format('EFI is now %s for %s%s', enable and CLR.ON('enabled') or CLR.OFF('disabled'), CLR.KEY(addons[trg].name), enable and '' or '. A UI reload is necessary to restore the original font.'))
+	if enable and not addons[trg].setup_done then (addons[trg].hook or addons[trg].setup)() end
+end
+
+-- Lookup for the target toggle command
+local targetnames = setmetatable({}, {
+	__index = function(t, key)
+		if addons[key] then return key end
+		for k, v in pairs(addons) do
+			if v.abbrev == key then return k end
+		end
+	end,
+})
 
 --[[----------------------------------------------------------------------------
 	Formatters
@@ -661,6 +682,10 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		end
 		efiprint 'All addons with a configurable font size will keep their own size setting.'
 		refresh_setup()
+	-- Addon toggles
+	elseif targetnames[args[1]] then
+		toggle_target(targetnames[args[1]])
+	-- Status and help
 	elseif args[1] == nil or args[1] == 's' or args[1] == 'status' or args[1] == 'info' then
 		print(BLOCKSEP)
 		efiprint(CLR.HEAD('Status & Info:'))
