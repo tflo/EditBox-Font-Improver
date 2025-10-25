@@ -21,6 +21,8 @@ local colors = {
 	KEY = 'FFD700', -- gold
 	FONT = '00FA9A', -- mediumspringgreen
 	PATH = '90EE90', -- lightgreen
+-- 	DEBUG = 'EE82EE', -- violet
+	DEBUG = 'FF00FF', -- magenta
 }
 
 local CLR = setmetatable({}, {
@@ -125,11 +127,33 @@ local dfonts = {
 	'FiraMono-Regular',
 	'FiraMono-Medium',
 	'Hack-Regular',
+	'UbuntuMono-R',
+	'B612Mono-Regular',
+	---
 	'IBMPlexMono-Light',
 	'IBMPlexMono-Regular',
 	'IBMPlexMono-Text',
 	'IBMPlexMono-Medium',
 	'IBMPlexMono-SemiBold',
+	---
+	'CascadiaMono-SemiLight',
+	'CascadiaMono-Regular',
+	'CascadiaMono-SemiBold',
+	'CascadiaMono-SemiLightItalic',
+	'CascadiaMono-Italic',
+	'CascadiaMono-SemiBoldItalic',
+	---
+	'Courier Prime',
+	'CourierPrime-Medium',
+	'CourierPrime-SemiBold',
+	'Courier Prime Code',
+	'Courier Prime Code Italic',
+	---
+	'Inconsolata-Light',
+	'Inconsolata-Regular',
+	'Inconsolata-Medium',
+	'Inconsolata-Condensed',
+	'Inconsolata-Expanded',
 }
 
 local base_path, extension = 'Interface/AddOns/EditBox-Font-Improver/font/', '.ttf'
@@ -146,10 +170,7 @@ local efi_font = db.font
 local function debugprint(...)
 	if db.debugmode then
 		local a, b = strsplit('.', GetTimePreciseSec())
-		print(
-			format('[%s.%s] %sEFI >>> Debug >>>\124r', a:sub(-3), b:sub(1, 3), '\124cffEE82EE'),
-			...
-		)
+		print(format('[%s.%s] %s', a:sub(-3), b:sub(1, 3), CLR.DEBUG('EFI Debug >')), ...)
 	end
 end
 
@@ -221,9 +242,9 @@ local addons = {
 -- https://www.townlong-yak.com/addons/opie
 
 -- Easy stuff, where we can simply apply our font object.
--- The frames are created at load time, so no issues, if the addons are
--- OptionalDeps. A missing addon doesn't pose a problem, as it just creates a
--- nil value in the table, which is ignored when we iterate.
+-- The frames are created at load time, so no need to hook (Blizzard_MacroUI needs
+-- OptionalDeps!). A missing addon doesn't pose a problem, as it just creates a
+-- nil value in the array.
 function addons.macroeditors.setup()
 	local editboxes = {
 		MacroFrameText, -- Blizzard_MacroUI; also affects ImprovedMacroFrame.
@@ -239,14 +260,6 @@ function addons.macroeditors.setup()
 	addons.macroeditors.setup_done = true
 	debugprint('Setup for misc macro editors finished (' .. count .. ' of ' .. #editboxes .. ').')
 end
-
--- NOTE for the user:
--- You can add more addons by adding their edit box frame to the `editboxes` list.
--- To find the correct frame, use `/fstack` in the game UI. This will only work
--- if the frame is created at addon load time, and not for every addon though.
-
--- Check out this:
--- https://github.com/Stanzilla/WoWUIBugs/issues/581
 
 
 --[[===========================================================================
@@ -270,12 +283,6 @@ function addons.wowlua.setup()
 		warnprint "WowLua's `WowLuaMonoFontSpaced` not found. Could not set font."
 	end
 	debugprint 'WowLua setup finished.'
-
-	-- Spacing disabled for the moment, since this messes up the cursor position
-	-- local spacing = tonumber(spacing_wowlua)
-	-- if spacing then
-	-- WowLuaMonoFontSpaced:SetSpacing(spacing)
-	-- end
 end
 
 
@@ -311,9 +318,9 @@ function addons.bugsack.hook()
 	if not BugSack.OpenSack then
 		warnprint '`BugSack.OpenSack` not found. Could not hook.'
 	else
-	hooksecurefunc(BugSack, 'OpenSack', function()
+		hooksecurefunc(BugSack, 'OpenSack', function()
 			if not addons.bugsack.setup_done then addons.bugsack.setup() end
-	end)
+		end)
 		debugprint 'BugSack hooked.'
 	end
 	addons.bugsack.hook_done = true
@@ -359,7 +366,6 @@ function addons.scriptlibrary.hook()
 	debugprint 'ScriptLibrary hooked.'
 end
 
--- NOTE:
 -- I haven't found a way to grab the font size that is set in ScriptLibrary.
 -- ScriptLibrary wipes its global DB after load, and practically all functions and variables are private.
 
@@ -409,6 +415,13 @@ end)
 --[[===========================================================================
 	UI
 ===========================================================================]]--
+
+-- Potential UI improvements, TODO:
+-- next: limit he displayed fonts in the overview to the first 15 or so and
+-- add a separate 'list all' command
+-- 'next font' command, e.g. `n`
+-- ambitious: a little font preview frame, which enables the scroll wheel to
+-- quickly scan through the installed fonts
 
 local function update_setup()
 	if not create_fontobj() then return end
