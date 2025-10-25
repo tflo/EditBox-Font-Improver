@@ -599,10 +599,10 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	for arg in msg:gmatch('[^ ]+') do
 		tinsert(args, arg)
 	end
-	-- Multi args: F
+	-- Multi args: font
 	-- Font selection by index
-	if (args[1] == 'f' or args[1] == 'font') and tonumber(args[2]) then
-		local selection = floor(args[2])
+	if tonumber(args[1]) or (args[1] == 'f' or args[1] == 'font') and tonumber(args[2]) then
+		local selection = floor(args[1]) or floor(args[2])
 		if db.font == dfonts[selection] then
 			efiprint(
 				format(
@@ -638,7 +638,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	elseif args[1] == 'f' and args[2] == 'reval' then -- Debug
 		db.font = db.font:gsub('AddOnsXXX', 'AddOns')
 		efiprint(format('Font path revalidated to: %s', db.font))
-	-- Multi args: DB (debug)
+	-- Multi args: database (debug)
 	elseif args[1] == 'db' and args[2] == 'reset' then -- Debug
 		empty_db()
 		merge_defaults(defaults, _G.EBFI_DB)
@@ -667,9 +667,9 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		)
 	elseif args[1] == 'db' and (args[2] == 'show' or args[2] == 'dump') then -- Debug
 		DevTools_Dump(db)
-	-- Single arg
-	elseif tonumber(args[1]) then
-		local size = max(min(tonumber(args[1]), 28), 6)
+	-- Multi args: fontsize
+	elseif args[1] == 's' and tonumber(args[2]) then
+		local size = max(min(tonumber(args[2]), 28), 6)
 		db.fontsize = size
 		efiprint(
 			format(
@@ -678,6 +678,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 			)
 		)
 		update_setup()
+	-- Single arg
 	elseif args[1] == 'unisize' then
 		for k, v in pairs(addons) do
 			if v.has_sizecfg then db[k].ownsize = false end
