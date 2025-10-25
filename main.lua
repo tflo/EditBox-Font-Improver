@@ -453,6 +453,8 @@ local targetnames = setmetatable({}, {
 	Formatters
 ----------------------------------------------------------------------------]]--
 
+local NUM_FONTS_COMPACTLIST = 10
+
 local function prettyname(name)
 	return name:gsub('[_-]+', ' '):gsub('%W%l', strupper):gsub('^pt ', 'PT ')
 end
@@ -483,14 +485,15 @@ local function fontpath(path)
 	return CLR.PATH(tostring(path):match(pattern)) or NOTHING_FOUND
 end
 
-local function listfonts(array, sep)
+local function listfonts(array, compact)
 	if type(array) ~= 'table' or #array == 0 then return NOTHING_FOUND end
-	sep = sep or ', '
-	local t ={}
-	for _,v in ipairs(array) do
-		tinsert(t, fontname(v)) -- , true, array
+	local fonts = {}
+	for i, v in ipairs(array) do
+		tinsert(fonts, fontname(v)) -- , true, array
+		if compact and i == NUM_FONTS_COMPACTLIST then break end
 	end
-	return table.concat(t, sep)
+	-- We cannot print 30 lines as one string due to Blizz's broken chat scrolling
+	return compact and table.concat(fonts, ', ') or fonts
 end
 
 local function listfontpaths(array, sep)
@@ -557,8 +560,8 @@ local function statusbody()
 					CLR.KEY(#dfonts),
 					CLR.KEY(type(ufonts) == 'table' and #ufonts or 'nil')
 				), -- TODO: user fonts
-				format('%s %s', CLR.HEAD('Default fonts:'), listfonts(dfonts)),
-				format('%s %s', CLR.HEAD('User fonts [NYI!]:'), listfonts(ufonts)), -- TODO: user fonts
+				format('%s %s', CLR.HEAD('Default fonts:'), listfonts(dfonts, true)),
+				format('%s %s', CLR.HEAD('User fonts [NYI!]:'), listfonts(ufonts, true)), -- TODO: user fonts
 				format('%s \n   %s', CLR.HEAD('User font paths [NYI!]:'), listfontpaths(ufonts, '\n   ')), -- TODO: user fonts
 				format('%s %s', CLR.HEAD('Enabled for addon/loaded:'), states),
 				format('%s %s', CLR.HEAD('Ownsize/Unisize:'), sizepols),
@@ -569,7 +572,7 @@ local function statusbody()
 			format('%s %s', CLR.HEAD('Current font:'), fontname(db.font)),
 			format('%s %s', CLR.HEAD('Current font size:'), CLR.KEY(db.fontsize)),
 			format('%s %s', CLR.HEAD('Num available fonts:'), CLR.KEY(#dfonts)),
-			format('%s %s', CLR.HEAD('Available fonts:'), listfonts(dfonts)),
+			format('%s %s %s', CLR.HEAD(('Installed fonts ' .. CLR.KEY('[1\226\128\147' .. NUM_FONTS_COMPACTLIST .. ']') .. ':')), listfonts(dfonts, true), format('; %q to list all available fonts.', CLR.CMD('/efi\194\160f'))),
 			format('%s %s', CLR.HEAD('Enabled for addon/loaded:'), states),
 			format('%s %s', CLR.HEAD('Ownsize/Unisize:'), sizepols),
 		}
@@ -703,6 +706,14 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		end
 		efiprint 'All addons with a configurable font size will keep their own size setting.'
 		update_setup()
+	elseif args[1] == 'f' or args[1] == 'fonts' then
+		print(BLOCKSEP)
+		efiprint(CLR.HEAD('All Installed Fonts:'))
+		local fonts = listfonts(dfonts, false)
+		for _, v in ipairs(fonts) do
+			print(v)
+		end
+		print(BLOCKSEP)
 	-- Addon toggles
 	elseif targetnames[args[1]] then
 		toggle_target(targetnames[args[1]])
