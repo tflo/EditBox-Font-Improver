@@ -185,6 +185,7 @@ local addons = {
 		abbrev = 'sl',
 		has_sizecfg = true,
 		loaded = false,
+		hook_done = false,
 		setup_done = false,
 	},
 	bugsack = {
@@ -192,6 +193,7 @@ local addons = {
 		abbrev = 'bs',
 		has_sizecfg = true,
 		loaded = false,
+		hook_done = false,
 		setup_done = false,
 	},
 }
@@ -228,11 +230,14 @@ function addons.macroeditors.setup()
 		ABE_MacroInputEB, -- M6 and OPie macro edit box.
 	}
 	-- Don't use `ipairs' because the entries may be nil (addon not loaded).
+	local count = 0
 	for _, box in pairs(editboxes) do
 		box:SetFontObject(efi_fontobject)
+		debugprint('Set up ' .. box:GetName())
+		count = count + 1
 	end
 	addons.macroeditors.setup_done = true
-	debugprint 'Setup for misc macro editors run.'
+	debugprint('Setup for misc macro editors finished (' .. count .. ' of ' .. #editboxes .. ').')
 end
 
 -- NOTE for the user:
@@ -264,7 +269,7 @@ function addons.wowlua.setup()
 	else
 		warnprint "WowLua's `WowLuaMonoFontSpaced` not found. Could not set font."
 	end
-	debugprint 'WowLua setup run.'
+	debugprint 'WowLua setup finished.'
 
 	-- Spacing disabled for the moment, since this messes up the cursor position
 	-- local spacing = tonumber(spacing_wowlua)
@@ -293,25 +298,25 @@ function addons.bugsack.setup()
 			BugSackScrollText:SetFontObject(efi_fontobject)
 		end
 		addons.bugsack.setup_done = true
+		debugprint 'BugSack setup finished.'
+	elseif not addons.bugsack.hook_done then
+		addons.bugsack.hook()
 	else
 		warnprint 'BugSack target frame not found. Could not set font.'
 	end
-	debugprint 'BugSack setup run.'
 end
 
 -- The main frame is not created before first open, so we have to hook.
 function addons.bugsack.hook()
 	if not BugSack.OpenSack then
-		warnprint '`BugSack.OpenSack` not found (needed for hook). Could not set font.'
-		return
-	end
-	local done = false
+		warnprint '`BugSack.OpenSack` not found. Could not hook.'
+	else
 	hooksecurefunc(BugSack, 'OpenSack', function()
-		if not done then
-			done = true
-			addons.bugsack.setup()
-		end
+			if not addons.bugsack.setup_done then addons.bugsack.setup() end
 	end)
+		debugprint 'BugSack hooked.'
+	end
+	addons.bugsack.hook_done = true
 end
 
 
@@ -330,26 +335,28 @@ function addons.scriptlibrary.setup()
 			or db.fontsize
 		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(efi_font, size, FLAGS)
 		addons.scriptlibrary.setup_done = true
+		debugprint 'ScriptLibrary setup finished.'
+	elseif not addons.scriptlibrary.hook_done then
+		addons.scriptlibrary.hook()
 	else
 		warnprint 'ScriptLibrary target frame not found. Could not set font.'
 	end
-	debugprint 'ScriptLibrary setup run.'
 end
 
 -- The main frame is not created before first open, so we have to hook.
 -- Couldn't find any accessible 'open' function, so we use the slash command.
 function addons.scriptlibrary.hook()
 	if not SlashCmdList.SCRIPTLIBRARY then
-		warnprint '`SlashCmdList.SCRIPTLIBRARY` not found (needed for hook). Could not set font.'
+		warnprint '`SlashCmdList.SCRIPTLIBRARY` not found. Could not hook.'
 		return
 	end
-	local done = false
 	hooksecurefunc(SlashCmdList, 'SCRIPTLIBRARY', function()
-		if not done then
-			done = true
+		if not addons.scriptlibrary.setup_done then
 			addons.scriptlibrary.setup()
 		end
 	end)
+	addons.scriptlibrary.hook_done = true
+	debugprint 'ScriptLibrary hooked.'
 end
 
 -- NOTE:
@@ -365,7 +372,7 @@ local ef = CreateFrame('Frame', MYNAME .. '_eventframe')
 
 local function initial_setup()
 	for k, v in pairs(addons) do
-		if db[k].enable and v.loaded then (v.hook or v.setup)() end
+		if db[k].enable and v.loaded then v.setup() end
 	end
 end
 
@@ -403,9 +410,10 @@ end)
 	UI
 ===========================================================================]]--
 
-local function refresh_setup()
+local function update_setup()
 	if not create_fontobj() then return end
 	for k, v in pairs(addons) do
+		-- If setup is not yet done then a hook was installed but not yet triggered.
 		if db[k].enable and v.setup_done then v.setup() end
 	end
 	return true
@@ -414,8 +422,8 @@ end
 local function toggle_target(trg)
 	local enable = not db[trg].enable
 	db[trg].enable = enable
-	efiprint(format('EFI is now %s for %s%s', enable and CLR.ON('enabled') or CLR.OFF('disabled'), CLR.KEY(addons[trg].name), enable and '' or '. A UI reload is necessary to restore the original font.'))
-	if enable and not addons[trg].setup_done then (addons[trg].hook or addons[trg].setup)() end
+	efiprint(format('EFI is now %s for %s.%s', enable and CLR.ON('enabled') or CLR.OFF('disabled'), CLR.KEY(addons[trg].name), enable and '' or '\nA ' .. CLR.WARN('UI reload') .. ' is necessary to restore the original font.'))
+	if enable and not addons[trg].setup_done then addons[trg].setup() end
 end
 
 -- Lookup for the target toggle command
@@ -612,7 +620,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 			)
 		else
 			efi_font = dfonts[selection]
-			if refresh_setup() then
+			if update_setup() then
 				db.font = dfonts[selection]
 				efiprint(format('Your new font is %s.', CLR.FONT(fontname(db.font))))
 			else
@@ -669,19 +677,19 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 				db.fontsize
 			)
 		)
-		refresh_setup()
+		update_setup()
 	elseif args[1] == 'unisize' then
 		for k, v in pairs(addons) do
 			if v.has_sizecfg then db[k].ownsize = false end
 		end
 		efiprint "All addons set to use EFI's default font size."
-		refresh_setup()
+		update_setup()
 	elseif args[1] == 'ownsize' then
 		for k, v in pairs(addons) do
 			if v.has_sizecfg then db[k].ownsize = true end
 		end
 		efiprint 'All addons with a configurable font size will keep their own size setting.'
-		refresh_setup()
+		update_setup()
 	-- Addon toggles
 	elseif targetnames[args[1]] then
 		toggle_target(targetnames[args[1]])
