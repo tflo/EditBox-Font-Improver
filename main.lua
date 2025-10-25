@@ -483,13 +483,12 @@ local function fontpath(path)
 	return CLR.PATH(tostring(path):match(pattern)) or NOTHING_FOUND
 end
 
-local function listfonts(array, withpath, sep)
+local function listfonts(array, sep)
 	if type(array) ~= 'table' or #array == 0 then return NOTHING_FOUND end
 	sep = sep or ', '
 	local t ={}
-	local func = withpath and fontpath or fontname
 	for _,v in ipairs(array) do
-		tinsert(t, func(v)) -- , true, array
+		tinsert(t, fontname(v)) -- , true, array
 	end
 	return table.concat(t, sep)
 end
