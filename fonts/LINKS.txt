@@ -1,0 +1,13 @@
+https://www.paratype.com/fonts/pt/pt-mono
+https://github.com/mozilla/Fira
+https://github.com/IBM/plex/releases/tag/%40ibm%2Fplex-mono%401.1.0
+https://github.com/source-foundry/Hack
+https://github.com/microsoft/cascadia-code
+https://quoteunquoteapps.com/courierprime/
+https://design.ubuntu.com/font
+https://github.com/polarsys/b612
+
+---
+
+Input has very nice mono and mono-like fonts, but I could not include them due to their license:
+https://input.djr.com/

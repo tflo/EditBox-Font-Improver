@@ -1,7 +1,7 @@
 -- SPDX-License-Identifier: GPL-3.0-or-later
 -- Copyright (c) 2022-2025 Thomas Floeren
 
-local MYNAME, _ = ...
+local MYNAME, A = ...
 local user_is_author = false
 
 local WTC = WrapTextInColorCode
@@ -122,41 +122,8 @@ local db = _G.EBFI_DB
 	Setup
 ===========================================================================]]--
 
-local dfonts = {
-	'pt-mono_regular',
-	'FiraMono-Regular',
-	'FiraMono-Medium',
-	'Hack-Regular',
-	'UbuntuMono-R',
-	'B612Mono-Regular',
-	---
-	'IBMPlexMono-Light',
-	'IBMPlexMono-Regular',
-	'IBMPlexMono-Text',
-	'IBMPlexMono-Medium',
-	'IBMPlexMono-SemiBold',
-	---
-	'CascadiaMono-SemiLight',
-	'CascadiaMono-Regular',
-	'CascadiaMono-SemiBold',
-	'CascadiaMono-SemiLightItalic',
-	'CascadiaMono-Italic',
-	'CascadiaMono-SemiBoldItalic',
-	---
-	'Courier Prime',
-	'CourierPrime-Medium',
-	'CourierPrime-SemiBold',
-	'Courier Prime Code',
-	'Courier Prime Code Italic',
-	---
-	'Inconsolata-Light',
-	'Inconsolata-Regular',
-	'Inconsolata-Medium',
-	'Inconsolata-Condensed',
-	'Inconsolata-Expanded',
-}
-
-local base_path, extension = 'Interface/AddOns/EditBox-Font-Improver/font/', '.ttf'
+local dfonts = A.defaultfonts
+local base_path, extension = 'Interface/AddOns/EditBox-Font-Improver/fonts/', '.ttf'
 
 for i, v in ipairs(dfonts) do
 	dfonts[i] = base_path .. v .. extension
@@ -453,8 +420,6 @@ local targetnames = setmetatable({}, {
 	Formatters
 ----------------------------------------------------------------------------]]--
 
-local NUM_FONTS_COMPACTLIST = 10
-
 local function prettyname(name)
 	return name:gsub('[_-]+', ' '):gsub('%W%l', strupper):gsub('^pt ', 'PT ')
 end
@@ -490,7 +455,7 @@ local function listfonts(array, compact)
 	local fonts = {}
 	for i, v in ipairs(array) do
 		tinsert(fonts, fontname(v)) -- , true, array
-		if compact and i == NUM_FONTS_COMPACTLIST then break end
+		if compact and i == A.NUM_FONTS_COMPACTLIST then break end
 	end
 	-- We cannot print 30 lines as one string due to Blizz's broken chat scrolling
 	return compact and table.concat(fonts, ', ') or fonts
@@ -572,7 +537,7 @@ local function statusbody()
 			format('%s %s', CLR.HEAD('Current font:'), fontname(db.font)),
 			format('%s %s', CLR.HEAD('Current font size:'), CLR.KEY(db.fontsize)),
 			format('%s %s. Use %q to list all.', CLR.HEAD('Number of installed fonts:'), CLR.KEY(#dfonts), CLR.CMD('/efi\194\160f')),
-			format('%s %s', CLR.HEAD(('Installed fonts ' .. CLR.KEY('[1\226\128\147' .. NUM_FONTS_COMPACTLIST .. ']') .. ':')), listfonts(dfonts, true)),
+			format('%s %s', CLR.HEAD(('Installed fonts ' .. CLR.KEY('[1\226\128\147' .. A.NUM_FONTS_COMPACTLIST .. ']') .. ':')), listfonts(dfonts, true)),
 			format('%s %s', CLR.HEAD('Enabled for addon/loaded:'), states),
 			format('%s %s', CLR.HEAD('Ownsize/Unisize:'), sizepols),
 		}

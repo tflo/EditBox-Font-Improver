@@ -1,8 +1,9 @@
 ## Interface: 110205
 ## Title: EditBox Font Improver
-## Version: 2.0.7
+## Version: 3.0.0
 ## IconTexture: Interface\AddOns\EditBox-Font-Improver\icon.blp
-## Notes: Lets you set your custom font, font size and style for the edit/code boxes of: Blizz's macro frame, OPie, M6, BugSack, ScriptLibrary, WoWLua.
+## Notes: Have a nice monospaced font in the edit/code boxes of: Blizz's Macro UI, OPie, M6, ScriptLibrary, WoWLua, BugSack.
+## Author: Mot (@6mot, @tflo)
 ## Category: User Interface
 ## Category-enUS: User Interface
 ## Category-deDE: Benutzerinterface
@@ -15,7 +16,6 @@
 ## Category-ruRU: Интерфейс пользователя
 ## Category-zhCN: 用户界面
 ## Category-zhTW: 使用者介面
-## Author: Mot (@6mot, @tflo)
 ## OptionalDeps: Blizzard_MacroUI
 ## AllowAddOnTableAccess: 1
 ## X-Wago-ID: lQNlO3Ge
@@ -26,3 +26,4 @@
 ## SavedVariables: EBFI_DB
 
 main.lua
+fonts.lua
