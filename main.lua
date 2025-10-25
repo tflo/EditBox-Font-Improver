@@ -556,8 +556,8 @@ local function statusbody()
 				format(
 					'%s %s; %s %s',
 					CLR.HEAD('Num fonts: default:'),
-					CLR.HEAD('user [NYI!]:'),
 					CLR.KEY(#dfonts),
+					CLR.HEAD('user [NYI!]:'),
 					CLR.KEY(type(ufonts) == 'table' and #ufonts or 'nil')
 				), -- TODO: user fonts
 				format('%s %s', CLR.HEAD('Default fonts:'), listfonts(dfonts, true)),
@@ -571,8 +571,8 @@ local function statusbody()
 		or {
 			format('%s %s', CLR.HEAD('Current font:'), fontname(db.font)),
 			format('%s %s', CLR.HEAD('Current font size:'), CLR.KEY(db.fontsize)),
-			format('%s %s', CLR.HEAD('Num available fonts:'), CLR.KEY(#dfonts)),
-			format('%s %s %s', CLR.HEAD(('Installed fonts ' .. CLR.KEY('[1\226\128\147' .. NUM_FONTS_COMPACTLIST .. ']') .. ':')), listfonts(dfonts, true), format('; %q to list all available fonts.', CLR.CMD('/efi\194\160f'))),
+			format('%s %s. Use %q to list all.', CLR.HEAD('Number of installed fonts:'), CLR.KEY(#dfonts), CLR.CMD('/efi\194\160f')),
+			format('%s %s', CLR.HEAD(('Installed fonts ' .. CLR.KEY('[1\226\128\147' .. NUM_FONTS_COMPACTLIST .. ']') .. ':')), listfonts(dfonts, true)),
 			format('%s %s', CLR.HEAD('Enabled for addon/loaded:'), states),
 			format('%s %s', CLR.HEAD('Ownsize/Unisize:'), sizepols),
 		}
@@ -582,16 +582,17 @@ local function shorthelpbody()
 	return format(
 		'%s %q to set the font size, %q to select a font by index, %q for the complete help with all commands explained.',
 		CLR.EFI('Usage examples:'),
-		CLR.CMD('/efi\194\16014'),
-		CLR.CMD('/efi\194\160f\194\1603'),
+		CLR.CMD('/efi\194\160s\194\16014'),
+		CLR.CMD('/efi\194\1603'),
 		CLR.CMD('/efi\194\160h')
 	)
 end
 
 local function fullhelpbody()
 	return {
-		format('%s : Select font by index (1 to %s)', CLR.CMD('/efi f <index>'), CLR.KEY(#dfonts)),
-		format('%s : Set fontsize (default: %s)', CLR.CMD('/efi <number>'), CLR.KEY(defaults.fontsize)),
+		format('%s : Select font by index (%s to %s).', CLR.CMD('/efi <index>'), CLR.KEY('1'), CLR.KEY(#dfonts)),
+		format('%s : List all %s available fonts.', CLR.CMD('/efi f'), CLR.KEY(#dfonts)),
+		format('%s : Set fontsize (default: %s).', CLR.CMD('/efi s <number>'), CLR.KEY(defaults.fontsize)),
 		format('%s : Do not change the font size of addons that have their own size setting (default).', CLR.CMD('/efi ownsize')),
 		format('%s : Apply font size to all addons, regardless of their own settings.', CLR.CMD('/efi unisize')),
 		format('%s or just %s : Display status and info (index of fonts, current font, settings).', CLR.CMD('/efi s'), CLR.CMD('/efi')),
