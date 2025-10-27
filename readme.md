@@ -1,90 +1,124 @@
 # EditBox Font Improver
 
+Better fonts and fontsize for writing macros and debugging code. Not only for font nerds.
+
 ## Summary
 
-The addon lets you set your custom font and font size for the edit boxes of:
+The addon lets you set the font and font size for the edit boxes of:
 
-- Blizz’s macro UI: Edit box
+- [Blizz Macro UI](https://gamingcy.com/wp-content/uploads/2024/01/WoW-Macros-Limitations.jpg): Edit box
 - [M6](https://www.curseforge.com/wow/addons/m6x): Edit box
 - [OPie](https://www.curseforge.com/wow/addons/opie): The edit box to write a macro for a button
 - [WowLua](https://www.curseforge.com/wow/addons/wowlua): Output and edit box
 - [ScriptLibrary](https://www.curseforge.com/wow/addons/script-library): Edit box
-- [BugSack](https://www.curseforge.com/wow/addons/bugsack): Main window text (not an edit box, but it contains code that should be readable)
+- [BugSack](https://www.curseforge.com/wow/addons/bugsack): Error frame text (not an edit box, but your bugs deserve readability too!)
 
-The main point is that in these macro/code boxes we want a clean, monospaced font, and not Friz Quadrata, Arial Narrow, or similar nonsense. (WoWLua is an exception, as it already uses a monospaced font. EFI allows you to replace it with the one of your choice.)
+Let’s make sure these edit and code boxes have a clean, monospaced font (and a proper text size!), instead of Friz Quadrata, Arial Narrow, or anything else that’s not quite right.  
+(WowLua is an exception, as it already comes with a suitable font (Vera Mono); this is great, but EFI lets you switch it out if you want something different.)
 
-This not an addon to globally change the WoW UI font! Its scope is to make the coding font of your choice available in macro and script editor addons (and BugSack), without affecting the rest of the UI.
+Note that this is *not* an addon to globally change the WoW UI font! (To do this, you simply put your fonts into *World of Warcraft/_retail_/Fonts* and name them like the default fonts.)
+
+EFI’s purpose is to make nice coding fonts available in edit boxes (and BugSack), *without* affecting the rest of your UI.
 
 ___If you’re having trouble reading this description on CurseForge, you might want to try switching to the [REPO PAGE](https://github.com/tflo/EditBox-Font-Improver?tab=readme-ov-file#editbox-font-improver). You’ll find the exact same text there, but it’s much easier to read and free from CurseForge’s rendering errors.___
 
-## Setup
+## Usage
+
+**Huge revamp with version 3, forget everything about the old EFI!**
+
+The most important changes:
+
+- **You can no longer add your own font paths** to the SavedVariables file (may be added back later).
+- Instead, EFI now comes with **quite a few preinstalled fonts** you can choose from.
+- *Everything* can now be set/done via the console UI.
+
+Before we go into the details, here a compilation of all commands:
+
+Base command: `/efi` or `/ebfi` or `/editboxfontimprover`. We’ll use `/efi` in this description.
+
+Subcommands/arguments:
+
+`/efi <number>` : Select a font by index. Example: `\efi 5`.    
+`/efi s <number>` : Set font size. Example: `\efi s 16`. Default: 12  
+`/efi s` : Show status, info, settings, fonts. Synonyms: `/efi status`, `/efi info`  
+`/efi f` : Show the complete list of installed fonts (the status display only shows a part). Synonyms: `/efi fonts`  
+`/efi unisize` : Use EFI’s font size also for addons that have their own size setting.  
+`/efi ownsize` : Do not override the font size setting of addons that come with their own size setting (this is the default).  
+`/efi h` : Show the help text with all commands and arguments explained. Synonyms: `/efi help`  
 
 ### Font Selection
 
-By default, the addon comes with a PT Mono font file and the font path is pre-set to that font. (The PT fonts are my preferred font family for the WoW UI.)
+You can choose from more than 50 different fonts and weights.  
 
-**New in version 3:**
+Some highlights:  
 
-You can now save a whole collection of fonts (more precisely: font paths) and switch between them with a simple slash command.
+- PT Mono
+- Fira Mono
+- JetBrains Mono
+- Hack
+- Ubuntu Mono
+- B612 Mono
+- Code New Roman
+- IBM Plex Mono
+- Cascadia Mono
+- Courier Prime
+- Inconsolata
 
-The easiest way to add your own font paths is by editing the SavedVariables file directly. If you open the SavedVariables file, you will see the default font list, consisting of two font paths:
+and many more!
 
-```lua
-["fonts"] = {
-"Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf",
-"Interface/AddOns/WeakAuras/Media/Fonts/FiraMono-Medium.ttf",
-},
-```
+For a full list in-game, enter `/efi fonts` or `/efi f`.
 
-The first one is the already mentioned PT Mono font that comes with the addon itself. The second one is the monospaced font in the WeakAuras folder. So if you happen to have WeakAuras installed, you can already switch between these two fonts.
+Font selection is simple: You enter `/efi font <index>` or shorter `/efi f <index>`, or just `/efi <index>`, where `index` corresponds to the index as shown with the `/efi f` command.
 
-The command for this is `/efi font <number>` or shorter `/efi f <number>`. So, to select the WeakAuras Fira Mono font, you simply enter `/efi f 2`. With `/efi f 1` you select the included default font again.
-
-The point of this font list is not to provide you with an exhaustive font collection out of the box (EFI is not a media addon), but to give you the possibility to add your own favorite fonts and easily switch between them.
-
-You can use any font that is located inside the `World of Warcraft/_retail_/Interface/AddOns` directory. If you already have a bunch of fonts installed (for example in a [SharedMedia](https://www.curseforge.com/wow/addons/sharedmedia) folder like `Interface/AddOns/SharedMedia_MyMedia`), just add the paths.
-
-Note that `Interface` must be the root folder of *any* font path. 
-
-EFI’s SavedVariables file is at the usual location: 
-`World of Warcraft/_retail_/WTF/Account/<number>/SavedVariables/EditBox-Font-Improver.lua`.
-
-To edit and save the SavedVariables file, you have to be logged out (but not necessary to quit the game). Otherwise the game client will overwrite your changes at logout.
-
-In the SavedVariables file itself you will also find a small “Read Me!” text with instructions for the font path.
-
-If you see a `["font"]` key, do *not* edit it, because it holds the index for the currently active font from the `["fonts"]` list.
-
-### Enable/Disable
-
-By default, the addon changes the font of the above listed addons. If you really want to deactivate the font replacement for a specific addon, you have to set the `enable` key of that addon to `false` in the SavedVariables files. (As with the font setup, you have to be logged out while editing/saving the SavedVariables file.)
-
-The `macroeditors` key affects Blizz’s macro UI, M6, and OPie. The other addons (WoWLua, BugSack, ScriptLibrary) have individual keys.
-
-Alternatively you can use these in-game commands (reload the UI afterwards):
-
-```text
-/run EBFI_DB.macroeditors.enable = false
-/run EBFI_DB.wowlua.enable = false
-/run EBFI_DB.scriptlibrary.enable = false
-/run EBFI_DB.bugsack.enable = false
-```
-
-Use `true` to re-enable.
+Example: `/efi f 1` sets *PT Mono* as your editbox font.
 
 ### Font Size
 
-You can change the font size with a slash command:
+You can change the font size with the command  
 
-`/editboxfontimprover <font size>` or `/efi <font size>`
+`/efi s <number>`
 
-For example `/efi 14`.
+For example `/efi s 14`.
 
-This affects only the addons that are set to use EFI’s default font size, which are the addons that do not have their own font size setting (currently Blizz Macro UI, M6, and OPie). WowLua, ScriptLibrary, and BugSack have their own font size setting, and EFI by default will not override it.
+This affects only the addons that are set to use EFI’s size setting, which are the addons that *do not have* their own font size setting (currently Blizz Macro UI, M6, and OPie). WowLua, ScriptLibrary, and BugSack have their own font size setting, and EFI by default will not override it.
 
 However you can enforce EFI’s font size for these addons with the `/efi unisize` command. Revert back with `/efi ownsize`.
 
-Note that even with `unisize` you can still use the respective addon’s font size setting. The size will just be reset at login, or when you use the slash command to change the size or to switch to another font.
+Note that even with `unisize` you can still use the respective addon’s font size setting. The size will just be reset at login/reload, or when you use the slash command to change the size or to switch to another font.
+
+### Enable/Disable
+
+By default, the addon changes the font of all the above listed 3rd-party and Blizz addons. If you really want to deactivate the font replacement for a specific addon, you can simply toggle it with `/efi <addonname>`, where `<addonname>` can be any of the following \[long form | short form\]:
+
+- `macroditors` | `me`
+- `wowlua` | `wl`
+- `scriptlibrary` | `sl`
+- `bugsack` | `bs`
+
+The `macroeditors` argument affects *Blizz’s Macro UI, M6, and OPie.* The other addons can be toggled individually.
+
+### Tips
+
+#### Font Browsing
+
+After installing EFI, you certainly want to check out the different fonts and see what they look like in your frames.
+
+To quickly browse through all installed fonts, you can increment (and decrement) the index instead of entering an index number. For this, use the commands `/efi +` and `/efi -`. This is designed to be used in conjunction with the chat command history. 
+
+So, to find the font you like the best:
+
+1. Open a frame where you can see the applied font, for example the BugSack window with some error code in it, or the macro editor.
+2. Enter `/efi +`  --> the font changes to the next in the list, and is applied to your BugSack text. The current font name is printed to the chat.
+3. Press your chat key (usually `/` or *Return*) to re-open the chat editbox.
+4. Press *Alt-UpArrow* to bring back the last command (or just *UpArrow*, if you have Chattynator).
+5. Press *Return*  --> the next font is applied.
+6. Repeat from step 3.
+
+For your convenience, instead of `-`/`+` you can also press `-`/`=`. For even more convenience you can also use the `,` and `.` (comma and period) keys.
+
+#### Size Browsing
+
+The same works for the font size: Just use `/efi s +` in step 2.
 
 ---
 
