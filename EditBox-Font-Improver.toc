@@ -25,5 +25,5 @@
 ## LoadSavedVariablesFirst: 1
 ## SavedVariables: EBFI_DB
 
-main.lua
 fonts.lua
+main.lua
