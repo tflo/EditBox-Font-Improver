@@ -134,7 +134,9 @@ local dfonts = A.defaultfonts
 local base_path, extension = 'Interface/AddOns/EditBox-Font-Improver/fonts/', '.ttf'
 
 for i, v in ipairs(dfonts) do
-	dfonts[i] = base_path .. v .. extension
+	local name = v
+	local ext = name:sub(-4) -- with the dot
+	dfonts[i] = base_path .. name .. ((ext == '.otf' or ext == '.ttf') and '' or extension)
 end
 
 -- not yet implemented, TODO
