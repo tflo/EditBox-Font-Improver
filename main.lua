@@ -366,6 +366,9 @@ local function PLAYER_LOGIN()
 	if not create_fontobj() then
 		-- Print the msg once more when login chat spam is over.
 		C_Timer.After(20, function() warnprint(FONTPATH_WARNING:format(efi_font)) end)
+		-- NOTE XXX: WoW seems to cache the font file *and also the path* until game
+		-- exit; so this test may pass at login even with the file removed, and the
+		-- ghost font is also still rendered in-game!
 		return
 	end
 	if db_emptied then C_Timer.After(20, function() warnprint(RESET_WARNING) end) end
