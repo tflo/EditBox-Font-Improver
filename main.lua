@@ -51,6 +51,10 @@ end
 
 local function efiprint(msg) print(format('%s %s', MSG_PREFIX, msg)) end
 
+local ITERATORS = {
+	['-'] = -1, ['+'] = 1, ['='] = 1, [','] = -1, ['.'] = 1,
+}
+
 --[[===========================================================================
 	Defaults
 ===========================================================================]]--
@@ -581,9 +585,9 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		tinsert(args, arg)
 	end
 	-- Multi args: font
-	-- Font selection by index
-	if tonumber(args[1]) or (args[1] == 'f' or args[1] == 'font') and tonumber(args[2]) then
-		local selection = floor(args[1]) or floor(args[2])
+	-- Font selection
+	if tonumber(args[1]) or ITERATORS[args[1]] then
+		local selection = tonumber(args[1]) and floor(args[1]) or idx_from_path(db.font) + ITERATORS[args[1]]
 		if db.font == dfonts[selection] then
 			efiprint(
 				format(
@@ -649,9 +653,8 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	elseif args[1] == 'db' and (args[2] == 'show' or args[2] == 'dump') then -- Debug
 		DevTools_Dump(db)
 	-- Multi args: fontsize
-	elseif args[1] == 's' and tonumber(args[2]) then
-		local size = max(min(tonumber(args[2]), 28), 6)
-		db.fontsize = size
+	elseif args[1] == 's' and tonumber(args[2]) or ITERATORS[args[2]] then
+		db.fontsize = max(min(tonumber(args[2] or db.fontsize + ITERATORS[args[2]]), 28), 6)
 		efiprint(
 			format(
 				'Font size now set to %s. This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack).',
