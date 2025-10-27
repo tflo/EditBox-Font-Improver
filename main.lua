@@ -91,7 +91,7 @@ end
 local DB_VERSION_CURRENT = 1
 
 local defaults = {
-	fontfile = 'Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf',
+	fontfile = 'Interface/AddOns/EditBox-Font-Improver/fonts/pt-mono_regular.ttf',
 	fontsize = 12,
 	userfonts = nil, -- TODO: user fonts
 	macroeditors = {
