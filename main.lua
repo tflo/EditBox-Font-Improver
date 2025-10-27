@@ -5,6 +5,8 @@ local MYNAME, A = ...
 local user_is_author = false
 
 local WTC = WrapTextInColorCode
+local tonumber = tonumber
+local type = type
 
 local FLAGS = '' -- For our purpose, we do not want any outlining.
 
@@ -43,6 +45,8 @@ local RESET_WARNING = format(
 	CLR.KEY('refer to the ReadMe or the description on CurseForge')
 )
 local NOTHING_FOUND = CLR.BAD('<NOTHING FOUND>')
+local BLOCKSEP = CLR.EFI(strrep('+', 42))
+
 -- We opt to not raise an error if a font cannot be set, and just print a one-time warning.
 -- The user will notice that the font is not set when they open the relevant addon.
 local function warnprint(msg)
@@ -135,6 +139,8 @@ end
 
 -- not yet implemented, TODO
 local ufonts = db.userfonts
+-- TODO: for the user font implementation: we should simply prepend the user table to our dfonts
+-- This will greatly simplify array handling e.g in our fontlisting etc. functions
 
 local efi_font = db.font
 
@@ -199,10 +205,10 @@ local addons = {
 -- BugSack:       configurable 10 to 16
 
 -- BugSack's built-in sizes:
--- Small: GameFontHighlightSmall: 10
--- Medium: GameFontHighlight: 12
--- Large: GameFontHighlightMedium: 14
--- X-Large: GameFontHighlightLarge: 16
+-- Small = GameFontHighlightSmall: 10
+-- Medium = GameFontHighlight: 12
+-- Large = GameFontHighlightMedium: 14
+-- X-Large = GameFontHighlightLarge: 16
 
 
 --[[===========================================================================
@@ -347,6 +353,7 @@ end
 
 local ef = CreateFrame('Frame', MYNAME .. '_eventframe')
 
+-- TODO: merge this func with the update_setup func
 local function initial_setup()
 	for k, v in pairs(addons) do
 		if db[k].enable and v.loaded then v.setup() end
@@ -569,8 +576,6 @@ local function fullhelpbody()
 	}
 end
 
-local BLOCKSEP = CLR.EFI(strrep('+', 42))
-
 
 --[[----------------------------------------------------------------------------
 	Slash function
@@ -607,7 +612,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 			efi_font = dfonts[selection]
 			if update_setup() then
 				db.font = dfonts[selection]
-				efiprint(format('Your new font is %s.', CLR.FONT(fontname(db.font))))
+				efiprint(format('Your new font: %s', CLR.FONT(fontname(db.font))))
 			else
 				efiprint(
 					format(
@@ -657,8 +662,8 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		db.fontsize = max(min(tonumber(args[2] or db.fontsize + ITERATORS[args[2]]), 28), 6)
 		efiprint(
 			format(
-				'Font size now set to %s. This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack).',
-				db.fontsize
+				'Font size set to %s. This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack).',
+				CLR.KEY(db.fontsize)
 			)
 		)
 		update_setup()
