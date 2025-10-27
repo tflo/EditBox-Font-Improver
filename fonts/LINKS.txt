@@ -6,8 +6,15 @@ https://github.com/microsoft/cascadia-code
 https://quoteunquoteapps.com/courierprime/
 https://design.ubuntu.com/font
 https://github.com/polarsys/b612
+https://github.com/google/fonts/tree/main/ofl/inconsolata
+https://www.redhat.com/en/about/brand/standards/typography
+https://fonts.google.com/specimen/Roboto+Mono
+https://github.com/sursly/sono
+https://fonts.google.com/noto/specimen/Noto+Sans
+https://github.com/chrissimpkins/codeface/tree/master/fonts/code-new-roman
+https://github.com/githubnext/monaspace
 
 ---
 
-Input has very nice mono and mono-like fonts, but I could not include them due to their license:
+'Input' has very nice mono and mono-like fonts, but I could not include them due to their license:
 https://input.djr.com/

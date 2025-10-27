@@ -3,7 +3,7 @@
 
 local _, A = ...
 
-A.NUM_FONTS_COMPACTLIST = 10
+A.NUM_FONTS_COMPACTLIST = 12
 
 
 A.defaultfonts = {
@@ -17,7 +17,9 @@ A.defaultfonts = {
 	'RobotoMono-Regular',
 	'B612Mono-Regular',
 	'IBMPlexMono-Text',
-	'Inconsolata-Condensed',
+	'MonaspaceNeon-Regular.otf',
+	'MonaspaceRadon-Regular.otf',
+	'NotoSansMono_Condensed-Regular',
 
 	-- Variants and secondaries
 
@@ -48,6 +50,7 @@ A.defaultfonts = {
 
 	'Inconsolata-Regular',
 	'Inconsolata-Medium',
+	'Inconsolata-Condensed',
 	'Inconsolata-Expanded',
 
 	'RobotoMono-Light',
@@ -67,7 +70,6 @@ A.defaultfonts = {
 	'NotoSansMono_SemiCondensed-Medium',
 	'NotoSansMono_SemiCondensed-SemiBold',
 	'NotoSansMono_Condensed-Light',
-	'NotoSansMono_Condensed-Regular',
 	'NotoSansMono_Condensed-Medium',
 	'NotoSansMono_Condensed-SemiBold',
 
@@ -80,6 +82,21 @@ A.defaultfonts = {
 	'SonoSans-SemiBold',
 
 	'Code New Roman b.otf',
+
+	'MonaspaceArgon-Light.otf',
+	'MonaspaceArgon-Regular.otf',
+	'MonaspaceArgon-Medium.otf',
+	'MonaspaceKrypton-Light.otf',
+	'MonaspaceKrypton-Regular.otf',
+	'MonaspaceKrypton-Medium.otf',
+	'MonaspaceRadon-Light.otf',
+	'MonaspaceRadon-Medium.otf',
+	'MonaspaceXenon-Light.otf',
+	'MonaspaceXenon-Regular.otf',
+	'MonaspaceXenon-Medium.otf',
+	'MonaspaceNeon-Light.otf',
+	'MonaspaceNeon-Medium.otf',
+
 }
 
 --[[ off ]]--[[
@@ -90,6 +107,16 @@ A.defaultfonts = {
 	'Inconsolata-Light',
 	'Sono-SemiBold',
 	'Code New Roman i.otf',
+	'MonaspaceArgon-SemiBold.otf',
+	'MonaspaceKrypton-SemiBold.otf',
+	'MonaspaceRadon-SemiBold.otf',
+	'MonaspaceXenon-SemiBold.otf',
+	'MonaspaceNeon-SemiBold.otf',
+	'MonaspaceArgon-Italic.otf',
+	'MonaspaceKrypton-Italic.otf',
+	'MonaspaceRadon-Italic.otf',
+	'MonaspaceNeon-Italic.otf',
+	'MonaspaceXenon-Italic.otf',
 
 
 --]]
