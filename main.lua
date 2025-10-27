@@ -165,6 +165,8 @@ end
 -- Chattynator chat EditBox
 -- Blizz chat editbox
 
+local initial_setup_stopped
+
 local addons = {
 	macroeditors = {
 		name = 'macro editors',
@@ -363,23 +365,23 @@ local function initial_setup()
 end
 
 local function PLAYER_LOGIN()
-	if not create_fontobj() then
-		-- Print the msg once more when login chat spam is over.
-		C_Timer.After(20, function() warnprint(FONTPATH_WARNING:format(efi_font)) end)
-		-- NOTE XXX: WoW seems to cache the font file *and also the path* until game
-		-- exit; so this test may pass at login even with the file removed, and the
-		-- ghost font is also still rendered in-game!
-		return
-	end
 	if db_emptied then C_Timer.After(20, function() warnprint(RESET_WARNING) end) end
 	addons.wowlua.loaded = C_AddOns.IsAddOnLoaded 'WowLua'
 	addons.scriptlibrary.loaded = C_AddOns.IsAddOnLoaded 'ScriptLibrary'
 	addons.bugsack.loaded = C_AddOns.IsAddOnLoaded 'BugSack'
-	initial_setup()
 	-- Debug
 	user_is_author = tf6 and tf6.user_is_tflo
 	if user_is_author then db.db_touched = true end
-
+	if not create_fontobj() then
+		-- Print the msg once more when login chat spam is over.
+		C_Timer.After(25, function() warnprint(FONTPATH_WARNING:format(efi_font)) end)
+		-- NOTE XXX: WoW seems to cache the font file *and also the path* until game
+		-- exit; so this test may pass at login even with the file removed, and the
+		-- ghost font is also still rendered in-game!
+		initial_setup_stopped = true
+		return
+	end
+	initial_setup()
 end
 
 local event_handlers = {
@@ -410,7 +412,7 @@ local function update_setup()
 	if not create_fontobj() then return end
 	for k, v in pairs(addons) do
 		-- If setup is not yet done then a hook was installed but not yet triggered.
-		if db[k].enable and v.setup_done then v.setup() end
+		if db[k].enable and (v.setup_done or initial_setup_stopped) then v.setup() end
 	end
 	return true
 end
