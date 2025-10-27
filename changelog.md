@@ -4,6 +4,27 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.0.0 (2025-10-27)
+
+- **This is a total rework of the addon.** Main changes:
+    - **You can no longer add your own font paths** to the SavedVariables file (may be added back later).
+    - EFI now comes with **quite a few preinstalled fonts** you can choose from (currently 74).
+    - Please check out the totally rewritten and updated [ReadMe](https://github.com/tflo/EditBox-Font-Improver?tab=readme-ov-file#editbox-font-improver), or the description on CF, for the new font selection commands and other exciting new or changed stuff!
+- If you’re coming from v2, the database will be rest.
+- Add slash command to set the font size (no reload required). Example `/efi s 14`.
+- Add slash command to select a font (no reload required). Example `/efi 3`.
+- Respect the addon-set font size (from the addon’s own font size setting) also for ScriptLibrary and BugSack (before, it was only respected for WowLua).
+    - This behavior is enabled by default.
+    - If you want to enforce efi’s default font size for all addons, use `/efi unisize`. Revert back with `/efi ownsize`.
+- Fix `SetFont` bug with WowLua.
+- “Rebranded” addon acronym from EBFI to EFI, including the slash command (now `/efi`). The old `/ebfi` will continue to work, along with the full one `/editboxfontimprover`.
+- More, and more informative, warning messages if a font could not be set.
+- Full rework of the CLI, inluding comprehensive help display with all commands.
+- Remove the still not used individual font sizes from the DB. 
+    - This was planned to be implemented, but it doesn’t really make much sense. And with WoWLua, ScriptLibrary, and BugSack you can set the font size within the addon itself anyway.
+- Standardize addon-is-loaded detection.
+- Various code optimizations.
+
 #### 2.0.7 (2025-10-07)
 
 - toc bumped to 110205, no changes.
