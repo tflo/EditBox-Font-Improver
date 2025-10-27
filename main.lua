@@ -450,7 +450,7 @@ local function idx_from_path(path, array)
 			if v == path then return array == ufonts and 'u' .. i or i end
 		end
 	end
-	return CLR.BAD('<no index>')
+	return CLR.BAD('<INVALID INDEX>')
 end
 
 local function fontname(path, withidx, array)

@@ -1,10 +1,10 @@
 # EditBox Font Improver
 
-Better fonts and fontsize for writing macros and debugging code. Not only for font nerds.
+Better fonts and fontsize for writing macros and debugging code. Not only for font nerds!
 
 ## Summary
 
-The addon lets you set the font and font size for the edit boxes of:
+The addon lets you set the font and font size for the edit boxe (text entry field) of:
 
 - [Blizz Macro UI](https://gamingcy.com/wp-content/uploads/2024/01/WoW-Macros-Limitations.jpg): Edit box
 - [M6](https://www.curseforge.com/wow/addons/m6x): Edit box
@@ -18,9 +18,13 @@ Let’s make sure these edit and code boxes have a clean, monospaced font (and a
 
 Note that this is *not* an addon to globally change the WoW UI font! (To do this, you simply put your fonts into *World of Warcraft/_retail_/Fonts* and name them like the default fonts.)
 
-EFI’s purpose is to make nice coding fonts available in edit boxes (and BugSack), *without* affecting the rest of your UI.
+EFI’s objective is to provide nice coding fonts for edit boxes (and BugSack), *without* affecting the rest of your UI.
 
-___If you’re having trouble reading this description on CurseForge, you might want to try switching to the [REPO PAGE](https://github.com/tflo/EditBox-Font-Improver?tab=readme-ov-file#editbox-font-improver). You’ll find the exact same text there, but it’s much easier to read and free from CurseForge’s rendering errors.___
+If you’re using an addon that isn’t covered by EFI, but you believe its edit box would benefit from a more suitable font and/or font size, feel free to suggest it on the [Issues page](https://github.com/tflo/EditBox-Font-Improver/issues)!
+
+---
+
+*_If you’re having trouble reading this description on CurseForge, you might want to try switching to the [Repo Page](https://github.com/tflo/EditBox-Font-Improver?tab=readme-ov-file#editbox-font-improver). You’ll find the exact same text there, but it’s much easier to read and free from CurseForge’s rendering errors.*
 
 ## Usage
 
@@ -48,7 +52,7 @@ Subcommands/arguments:
 
 ### Font Selection
 
-You can choose from more than 50 different fonts and weights.  
+You can choose from more than 70 different fonts and weights.  
 
 Some highlights:  
 
