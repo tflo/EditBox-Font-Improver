@@ -91,7 +91,7 @@ end
 local DB_VERSION_CURRENT = 1
 
 local defaults = {
-	font = 'Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf',
+	fontfile = 'Interface/AddOns/EditBox-Font-Improver/font/pt-mono_regular.ttf',
 	fontsize = 12,
 	userfonts = nil, -- TODO: user fonts
 	macroeditors = {
@@ -144,7 +144,7 @@ local ufonts = db.userfonts
 -- TODO: for the user font implementation: we should simply prepend the user table to our dfonts
 -- This will greatly simplify array handling e.g in our fontlisting etc. functions
 
-local efi_font = db.font
+local efi_font = db.fontfile
 
 local function debugprint(...)
 	if db.debugmode then
@@ -528,9 +528,9 @@ local function statusbody()
 	sizepols = table.concat(sizepols, '; ')
 	return db.debugmode
 			and {
-				format('%s %s', CLR.HEAD('Current font:'), fontname(db.font)),
+				format('%s %s', CLR.HEAD('Current font:'), fontname(db.fontfile)),
 				format('%s %s', CLR.HEAD('Current font size:'), CLR.KEY(db.fontsize)),
-				format('%s %s', CLR.HEAD('Current font path:'), fontpath(db.font)), -- TODO: user fonts
+				format('%s %s', CLR.HEAD('Current font path:'), fontpath(db.fontfile)), -- TODO: user fonts
 				format(
 					'%s %s; %s %s',
 					CLR.HEAD('Num fonts: default:'),
@@ -547,7 +547,7 @@ local function statusbody()
 				format('%s %s', CLR.HEAD('User is author:'), user_is_author and 'Yes' or 'No'),
 			}
 		or {
-			format('%s %s', CLR.HEAD('Current font:'), fontname(db.font)),
+			format('%s %s', CLR.HEAD('Current font:'), fontname(db.fontfile)),
 			format('%s %s', CLR.HEAD('Current font size:'), CLR.KEY(db.fontsize)),
 			format('%s %s. Use %q to list all.', CLR.HEAD('Number of installed fonts:'), CLR.KEY(#dfonts), CLR.CMD('/efi\194\160f')),
 			format('%s %s', CLR.HEAD(('Installed fonts ' .. CLR.KEY('[1\226\128\147' .. A.NUM_FONTS_COMPACTLIST .. ']') .. ':')), listfonts(dfonts, true)),
@@ -594,8 +594,8 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	-- Multi args: font
 	-- Font selection
 	if tonumber(args[1]) or ITERATORS[args[1]] then
-		local selection = tonumber(args[1]) and floor(args[1]) or idx_from_path(db.font) + ITERATORS[args[1]]
-		if db.font == dfonts[selection] then
+		local selection = tonumber(args[1]) and floor(args[1]) or idx_from_path(db.fontfile) + ITERATORS[args[1]]
+		if db.fontfile == dfonts[selection] then
 			efiprint(
 				format(
 					'The font you have selected (%s) is already loaded.',
@@ -613,8 +613,8 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		else
 			efi_font = dfonts[selection]
 			if update_setup() then
-				db.font = dfonts[selection]
-				efiprint(format('Your new font: %s', CLR.FONT(fontname(db.font))))
+				db.fontfile = dfonts[selection]
+				efiprint(format('Your new font: %s', CLR.FONT(fontname(db.fontfile))))
 			else
 				efiprint(
 					format(
@@ -625,11 +625,11 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 			end
 		end
 	elseif args[1] == 'f' and args[2] == 'inval' then -- Debug
-		db.font = db.font:gsub('AddOns', 'AddOnsXXX')
-		efiprint(format('Font path invalidated to: %s', db.font))
+		db.fontfile = db.fontfile:gsub('AddOns', 'AddOnsXXX')
+		efiprint(format('Font path invalidated to: %s', db.fontfile))
 	elseif args[1] == 'f' and args[2] == 'reval' then -- Debug
-		db.font = db.font:gsub('AddOnsXXX', 'AddOns')
-		efiprint(format('Font path revalidated to: %s', db.font))
+		db.fontfile = db.fontfile:gsub('AddOnsXXX', 'AddOns')
+		efiprint(format('Font path revalidated to: %s', db.fontfile))
 	-- Multi args: database (debug)
 	elseif args[1] == 'db' and args[2] == 'reset' then -- Debug
 		empty_db()
