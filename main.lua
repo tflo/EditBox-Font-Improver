@@ -172,6 +172,7 @@ local addons = {
 		name = 'macro editors',
 		abbrev = 'me',
 		has_sizecfg = false,
+		DOES_INHERIT = true,
 		loaded = true,
 		setup_done = false,
 	},
@@ -179,6 +180,7 @@ local addons = {
 		name = 'WowLua',
 		abbrev = 'wl',
 		has_sizecfg = true,
+		DOES_INHERIT = false,
 		loaded = false,
 		setup_done = false,
 	},
@@ -186,6 +188,7 @@ local addons = {
 		name = 'ScriptLibrary',
 		abbrev = 'sl',
 		has_sizecfg = true,
+		DOES_INHERIT = false,
 		loaded = false,
 		hook_done = false,
 		setup_done = false,
@@ -194,6 +197,7 @@ local addons = {
 		name = 'BugSack',
 		abbrev = 'bs',
 		has_sizecfg = true,
+		DOES_INHERIT = false,
 		loaded = false,
 		hook_done = false,
 		setup_done = false,
@@ -412,7 +416,7 @@ local function update_setup()
 	if not create_fontobj() then return end
 	for k, v in pairs(addons) do
 		-- If setup is not yet done then a hook was installed but not yet triggered.
-		if db[k].enable and (v.setup_done or initial_setup_stopped) then v.setup() end
+		if db[k].enable and (not v.DOES_INHERIT and v.setup_done or initial_setup_stopped) then v.setup() end
 	end
 	return true
 end
