@@ -630,10 +630,10 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 			end
 		end
 	elseif args[1] == 'f' and args[2] == 'inval' then -- Debug
-		db.fontfile = db.fontfile:gsub('AddOns', 'AddOnsXXX')
+		db.fontfile = db.fontfile:gsub('AddOns', 'INVALIDATED_PATH')
 		efiprint(format('Font path invalidated to: %s', db.fontfile))
 	elseif args[1] == 'f' and args[2] == 'reval' then -- Debug
-		db.fontfile = db.fontfile:gsub('AddOnsXXX', 'AddOns')
+		db.fontfile = db.fontfile:gsub('INVALIDATED_PATH', 'AddOns')
 		efiprint(format('Font path revalidated to: %s', db.fontfile))
 	-- Multi args: database (debug)
 	elseif args[1] == 'db' and args[2] == 'reset' then -- Debug
