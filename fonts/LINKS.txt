@@ -13,6 +13,7 @@ https://github.com/sursly/sono
 https://fonts.google.com/noto/specimen/Noto+Sans
 https://github.com/chrissimpkins/codeface/tree/master/fonts/code-new-roman
 https://github.com/githubnext/monaspace
+https://rubjo.github.io/victor-mono/
 
 ---
 

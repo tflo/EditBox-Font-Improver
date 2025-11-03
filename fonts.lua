@@ -98,6 +98,11 @@ A.defaultfonts = {
 	'MonaspaceNeon-Light.otf',
 	'MonaspaceNeon-Medium.otf',
 
+	'VictorMono-Regular',
+	'VictorMono-Medium',
+	'VictorMono-SemiBold',
+	'VictorMono-MediumItalic',
+	'VictorMono-SemiBoldItalic',
 }
 
 --[[ off ]]--[[
