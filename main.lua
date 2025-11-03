@@ -94,7 +94,7 @@ local defaults = {
 	fontfile = 'Interface/AddOns/EditBox-Font-Improver/fonts/pt-mono_regular.ttf',
 	fontsize = 12,
 	userfonts = nil, -- TODO: user fonts
-	macroeditors = {
+	misceditors = {
 		enable = true,
 		ownsize = nil, -- Always EFI size, since these addons have no own size setting
 	},
@@ -168,8 +168,8 @@ end
 local initial_setup_stopped
 
 local addons = {
-	macroeditors = {
-		name = 'macro editors',
+	misceditors = {
+		name = 'misc editors',
 		abbrev = 'me',
 		has_sizecfg = false,
 		DOES_INHERIT = true,
@@ -220,7 +220,7 @@ local addons = {
 
 
 --[[===========================================================================
-	Straightforward Frames (macro editors)
+	Straightforward Frames (misc editors)
 ===========================================================================]]--
 
 -- https://www.townlong-yak.com/addons/m6
@@ -230,7 +230,7 @@ local addons = {
 -- The frames are created at load time, so no need to hook (Blizzard_MacroUI needs
 -- OptionalDeps!). A missing addon doesn't pose a problem, as it just creates a
 -- nil value in the array.
-function addons.macroeditors.setup()
+function addons.misceditors.setup()
 	local editboxes = {
 		-- Save
 		MacroFrameText, -- Blizzard_MacroUI; also affects ImprovedMacroFrame.
@@ -247,8 +247,8 @@ function addons.macroeditors.setup()
 		debugprint('Set up ' .. box:GetName())
 		count = count + 1
 	end
-	addons.macroeditors.setup_done = true
-	debugprint('Setup for misc macro editors finished (' .. count .. ' of ' .. #editboxes .. ').')
+	addons.misceditors.setup_done = true
+	debugprint('Setup for misc editors finished (' .. count .. ' of ' .. #editboxes .. ').')
 end
 
 
