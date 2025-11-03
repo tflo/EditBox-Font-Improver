@@ -4,6 +4,14 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.2.0 (2025-11-03)
+
+- Add Victor Mono font in 3 weights and 2 styles.
+    - This is an interesting font for our purpose, as it is pretty narrow while still mono-like.
+- Set default font size to 13 (was 12). Does not affect existing setups.
+    - I have a hard time to judge what would be a good size for the “average” setup, as I’m running the game GUI at 100% UI Scale on a MacBook with native 3456x2234; for me, 14–16px is a good size, so with 80% UI Scale (which seems to be a more common scale), 13px *could* be the sweet spot.
+    -  In any case, you can always adjust it with `/efi s <size>`.
+
 #### 3.1.0 (2025-11-03)
 
 - Add PasteNG as supported addon (editbox). Currently member of the `macroeditors` group.

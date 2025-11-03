@@ -1,6 +1,6 @@
 ## Interface: 110205, 110207
 ## Title: EditBox Font Improver
-## Version: 3.1.0
+## Version: 3.2.0
 ## IconTexture: Interface\AddOns\EditBox-Font-Improver\icon.blp
 ## Notes: Have a nice monospaced font in the edit/code boxes of: Blizz's Macro UI, OPie, M6, ScriptLibrary, WoWLua, BugSack.
 ## Author: Mot (@6mot, @tflo)
