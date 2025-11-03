@@ -1,6 +1,6 @@
 # EditBox Font Improver
 
-Better fonts and fontsize for writing macros and debugging code. Not only for font nerds!
+Better fonts and font size for writing macros and debugging code. Not only for font nerds!
 
 ## Summary
 
@@ -25,6 +25,8 @@ If you’re using an addon that isn’t covered by EFI, but you believe its edit
 ---
 
 *_If you’re having trouble reading this description on CurseForge, you might want to try switching to the [Repo Page](https://github.com/tflo/EditBox-Font-Improver?tab=readme-ov-file#editbox-font-improver). You’ll find the exact same text there, but it’s much easier to read and free from CurseForge’s rendering errors.*
+
+---
 
 ## Usage
 
