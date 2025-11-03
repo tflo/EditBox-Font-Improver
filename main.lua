@@ -331,6 +331,7 @@ function addons.scriptlibrary.setup()
 				)
 			or db.fontsize
 		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(efi_font, size, FLAGS)
+		-- RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFontObject(efi_fontobject)
 		addons.scriptlibrary.setup_done = true
 		debugprint 'ScriptLibrary setup finished.'
 	elseif not addons.scriptlibrary.hook_done then

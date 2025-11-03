@@ -5,6 +5,7 @@ local _, A = ...
 
 A.NUM_FONTS_COMPACTLIST = 12
 
+--TODO: add Victor
 
 A.defaultfonts = {
 	-- Principal group (= compactlist)
