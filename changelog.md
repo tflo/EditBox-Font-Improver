@@ -4,6 +4,11 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.2.2 (2025-11-03)
+
+- Remove Roboto from the top 1–12 group.
+- Add VictorMono-Medium to the top 1–12 group, pos. 11.
+
 #### 3.2.1 (2025-11-03)
 
 - Updated ReadMe for the added PasteNG addon.

@@ -15,11 +15,11 @@ A.defaultfonts = {
 	'Code New Roman.otf',
 	'Courier Prime Code',
 	'CascadiaMono-Regular',
-	'RobotoMono-Regular',
 	'B612Mono-Regular',
 	'IBMPlexMono-Text',
 	'MonaspaceNeon-Regular.otf',
 	'MonaspaceRadon-Regular.otf',
+	'VictorMono-Medium',
 	'NotoSansMono_Condensed-Regular',
 
 	-- Variants and secondaries
@@ -55,6 +55,7 @@ A.defaultfonts = {
 	'Inconsolata-Expanded',
 
 	'RobotoMono-Light',
+	'RobotoMono-Regular',
 	'RobotoMono-Medium',
 	'RobotoMono-SemiBold',
 	'RobotoMono-Italic',
@@ -99,7 +100,6 @@ A.defaultfonts = {
 	'MonaspaceNeon-Medium.otf',
 
 	'VictorMono-Regular',
-	'VictorMono-Medium',
 	'VictorMono-SemiBold',
 	'VictorMono-MediumItalic',
 	'VictorMono-SemiBoldItalic',
