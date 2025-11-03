@@ -4,19 +4,20 @@ Better fonts and font size for writing macros and debugging code. Not only for f
 
 ## Summary
 
-The addon lets you set the font and font size for the edit boxe (text entry field) of:
+The addon lets you set the font and font size for the edit box (text entry field) of:
 
 - [Blizz Macro UI](https://gamingcy.com/wp-content/uploads/2024/01/WoW-Macros-Limitations.jpg): Edit box
 - [M6](https://www.curseforge.com/wow/addons/m6x): Edit box
 - [OPie](https://www.curseforge.com/wow/addons/opie): The edit box to write a macro for a button
 - [WowLua](https://www.curseforge.com/wow/addons/wowlua): Output and edit box
 - [ScriptLibrary](https://www.curseforge.com/wow/addons/script-library): Edit box
+- [PasteNG](https://www.curseforge.com/wow/addons/pasteng): Edit box
 - [BugSack](https://www.curseforge.com/wow/addons/bugsack): Error frame text (not an edit box, but your bugs deserve readability too!)
 
 Let’s make sure these edit and code boxes have a clean, monospaced font (and a proper text size!), instead of Friz Quadrata, Arial Narrow, or anything else that’s not quite right.  
 (WowLua is an exception, as it already comes with a suitable font (Vera Mono); this is great, but EFI lets you switch it out if you want something different.)
 
-Note that this is *not* an addon to globally change the WoW UI font! (To do this, you simply put your fonts into *World of Warcraft/_retail_/Fonts* and name them like the default fonts.)
+Note that this is *not* an addon to globally change the WoW UI font! (To do this, you simply put your fonts into *World of Warcraft/_retail_/Fonts* and name them like the default font files.)
 
 EFI’s objective is to provide nice coding fonts for edit boxes (and BugSack), *without* affecting the rest of your UI.
 
@@ -101,7 +102,7 @@ By default, the addon changes the font of all the above listed 3rd-party and Bli
 - `scriptlibrary` | `sl`
 - `bugsack` | `bs`
 
-The `macroeditors` argument affects *Blizz’s Macro UI, M6, and OPie.* The other addons can be toggled individually.
+The `misceditors` argument affects *Blizz’s Macro UI, M6, and OPie.* The other addons can be toggled individually.
 
 ### Tips
 

@@ -4,6 +4,12 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.1.0 (2025-11-03)
+
+- Add PasteNG as supported addon (editbox). Currently member of the `macroeditors` group.
+- Rename `macroeditors` to `misceditors`, `macro editors` to `misc editors` in all UI and internal instances.
+- toc: Add 110207 as compatible interface.
+
 #### 3.0.0 (2025-10-27)
 
 - **This is a total rework of the addon.** Main changes:
