@@ -171,7 +171,7 @@ local addons = {
 	misceditors = {
 		name = 'misc editors',
 		abbrev = 'me',
-		has_sizecfg = false,
+		HAS_SIZECFG = false,
 		DOES_INHERIT = true,
 		loaded = true,
 		setup_done = false,
@@ -179,7 +179,7 @@ local addons = {
 	wowlua = {
 		name = 'WowLua',
 		abbrev = 'wl',
-		has_sizecfg = true,
+		HAS_SIZECFG = true,
 		DOES_INHERIT = false,
 		loaded = false,
 		setup_done = false,
@@ -187,7 +187,7 @@ local addons = {
 	scriptlibrary = {
 		name = 'ScriptLibrary',
 		abbrev = 'sl',
-		has_sizecfg = true,
+		HAS_SIZECFG = true,
 		DOES_INHERIT = false,
 		loaded = false,
 		hook_done = false,
@@ -196,7 +196,7 @@ local addons = {
 	bugsack = {
 		name = 'BugSack',
 		abbrev = 'bs',
-		has_sizecfg = true,
+		HAS_SIZECFG = true,
 		DOES_INHERIT = false,
 		loaded = false,
 		hook_done = false,
@@ -687,13 +687,13 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	-- Single arg
 	elseif args[1] == 'unisize' then
 		for k, v in pairs(addons) do
-			if v.has_sizecfg then db[k].ownsize = false end
+			if v.HAS_SIZECFG then db[k].ownsize = false end
 		end
 		efiprint "All addons set to use EFI's default font size."
 		update_setup()
 	elseif args[1] == 'ownsize' then
 		for k, v in pairs(addons) do
-			if v.has_sizecfg then db[k].ownsize = true end
+			if v.HAS_SIZECFG then db[k].ownsize = true end
 		end
 		efiprint 'All addons with a configurable font size will keep their own size setting.'
 		update_setup()
