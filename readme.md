@@ -87,7 +87,7 @@ You can change the font size with the command
 
 For example `/efi s 14`.
 
-This affects only the addons that are set to use EFI’s size setting, which are the addons that *do not have* their own font size setting (currently Blizz Macro UI, M6, and OPie). WowLua, ScriptLibrary, and BugSack have their own font size setting, and EFI by default will not override it.
+This affects only the addons that are set to use EFI’s size setting, which are the addons that *do not have* their own font size setting (currently Blizz Macro UI, M6, OPie, and PasteNG). WowLua, ScriptLibrary, and BugSack have their own font size setting, and EFI by default will not override it.
 
 However you can enforce EFI’s font size for these addons with the `/efi unisize` command. Revert back with `/efi ownsize`.
 
@@ -102,7 +102,7 @@ By default, the addon changes the font of all the above listed 3rd-party and Bli
 - `scriptlibrary` | `sl`
 - `bugsack` | `bs`
 
-The `misceditors` argument affects *Blizz’s Macro UI, M6, and OPie.* The other addons can be toggled individually.
+The `misceditors` argument affects *Blizz Macro UI, M6, OPie, and PasteNG.* The other addons can be toggled individually.
 
 ### Tips
 

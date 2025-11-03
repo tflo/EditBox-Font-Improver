@@ -4,6 +4,10 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.2.1 (2025-11-03)
+
+- Updated ReadMe for the added PasteNG addon.
+
 #### 3.2.0 (2025-11-03)
 
 - Add Victor Mono font in 3 weights and 2 styles.
