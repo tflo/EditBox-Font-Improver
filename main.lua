@@ -232,9 +232,14 @@ local addons = {
 -- nil value in the array.
 function addons.macroeditors.setup()
 	local editboxes = {
+		-- Save
 		MacroFrameText, -- Blizzard_MacroUI; also affects ImprovedMacroFrame.
 		ABE_MacroInputEB, -- M6 and OPie macro edit box.
-	}
+		--Experimantal
+		MultiLineEditBox1Edit,-- PasteNG; does this hit other boxes too? TODO
+-- 		_G['AceGUI-3.0EditBox1'], -- PasteNG: msg recipient field
+-- 		ChatFrame1EditBox,-- Trying to hit the chatframe editbox
+}
 	-- Don't use `ipairs' because the entries may be nil (addon not loaded).
 	local count = 0
 	for _, box in pairs(editboxes) do
