@@ -92,7 +92,7 @@ local DB_VERSION_CURRENT = 1
 
 local defaults = {
 	fontfile = 'Interface/AddOns/EditBox-Font-Improver/fonts/pt-mono_regular.ttf',
-	fontsize = 12,
+	fontsize = 13,
 	userfonts = nil, -- TODO: user fonts
 	misceditors = {
 		enable = true,
