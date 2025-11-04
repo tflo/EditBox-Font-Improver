@@ -97,7 +97,7 @@ Note that even with `unisize` you can still use the respective addon’s font si
 
 By default, the addon changes the font of all the above listed 3rd-party and Blizz addons. If you really want to deactivate the font replacement for a specific addon, you can simply toggle it with `/efi <addonname>`, where `<addonname>` can be any of the following \[long form | short form\]:
 
-- `macroditors` | `me`
+- `misceditors` | `me`
 - `wowlua` | `wl`
 - `scriptlibrary` | `sl`
 - `bugsack` | `bs`
