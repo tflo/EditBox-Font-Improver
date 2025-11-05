@@ -248,14 +248,21 @@ local addons = {
 -- The frames are created at load time, so no need to hook (Blizzard_MacroUI needs
 -- OptionalDeps!). A missing addon doesn't pose a problem, as it just creates a
 -- nil value in the array.
+
+local function try_misc_ace_boxes()
+	if not user_is_author then return end
+	local t = {}
+	for i = 1, 10 do
+		tinsert(t, _G['MultiLineEditBox' .. i .. 'Edit'])
+	end
+	return unpack(t, 1, 10)
+end
+
 function addons.misceditors.setup()
 	local editboxes = {
-		-- Save
 		MacroFrameText, -- Blizzard_MacroUI; also affects ImprovedMacroFrame.
 		ABE_MacroInputEB, -- M6 and OPie macro edit box.
-		--Experimantal
-		MultiLineEditBox1Edit,-- PasteNG; does this hit other boxes too? TODO
--- 		_G['AceGUI-3.0EditBox1'], -- PasteNG: msg recipient field
+		try_misc_ace_boxes(),
 -- 		ChatFrame1EditBox,-- Trying to hit the chatframe editbox
 }
 	-- Don't use `ipairs' because the entries may be nil (addon not loaded).

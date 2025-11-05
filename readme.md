@@ -11,7 +11,6 @@ The addon lets you set the font and font size for the edit box (text entry field
 - [OPie](https://www.curseforge.com/wow/addons/opie): The edit box to write a macro for a button
 - [WowLua](https://www.curseforge.com/wow/addons/wowlua): Output and edit box
 - [ScriptLibrary](https://www.curseforge.com/wow/addons/script-library): Edit box
-- [PasteNG](https://www.curseforge.com/wow/addons/pasteng): Edit box
 - [BugSack](https://www.curseforge.com/wow/addons/bugsack): Error frame text (not an edit box, but your bugs deserve readability too!)
 
 Let’s make sure these edit and code boxes have a clean, monospaced font (and a proper text size!), instead of Friz Quadrata, Arial Narrow, or anything else that’s not quite right.  
@@ -87,7 +86,7 @@ You can change the font size with the command
 
 For example `/efi s 14`.
 
-This affects only the addons that are set to use EFI’s size setting, which are the addons that *do not have* their own font size setting (currently Blizz Macro UI, M6, OPie, and PasteNG). WowLua, ScriptLibrary, and BugSack have their own font size setting, and EFI by default will not override it.
+This affects only the addons that are set to use EFI’s size setting, which are the addons that *do not have* their own font size setting (currently Blizz Macro UI, M6, OPie). WowLua, ScriptLibrary, and BugSack have their own font size setting, and EFI by default will not override it.
 
 However you can enforce EFI’s font size for these addons with the `/efi unisize` command. Revert back with `/efi ownsize`.
 
@@ -102,7 +101,7 @@ By default, the addon changes the font of all the above listed 3rd-party and Bli
 - `scriptlibrary` | `sl`
 - `bugsack` | `bs`
 
-The `misceditors` argument affects *Blizz Macro UI, M6, OPie, and PasteNG.* The other addons can be toggled individually.
+The `misceditors` argument affects *Blizz Macro UI, M6, OPie.* The other addons can be toggled individually.
 
 ### Tips
 
