@@ -50,6 +50,7 @@ Subcommands/arguments:
 `/efi f` : Show the complete list of installed fonts (the status display only shows a part). Synonyms: `/efi fonts`  
 `/efi unisize` : Use EFI’s font size also for addons that have their own size setting.  
 `/efi ownsize` : Do not override the font size setting of addons that come with their own size setting (this is the default).  
+`/efi r` : Refresh setup. Use this if a target has lost the correct font, or something went wrong with the setup at login.  
 `/efi h` : Show the help text with all commands and arguments explained. Synonyms: `/efi help`  
 
 ### Font Selection

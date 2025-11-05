@@ -490,11 +490,11 @@ end)
 -- ambitious: a little font preview frame, which enables the scroll wheel to
 -- quickly scan through the installed fonts
 
-local function update_setup()
+local function update_setup(force)
 	if not create_fontobj() then return end
 	for k, v in pairs(addons) do
 		-- If setup is not yet done then a hook was installed but not yet triggered.
-		if db[k].enable and (v.PUBLIC or user_is_author) and (not v.DOES_INHERIT and v.setup_done or initial_setup_stopped) then v.setup() end
+		if db[k].enable and (v.PUBLIC or user_is_author) and (not v.DOES_INHERIT and v.setup_done or initial_setup_stopped or force) then v.setup() end
 	end
 	return true
 end
@@ -664,6 +664,7 @@ local function fullhelpbody()
 		format('%s : Set fontsize (default: %s).', CLR.CMD('/efi s <number>'), CLR.KEY(defaults.fontsize)),
 		format('%s : Do not change the font size of addons that have their own size setting (default).', CLR.CMD('/efi ownsize')),
 		format('%s : Apply font size to all addons, regardless of their own settings.', CLR.CMD('/efi unisize')),
+		format('%s : Refresh setup for all enabled targets.', CLR.CMD('/efi r')),
 		format('%s or just %s : Display status and info (index of fonts, current font, settings).', CLR.CMD('/efi s'), CLR.CMD('/efi')),
 		format('%s : Display this help text.', CLR.CMD('/efi h')),
 	}
@@ -767,6 +768,9 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		end
 		efiprint "All addons set to use EFI's default font size."
 		update_setup()
+	elseif args[1] == 'r' then
+		efiprint 'Setup refreshed.'
+		update_setup(true)
 	elseif args[1] == 'ownsize' then
 		for k, v in pairs(addons) do
 			if v.HAS_SIZECFG then db[k].ownsize = true end
