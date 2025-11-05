@@ -4,6 +4,10 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.2.4 (2025-11-05)
+
+- Forgot to update version in toc.
+
 #### 3.2.3 (2025-11-05)
 
 - Removed PasteNG again, until I have found a reliable method to identify its editbox.

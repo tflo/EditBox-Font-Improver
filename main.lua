@@ -168,6 +168,7 @@ end
 -- PasteNG
 -- Chattynator chat EditBox
 -- Blizz chat editbox
+-- WeakAuras code editbox
 
 local initial_setup_stopped
 
@@ -263,9 +264,9 @@ function addons.misceditors.setup()
 		MacroFrameText, -- Blizzard_MacroUI; also affects ImprovedMacroFrame.
 		ABE_MacroInputEB, -- M6 and OPie macro edit box.
 		try_misc_ace_boxes(),
--- 		ChatFrame1EditBox,-- Trying to hit the chatframe editbox
+-- 		ChatFrame1EditBox, -- Trying to hit the chatframe editbox
 }
-	-- Don't use `ipairs' because the entries may be nil (addon not loaded).
+	-- Don't use `ipairs' because the entries can be nil.
 	local count = 0
 	for _, box in pairs(editboxes) do
 		box:SetFontObject(efi_fontobject)
@@ -387,16 +388,15 @@ end
 
 
 --[[===========================================================================
-	WeakAuras --- WiP!
+	WeakAuras --- WiP! -- not exposed
 ===========================================================================]]--
 
 -- https://www.curseforge.com/wow/addons/weakauras-2
 
 -- WA sets the font bruteforce with `MultiLineEditBox3Edit:SetFont`, no fontobject
 -- We loose the font when the size is changed in WA.
--- The MultiLineEditBox3Edit is created only when the Expand button is first clicked.
+-- The Ace box (e.g. MultiLineEditBox3Edit) is created only when the Expand button is first clicked.
 
--- Hook candidates: WeakAuras.ClearAndUpdateOptions,
 function addons.weakauras.setup()
 	if MultiLineEditBox3Edit then -- We need a specific frame name
 		local size = db.fontsize
@@ -520,7 +520,7 @@ local targetnames = setmetatable({}, {
 	Formatters
 ----------------------------------------------------------------------------]]--
 
-local function prettyname(name)
+local function prettyfontname(name)
 	return name:gsub('[_-]+', ' '):gsub('%W%l', strupper):gsub('^pt ', 'PT ')
 end
 
@@ -541,7 +541,7 @@ local function fontname(path, withidx, array)
 	local pattern = db.debugmode and '[^/\\]+$' or '([^/\\]+)%.[tof]+'
 	local name = tostring(path):match(pattern)
 	if not name then return NOTHING_FOUND end
-	name = db.debugmode and name or prettyname(name)
+	name = db.debugmode and name or prettyfontname(name)
 	return CLR.FONT(idx and '[' .. idx .. ']\194\160' .. name or name)
 end
 
