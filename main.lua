@@ -110,6 +110,10 @@ local defaults = {
 		enable = true,
 		ownsize = true,
 	},
+	weakauras = {
+		enable = false,
+		ownsize = true,
+	},
 	debugmode = false,
 	db_version = DB_VERSION_CURRENT,
 	db_touched = nil,
@@ -169,6 +173,7 @@ local initial_setup_stopped
 
 local addons = {
 	misceditors = {
+		PUBLIC = true,
 		name = 'misc editors',
 		abbrev = 'me',
 		HAS_SIZECFG = false,
@@ -177,6 +182,7 @@ local addons = {
 		setup_done = false,
 	},
 	wowlua = {
+		PUBLIC = true,
 		name = 'WowLua',
 		abbrev = 'wl',
 		HAS_SIZECFG = true,
@@ -185,6 +191,7 @@ local addons = {
 		setup_done = false,
 	},
 	scriptlibrary = {
+		PUBLIC = true,
 		name = 'ScriptLibrary',
 		abbrev = 'sl',
 		HAS_SIZECFG = true,
@@ -194,8 +201,19 @@ local addons = {
 		setup_done = false,
 	},
 	bugsack = {
+		PUBLIC = true,
 		name = 'BugSack',
 		abbrev = 'bs',
+		HAS_SIZECFG = true,
+		DOES_INHERIT = false,
+		loaded = false,
+		hook_done = false,
+		setup_done = false,
+	},
+	weakauras = {
+		PUBLIC = false,
+		name = 'WeakAuras',
+		abbrev = 'wa',
 		HAS_SIZECFG = true,
 		DOES_INHERIT = false,
 		loaded = false,
@@ -362,6 +380,51 @@ end
 
 
 --[[===========================================================================
+	WeakAuras --- WiP!
+===========================================================================]]--
+
+-- https://www.curseforge.com/wow/addons/weakauras-2
+
+-- WA sets the font bruteforce with `MultiLineEditBox3Edit:SetFont`, no fontobject
+-- We loose the font when the size is changed in WA.
+-- The MultiLineEditBox3Edit is created only when the Expand button is first clicked.
+
+-- Hook candidates: WeakAuras.ClearAndUpdateOptions,
+function addons.weakauras.setup()
+	if MultiLineEditBox3Edit then -- We need a specific frame name
+		local size = db.fontsize
+		if db.weakauras.ownsize then
+			if WeakAurasSaved and WeakAurasSaved.editor_font_size then
+				size = WeakAurasSaved.editor_font_size
+				debugprint "WeakAuras' own font size aquired."
+			else
+				warnprint "Unable to read WeakAuras' own font size. Using EFI's size."
+			end
+		end
+		MultiLineEditBox3Edit:SetFont(efi_font, size, FLAGS)
+		addons.weakauras.setup_done = true
+		debugprint 'WeakAuras setup finished.'
+	elseif not addons.weakauras.hook_done then
+		addons.weakauras.hook()
+	else
+		warnprint 'WeakAuras target frame not found. Could not set font.'
+	end
+end
+
+function addons.weakauras.hook()
+	if not IndentationLib then
+		warnprint '`IndentationLib` not found. Could not hook WeakAuras.'
+	else
+		hooksecurefunc(IndentationLib, 'stripWowColorsWithPos', function()
+			if not addons.weakauras.setup_done then addons.weakauras.setup() end
+		end)
+		debugprint 'WeakAuras hooked.'
+	end
+	addons.weakauras.hook_done = true
+end
+
+
+--[[===========================================================================
 	Run the Stuff
 ===========================================================================]]--
 
@@ -370,18 +433,20 @@ local ef = CreateFrame('Frame', MYNAME .. '_eventframe')
 -- TODO: merge this func with the update_setup func
 local function initial_setup()
 	for k, v in pairs(addons) do
-		if db[k].enable and v.loaded then v.setup() end
+		if db[k].enable and (v.PUBLIC or user_is_author) and v.loaded then v.setup() end
 	end
 end
 
 local function PLAYER_LOGIN()
-	if db_emptied then C_Timer.After(20, function() warnprint(RESET_WARNING) end) end
-	addons.wowlua.loaded = C_AddOns.IsAddOnLoaded 'WowLua'
-	addons.scriptlibrary.loaded = C_AddOns.IsAddOnLoaded 'ScriptLibrary'
-	addons.bugsack.loaded = C_AddOns.IsAddOnLoaded 'BugSack'
 	-- Debug
 	user_is_author = tf6 and tf6.user_is_tflo
 	if user_is_author then db.db_touched = true end
+
+	if db_emptied then C_Timer.After(20, function() warnprint(RESET_WARNING) end) end
+	addons.wowlua.loaded = C_AddOns.IsAddOnLoaded 'WowLua'
+	addons.weakauras.loaded = user_is_author and C_AddOns.IsAddOnLoaded 'WeakAuras'
+	addons.scriptlibrary.loaded = C_AddOns.IsAddOnLoaded 'ScriptLibrary'
+	addons.bugsack.loaded = C_AddOns.IsAddOnLoaded 'BugSack'
 	if not create_fontobj() then
 		-- Print the msg once more when login chat spam is over.
 		C_Timer.After(25, function() warnprint(FONTPATH_WARNING:format(efi_font)) end)
@@ -422,7 +487,7 @@ local function update_setup()
 	if not create_fontobj() then return end
 	for k, v in pairs(addons) do
 		-- If setup is not yet done then a hook was installed but not yet triggered.
-		if db[k].enable and (not v.DOES_INHERIT and v.setup_done or initial_setup_stopped) then v.setup() end
+		if db[k].enable and (v.PUBLIC or user_is_author) and (not v.DOES_INHERIT and v.setup_done or initial_setup_stopped) then v.setup() end
 	end
 	return true
 end
@@ -519,25 +584,29 @@ local function statusbody()
 	-- addon efi-enabled / loaded
 	local states = {}
 	for k, v in pairs(addons) do
-		local str = format(
-			'%s: %s/%s',
-			v.name,
-			db[k].enable and CLR.ON('Yes') or CLR.OFF('No'),
-			v.loaded and CLR.ON('Yes') or CLR.OFF('No')
-		)
-		tinsert(states, str)
+		if v.PUBLIC or user_is_author then
+			local str = format(
+				'%s: %s/%s',
+				v.name,
+				db[k].enable and CLR.ON('Yes') or CLR.OFF('No'),
+				v.loaded and CLR.ON('Yes') or CLR.OFF('No')
+			)
+			tinsert(states, str)
+		end
 	end
 	table.sort(states)
 	states = table.concat(states, '; ')
 	-- size policies TODO
 	local sizepols = {}
 	for k, v in pairs(addons) do
-		local str = format(
-			'%s: %s',
-			v.name,
-			db[k].ownsize and CLR.KEY('Own') or CLR.KEY('Uni')
-		)
-		tinsert(sizepols, str)
+		if v.PUBLIC or user_is_author then
+			local str = format(
+				'%s: %s',
+				v.name,
+				db[k].ownsize and CLR.KEY('Own') or CLR.KEY('Uni')
+			)
+			tinsert(sizepols, str)
+		end
 	end
 	table.sort(sizepols)
 	sizepols = table.concat(sizepols, '; ')
