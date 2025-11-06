@@ -175,8 +175,8 @@ local initial_setup_stopped
 local addons = {
 	misceditors = {
 		PUBLIC = true,
-		name = 'misc editors',
-		abbrev = 'me',
+		DISPLAYNAME = 'misc editors',
+		ABBREV = 'me',
 		HAS_SIZECFG = false,
 		DOES_INHERIT = true,
 		loaded = true,
@@ -184,8 +184,8 @@ local addons = {
 	},
 	wowlua = {
 		PUBLIC = true,
-		name = 'WowLua',
-		abbrev = 'wl',
+		DISPLAYNAME = 'WowLua',
+		ABBREV = 'wl',
 		HAS_SIZECFG = true,
 		DOES_INHERIT = false,
 		loaded = false,
@@ -193,8 +193,8 @@ local addons = {
 	},
 	scriptlibrary = {
 		PUBLIC = true,
-		name = 'ScriptLibrary',
-		abbrev = 'sl',
+		DISPLAYNAME = 'ScriptLibrary',
+		ABBREV = 'sl',
 		HAS_SIZECFG = true,
 		DOES_INHERIT = false,
 		loaded = false,
@@ -203,8 +203,8 @@ local addons = {
 	},
 	bugsack = {
 		PUBLIC = true,
-		name = 'BugSack',
-		abbrev = 'bs',
+		DISPLAYNAME = 'BugSack',
+		ABBREV = 'bs',
 		HAS_SIZECFG = true,
 		DOES_INHERIT = false,
 		loaded = false,
@@ -213,8 +213,8 @@ local addons = {
 	},
 	weakauras = {
 		PUBLIC = false,
-		name = 'WeakAuras',
-		abbrev = 'wa',
+		DISPLAYNAME = 'WeakAuras',
+		ABBREV = 'wa',
 		HAS_SIZECFG = true,
 		DOES_INHERIT = false,
 		loaded = false,
@@ -502,7 +502,7 @@ end
 local function toggle_target(trg)
 	local enable = not db[trg].enable
 	db[trg].enable = enable
-	efiprint(format('EFI is now %s for %s.%s', enable and CLR.ON('enabled') or CLR.OFF('disabled'), CLR.KEY(addons[trg].name), enable and '' or '\nA ' .. CLR.WARN('UI reload') .. ' is necessary to restore the original font.'))
+	efiprint(format('EFI is now %s for %s.%s', enable and CLR.ON('enabled') or CLR.OFF('disabled'), CLR.KEY(addons[trg].DISPLAYNAME), enable and '' or '\nA ' .. CLR.WARN('UI reload') .. ' is necessary to restore the original font.'))
 	if enable and not addons[trg].setup_done then addons[trg].setup() end
 end
 
@@ -511,7 +511,7 @@ local targetnames = setmetatable({}, {
 	__index = function(t, key)
 		if addons[key] then return key end
 		for k, v in pairs(addons) do
-			if v.abbrev == key then return k end
+			if v.ABBREV == key then return k end
 		end
 	end,
 })
@@ -594,7 +594,7 @@ local function statusbody()
 		if v.PUBLIC or user_is_author then
 			local str = format(
 				'%s: %s/%s',
-				v.name,
+				v.DISPLAYNAME,
 				db[k].enable and CLR.ON('Yes') or CLR.OFF('No'),
 				v.loaded and CLR.ON('Yes') or CLR.OFF('No')
 			)
@@ -609,7 +609,7 @@ local function statusbody()
 		if v.PUBLIC or user_is_author then
 			local str = format(
 				'%s: %s',
-				v.name,
+				v.DISPLAYNAME,
 				db[k].ownsize and CLR.KEY('Own') or CLR.KEY('Uni')
 			)
 			tinsert(sizepols, str)
