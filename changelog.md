@@ -4,6 +4,11 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.2.5 (2025-11-05)
+
+- Added Refresh command `/efi r`, for the case that a target has lost the correct font, or if you think something went wrong with the setup at login. 
+    - This is a force-refresh (initially meant for debugging), and 99% of the time it shouldn’t be necessary to use this.
+
 #### 3.2.4 (2025-11-05)
 
 - Forgot to update version in toc.
