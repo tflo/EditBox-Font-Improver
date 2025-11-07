@@ -158,9 +158,9 @@ local function debugprint(...)
 end
 
 local function create_fontobj()
-	local efi_fontobject = CreateFont 'efi_fontobject'
 	efi_fontobject:SetFont(efi_font, db.fontsize, FLAGS)
 	if efi_fontobject:GetFont() == efi_font then return true end
+	local efi_fobj = EFI_Fobj or CreateFont 'EFI_Fobj'
 	warnprint(FONTPATH_WARNING:format(efi_font))
 end
 
