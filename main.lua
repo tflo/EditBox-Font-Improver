@@ -209,6 +209,7 @@ local addons = {
 		DOES_INHERIT = false,
 		loaded = false,
 		hook_done = false,
+		hook2_done = false,
 		setup_done = false,
 	},
 	weakauras = {
@@ -310,16 +311,32 @@ end
 
 function addons.bugsack.setup()
 	if BugSackScrollText then
+		if not EFI_BugSackFont then CreateFont 'EFI_BugSackFont' end
+
 		if db.bugsack.ownsize then
 			local currentsize = BugSackScrollText:GetFontObject():GetFontHeight()
-			BugSackScrollText:SetFont(
-				efi_font,
-				tonumber(currentsize) or db.fontsize,
-				FLAGS
-			)
+			EFI_BugSackFont:CopyFontObject(efi_fontobject)
+			EFI_BugSackFont:SetFontHeight(currentsize)
+			BugSackScrollText:SetFontObject(EFI_BugSackFont)
 		else
 			BugSackScrollText:SetFontObject(efi_fontobject)
 		end
+
+		if not addons.bugsack.hook2_done then
+			hooksecurefunc(BugSackScrollText, 'SetFontObject', function(self, fobj)
+				local path = fobj:GetFont()
+				if path and path:find('FRIZQT__') then
+					local new_size = fobj:GetFontHeight()
+					EFI_BugSackFont:SetFontObject(efi_fontobject)
+					EFI_BugSackFont:SetFontHeight(new_size)
+					self:SetFontObject(EFI_BugSackFont)
+					debugprint('BugSack size changed, reapplied EFI font at size ' .. new_size)
+				end
+			end)
+			addons.bugsack.hook2_done = true
+			debugprint 'BugSack SetFontObject hook installed.'
+		end
+
 		addons.bugsack.setup_done = true
 		debugprint 'BugSack setup finished.'
 	elseif not addons.bugsack.hook_done then
