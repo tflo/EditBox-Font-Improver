@@ -158,9 +158,9 @@ local function debugprint(...)
 end
 
 local function create_fontobj()
-	efi_fontobject:SetFont(efi_font, db.fontsize, FLAGS)
-	if efi_fontobject:GetFont() == efi_font then return true end
 	local efi_fobj = EFI_Fobj or CreateFont 'EFI_Fobj'
+	efi_fobj:SetFont(efi_font, db.fontsize, FLAGS)
+	if efi_fobj:GetFont() == efi_font then return true end
 	warnprint(FONTPATH_WARNING:format(efi_font))
 end
 
@@ -265,12 +265,12 @@ function addons.misceditors.setup()
 		MacroFrameText, -- Blizzard_MacroUI; also affects ImprovedMacroFrame.
 		ABE_MacroInputEB, -- M6 and OPie macro edit box.
 		try_misc_ace_boxes(),
--- 		ChatFrame1EditBox, -- Trying to hit the chatframe editbox
-}
+		-- ChatFrame1EditBox, -- Trying to hit the chatframe editbox
+	}
 	-- Don't use `ipairs' because the entries can be nil.
 	local count = 0
 	for _, box in pairs(editboxes) do
-		box:SetFontObject(efi_fontobject)
+		box:SetFontObject(EFI_Fobj)
 		debugprint('Set up ' .. box:GetName())
 		count = count + 1
 	end
@@ -311,15 +311,15 @@ end
 
 function addons.bugsack.setup()
 	if BugSackScrollText then
-		if not EFI_BugSackFont then CreateFont 'EFI_BugSackFont' end
+		if not EFI_BugSackFobj then CreateFont 'EFI_BugSackFobj' end
 
 		if db.bugsack.ownsize then
 			local currentsize = BugSackScrollText:GetFontObject():GetFontHeight()
-			EFI_BugSackFont:CopyFontObject(efi_fontobject)
-			EFI_BugSackFont:SetFontHeight(currentsize)
-			BugSackScrollText:SetFontObject(EFI_BugSackFont)
+			EFI_BugSackFobj:CopyFontObject(EFI_Fobj)
+			EFI_BugSackFobj:SetFontHeight(currentsize)
+			BugSackScrollText:SetFontObject(EFI_BugSackFobj)
 		else
-			BugSackScrollText:SetFontObject(efi_fontobject)
+			BugSackScrollText:SetFontObject(EFI_Fobj)
 		end
 
 		if not addons.bugsack.hook2_done then
@@ -327,9 +327,9 @@ function addons.bugsack.setup()
 				local path = fobj:GetFont()
 				if path and path:find('FRIZQT__') then
 					local new_size = fobj:GetFontHeight()
-					EFI_BugSackFont:SetFontObject(efi_fontobject)
-					EFI_BugSackFont:SetFontHeight(new_size)
-					self:SetFontObject(EFI_BugSackFont)
+					EFI_BugSackFobj:SetFontObject(EFI_Fobj)
+					EFI_BugSackFobj:SetFontHeight(new_size)
+					self:SetFontObject(EFI_BugSackFobj)
 					debugprint('BugSack size changed, reapplied EFI font at size ' .. new_size)
 				end
 			end)
@@ -374,7 +374,7 @@ function addons.scriptlibrary.setup()
 				)
 			or db.fontsize
 		RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFont(efi_font, size, FLAGS)
-		-- RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFontObject(efi_fontobject)
+		-- RuntimeEditorMainWindowCodeEditorCodeEditorEditBox:SetFontObject(EFI_Fobj)
 		addons.scriptlibrary.setup_done = true
 		debugprint 'ScriptLibrary setup finished.'
 	elseif not addons.scriptlibrary.hook_done then
@@ -478,6 +478,7 @@ local function PLAYER_LOGIN()
 		-- exit; so this test may pass at login even with the file removed, and the
 		-- ghost font is also still rendered in-game!
 		initial_setup_stopped = true
+		debugprint 'Initial setup stopped!'
 		return
 	end
 	initial_setup()
@@ -773,7 +774,7 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		db.fontsize = max(min(tonumber(args[2] or db.fontsize + ITERATORS[args[2]]), 28), 6)
 		efiprint(
 			format(
-				'Font size set to %s. This does not affect the addons that are set to use their own font size setting (by default WowLua, Scriptlibrary, and BugSack).',
+				'Font size set to %s. This does not affect any addon that is set to use its own font size setting (by default WowLua, ScriptLibrary, BugSack).',
 				CLR.KEY(db.fontsize)
 			)
 		)
