@@ -772,10 +772,16 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 	-- Multi args: fontsize
 	elseif args[1] == 's' and tonumber(args[2]) or ITERATORS[args[2]] then
 		db.fontsize = max(min(tonumber(args[2] or db.fontsize + ITERATORS[args[2]]), 28), 6)
+		local t = {}
+		for k, v in pairs(addons) do
+			if defaults[k].ownsize and (v.PUBLIC or user_is_author) then table.insert(t, v.DISPLAYNAME) end
+		end
+		local ownsizers = table.concat(t, ', ')
 		efiprint(
 			format(
-				'Font size set to %s. This does not affect any addon that is set to use its own font size setting (by default WowLua, ScriptLibrary, BugSack).',
-				CLR.KEY(db.fontsize)
+				'Font size set to %s. This does not affect any addon that is set to use its own font size setting (by default %s).',
+				CLR.KEY(db.fontsize),
+				CLR.KEY(ownsizers)
 			)
 		)
 		update_setup()
@@ -786,15 +792,18 @@ SlashCmdList.EditBoxFontImprover = function(msg)
 		end
 		efiprint "All addons set to use EFI's default font size."
 		update_setup()
-	elseif args[1] == 'r' then
-		efiprint 'Setup refreshed.'
-		update_setup(true)
 	elseif args[1] == 'ownsize' then
 		for k, v in pairs(addons) do
 			if v.HAS_SIZECFG then db[k].ownsize = true end
 		end
 		efiprint 'All addons with a configurable font size will keep their own size setting.'
 		update_setup()
+	elseif args[1] == 'r' then
+		efiprint 'Setup refreshed.'
+		update_setup(true)
+	elseif args[1] == 'notme' or args[1] == 'itsme' then -- Debug
+		user_is_author = not user_is_author
+		efiprint(user_is_author and CLR.ON("It's me.") or CLR.OFF("It's not me!"))
 	elseif args[1] == 'f' or args[1] == 'fonts' then
 		print(BLOCKSEP)
 		efiprint(CLR.HEAD('All Installed Fonts:'))
