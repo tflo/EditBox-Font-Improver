@@ -4,6 +4,13 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.2.6 (2025-11-08)
+
+- Smoother handling of BugSack:
+    - No more hard-setting of BS’s font when ‘ownsize’ is enabled, so BS’s own size setting remains fully functional.
+    - Additional hook for auto-reapplying the fontobject when BS’s own font size setting changes (no more force refresh needed).
+- Minor optimizations.
+
 #### 3.2.5 (2025-11-05)
 
 - Added Refresh command `/efi r`, for the case that a target has lost the correct font, or if you think something went wrong with the setup at login. 
