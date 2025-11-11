@@ -7,6 +7,7 @@ local user_is_author = false
 local WTC = WrapTextInColorCode
 local tonumber = tonumber
 local type = type
+local format = format
 
 local FLAGS = '' -- For our purpose, we do not want any outlining.
 
@@ -124,6 +125,7 @@ if type(_G.EBFI_DB) ~= 'table' then
 -- empty_db() triggers a warn print that we don’t want to see during a first installation.
 elseif not _G.EBFI_DB.db_version or _G.EBFI_DB.db_version ~= DB_VERSION_CURRENT then
 	empty_db()
+	_G.EBFI_DB.db_version = DB_VERSION_CURRENT
 end
 
 merge_defaults(defaults, _G.EBFI_DB)
@@ -526,7 +528,7 @@ end
 
 -- Lookup for the target toggle command
 local targetnames = setmetatable({}, {
-	__index = function(t, key)
+	__index = function(_, key)
 		if addons[key] then return key end
 		for k, v in pairs(addons) do
 			if v.ABBREV == key then return k end
