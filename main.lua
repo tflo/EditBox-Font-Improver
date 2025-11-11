@@ -32,7 +32,7 @@ local CLR = setmetatable({}, {
 		local color = colors[k]
 		assert(color, format('Color %q not defined.', k))
 		color = 'FF' .. color
-		return function(text) return text and WTC(text, color) or color end
+		return function(text) return text and WTC(text, color) or '\124c' .. color end
 	end,
 })
 
