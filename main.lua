@@ -1,5 +1,5 @@
--- SPDX-License-Identifier: GPL-3.0-or-later
--- Copyright (c) 2022-2025 Thomas Floeren
+-- SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+-- Copyright (c) 2022-2026 Thomas Floeren
 
 local MYNAME, A = ...
 local user_is_author = false
@@ -171,6 +171,7 @@ end
 -- Chattynator chat EditBox
 -- Blizz chat editbox
 -- WeakAuras code editbox
+-- LiteMount unavailable/combat macros: `Macro.EditBox`; `Macro` table is created on demand
 
 local initial_setup_stopped
 
@@ -504,9 +505,6 @@ end)
 ===========================================================================]]--
 
 -- Potential UI improvements, TODO:
--- next: limit he displayed fonts in the overview to the first 15 or so and
--- add a separate 'list all' command
--- 'next font' command, e.g. `n`
 -- ambitious: a little font preview frame, which enables the scroll wheel to
 -- quickly scan through the installed fonts
 
