@@ -4,6 +4,11 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.2.8 (2025-12-03)
+
+- Change license, add CONTRIBUTING/CLA.
+- toc: remove flag 110205
+
 #### 3.2.7 (2025-11-11)
 
 - Color bug with the chat prints fixed.
