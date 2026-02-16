@@ -4,6 +4,10 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.2.10 (2026-02-16)
+
+- Remove old interface version numbers from the toc.
+
 #### 3.2.9 (2026-01-17)
 
 - Bumped compatibility flags to 12000+
