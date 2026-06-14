@@ -4,6 +4,10 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.2.11 (2026-06-14)
+
+- toc bump, no changes.
+
 #### 3.2.10 (2026-02-16)
 
 - Remove old interface version numbers from the toc.
