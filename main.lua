@@ -161,8 +161,10 @@ end
 
 local function create_fontobj()
 	local efi_fobj = EFI_Fobj or CreateFont 'EFI_Fobj'
-	efi_fobj:SetFont(efi_font, db.fontsize, FLAGS)
-	if efi_fobj:GetFont() == efi_font then return true end
+	if C_UIFileAsset.IsKnownFile(efi_font) then
+		efi_fobj:SetFont(efi_font, db.fontsize, FLAGS)
+		return true
+	end
 	warnprint(FONTPATH_WARNING:format(efi_font))
 end
 
