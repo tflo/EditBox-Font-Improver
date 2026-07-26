@@ -111,10 +111,6 @@ local defaults = {
 		enable = true,
 		ownsize = true,
 	},
-	weakauras = {
-		enable = false,
-		ownsize = true,
-	},
 	debugmode = false,
 	db_version = DB_VERSION_CURRENT,
 	db_touched = nil,
@@ -172,7 +168,6 @@ end
 -- PasteNG
 -- Chattynator chat EditBox
 -- Blizz chat editbox
--- WeakAuras code editbox
 -- LiteMount unavailable/combat macros: `Macro.EditBox`; `Macro` table is created on demand
 
 local initial_setup_stopped
@@ -215,16 +210,6 @@ local addons = {
 		loaded = false,
 		hook_done = false,
 		hook2_done = false,
-		setup_done = false,
-	},
-	weakauras = {
-		PUBLIC = false,
-		DISPLAYNAME = 'WeakAuras',
-		ABBREV = 'wa',
-		HAS_SIZECFG = true,
-		DOES_INHERIT = false,
-		loaded = false,
-		hook_done = false,
 		setup_done = false,
 	},
 }
@@ -410,50 +395,6 @@ end
 
 
 --[[===========================================================================
-	WeakAuras --- WiP! -- not exposed
-===========================================================================]]--
-
--- https://www.curseforge.com/wow/addons/weakauras-2
-
--- WA sets the font bruteforce with `MultiLineEditBox3Edit:SetFont`, no fontobject
--- We loose the font when the size is changed in WA.
--- The Ace box (e.g. MultiLineEditBox3Edit) is created only when the Expand button is first clicked.
-
-function addons.weakauras.setup()
-	if MultiLineEditBox3Edit then -- We need a specific frame name
-		local size = db.fontsize
-		if db.weakauras.ownsize then
-			if WeakAurasSaved and WeakAurasSaved.editor_font_size then
-				size = WeakAurasSaved.editor_font_size
-				debugprint "WeakAuras' own font size aquired."
-			else
-				warnprint "Unable to read WeakAuras' own font size. Using EFI's size."
-			end
-		end
-		MultiLineEditBox3Edit:SetFont(efi_font, size, FLAGS)
-		addons.weakauras.setup_done = true
-		debugprint 'WeakAuras setup finished.'
-	elseif not addons.weakauras.hook_done then
-		addons.weakauras.hook()
-	else
-		warnprint 'WeakAuras target frame not found. Could not set font.'
-	end
-end
-
-function addons.weakauras.hook()
-	if not IndentationLib then
-		warnprint '`IndentationLib` not found. Could not hook WeakAuras.'
-	else
-		hooksecurefunc(IndentationLib, 'stripWowColorsWithPos', function()
-			if not addons.weakauras.setup_done then addons.weakauras.setup() end
-		end)
-		debugprint 'WeakAuras hooked.'
-	end
-	addons.weakauras.hook_done = true
-end
-
-
---[[===========================================================================
 	Run the Stuff
 ===========================================================================]]--
 
@@ -473,7 +414,6 @@ local function PLAYER_LOGIN()
 
 	if db_emptied then C_Timer.After(20, function() warnprint(RESET_WARNING) end) end
 	addons.wowlua.loaded = C_AddOns.IsAddOnLoaded 'WowLua'
-	addons.weakauras.loaded = user_is_author and C_AddOns.IsAddOnLoaded 'WeakAuras'
 	addons.scriptlibrary.loaded = C_AddOns.IsAddOnLoaded 'ScriptLibrary'
 	addons.bugsack.loaded = C_AddOns.IsAddOnLoaded 'BugSack'
 	if not create_fontobj() then
