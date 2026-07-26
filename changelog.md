@@ -4,6 +4,12 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.2.12 (2026-07-26)
+
+- Use the new `C_UIFileAsset.IsKnownFile` for font path validation.
+- Remove functionality for the deceased WeakAuras.
+- Remove 120005 compatibility flag from toc.
+
 #### 3.2.11 (2026-06-14)
 
 - toc bump, no changes.
