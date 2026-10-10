@@ -4,6 +4,10 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.2.13 (2026-10-10)
+
+- toc bump for 12.1.5, no changes.
+
 #### 3.2.12 (2026-07-26)
 
 - Use the new `C_UIFileAsset.IsKnownFile` for font path validation.
