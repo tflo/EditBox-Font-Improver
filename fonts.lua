@@ -9,17 +9,17 @@ A.NUM_FONTS_COMPACTLIST = 12
 
 A.defaultfonts = {
 	-- Principal group (= compactlist)
-	'pt-mono_regular',
 	'FiraMono-Regular',
+	'pt-mono_regular',
 	'JetBrainsMonoNL-Regular',
-	'Code New Roman.otf',
+	'MapleMonoNL-Regular',
+	'MapleMonoNLNR-Regular',
+	'iAWriterDuoS-Regular',
 	'Courier Prime Code',
 	'CascadiaMono-Regular',
-	'B612Mono-Regular',
-	'IBMPlexMono-Text',
 	'MonaspaceNeon-Regular.otf',
 	'MonaspaceRadon-Regular.otf',
-	'VictorMono-Medium',
+	'RobotoMono-Regular',
 	'NotoSansMono_Condensed-Regular',
 
 	-- Variants and secondaries
@@ -27,9 +27,14 @@ A.defaultfonts = {
 	'FiraMono-Medium',
 	'Hack-Regular',
 	'UbuntuMono-R',
+	'B612Mono-Regular',
+
+	'iAWriterMonoS-Regular',
+	'iAWriterQuattroS-Regular',
 
 	'IBMPlexMono-Light',
 	'IBMPlexMono-Regular',
+	'IBMPlexMono-Text',
 	'IBMPlexMono-Medium',
 	'IBMPlexMono-SemiBold',
 
@@ -38,6 +43,18 @@ A.defaultfonts = {
 	'JetBrainsMonoNL-SemiBold',
 	'JetBrainsMonoNL-Italic',
 	'JetBrainsMonoNL-MediumItalic',
+
+	'MapleMonoNL-Light',
+	'MapleMonoNL-Medium',
+	'MapleMonoNLNR-Medium',
+	'MapleMonoNL-Italic',
+	'MapleMonoNLNR-Light',
+	'MapleMonoNLNR-Italic',
+	'MapleMonoNLSL-Light',
+	'MapleMonoNLSL-Regular',
+
+	'Code New Roman.otf',
+	'Code New Roman b.otf',
 
 	'CascadiaMono-SemiLight',
 	'CascadiaMono-SemiBold',
@@ -55,7 +72,6 @@ A.defaultfonts = {
 	'Inconsolata-Expanded',
 
 	'RobotoMono-Light',
-	'RobotoMono-Regular',
 	'RobotoMono-Medium',
 	'RobotoMono-SemiBold',
 	'RobotoMono-Italic',
@@ -83,8 +99,6 @@ A.defaultfonts = {
 	'SonoSans-Medium',
 	'SonoSans-SemiBold',
 
-	'Code New Roman b.otf',
-
 	'MonaspaceArgon-Light.otf',
 	'MonaspaceArgon-Regular.otf',
 	'MonaspaceArgon-Medium.otf',
@@ -100,6 +114,7 @@ A.defaultfonts = {
 	'MonaspaceNeon-Medium.otf',
 
 	'VictorMono-Regular',
+	'VictorMono-Medium',
 	'VictorMono-SemiBold',
 	'VictorMono-MediumItalic',
 	'VictorMono-SemiBoldItalic',
