@@ -55,18 +55,20 @@ Subcommands/arguments:
 
 ### Font Selection
 
-You can choose from more than 70 different fonts and weights.  
+You can choose from more than 90 different fonts, weights, and styles.  
 
 Some highlights:  
 
-- PT Mono
 - Fira Mono
 - JetBrains Mono
+- Maple Mono
 - Hack
 - Ubuntu Mono
 - B612 Mono
 - Code New Roman
+- PT Mono
 - IBM Plex Mono
+- Monaspace Neon
 - Cascadia Mono
 - Courier Prime
 - Inconsolata

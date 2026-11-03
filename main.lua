@@ -38,6 +38,10 @@ local CLR = setmetatable({}, {
 })
 
 local MSG_PREFIX = CLR.EFI('EditBox Font Improver:')
+-- TODO: Explain possible reasons and what to do:
+	-- Font has been removed with an addon update --> select new font
+	-- Font file is corrupted --> reinstall addon
+-- Should we apply a fallback font?
 local FONTPATH_WARNING = CLR.WARN('Font path is not valid!')
 	.. ' Make sure that a font file exists at this location, or change the path: \n%s'
 local RESET_WARNING = format(

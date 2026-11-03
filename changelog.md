@@ -4,6 +4,22 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.3 (2026-11-03)
+
+- **Fonts added!**
+    - [iA Writer Mono, Duo, and Quattro](https://github.com/iaolo/iA-Fonts)
+        - These are the fonts that also come with the iA Writer app; based on IBM Plex.
+        - Duo has a slightly adaptive glyph spacing and kerning,
+        - Quattro is a proportional font, but with mono-like vibes and readability.
+    - [Maple Mono](https://github.com/subframe7536/maple-font)
+        - This is a very nice font based on Jetbrains Mono.
+        - Basically a rounded variant of Jetbrains Mono, and highly customizable.
+        - The added fonts are a custom build with a barred “7” and “Z” (middle stroke), and a slashed zero.
+        - 3 widths: Normal, narrow, slim.
+- **Change the order of the font entries**, to accommodate the new ones.
+    - This should not affect your currently selected font, just the numbering for selecting a font and when you call the font list with `/efi f` will be different.
+- toc: add flag for 12.1.7       
+
 #### 3.2.13 (2026-10-10)
 
 - toc bump for 12.1.5, no changes.
