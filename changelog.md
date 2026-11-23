@@ -4,6 +4,11 @@ To see all commits, including all alpha changes, [*go here*](https://github.com/
 
 ## Releases
 
+#### 3.3.1 (2026-11-24)
+
+- toc: add Forever compatibility flag.
+- Add source links for the recently added fonts to fonts/LINKS.txt.
+
 #### 3.3 (2026-11-03)
 
 - **Fonts added!**
